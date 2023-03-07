@@ -1,0 +1,32 @@
+# Provide a custom message
+message: "Hello World App"
+
+ingress:
+  configured: false
+  rewritePath: true
+  pathPrefix: ""
+
+service:
+  type: LoadBalancer
+  port: 80
+
+deployment:
+  replicaCount: 2
+  container:
+    image:
+      repository: "gcr.io/google-samples/hello-app"
+      tag: "1.0" # uses chart appVersion if not provided
+      pullPolicy: IfNotPresent
+    port: 8080
+
+  # Currently only linux images on amd64 architecture are supported - support for arm64 and windows/amd64 coming ...
+  # nodeSelector:
+  #   kubernetes.io/os: linux
+  #   kubernetes.io/arch: amd64
+
+  resources: {}
+
+  tolerations: []
+
+  affinity: {}
+
