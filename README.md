@@ -224,3 +224,39 @@ Do you really want to destroy all resources?
 ```
 
 After you have destroyed your environment, go back to the [Start your environment via Terraform](#start-your-environment-via-terraform) section for instructions on how to run your local development environment.
+
+
+<br><br>
+# Monitoring
+## Grafana
+### Charts and visualizations for viewing system usage and performance are available in the Grafana Dashboard.
+<br>
+For developer access to the Grafana dashboard, first enable port forwarding:
+
+![Grafana Port Forwarding](./images/grafana_port_forward.png)
+
+If you don't already have your Grafana credentials, they can be obtained with:
+```
+# Username
+kubectl get secret grafana -n monitoring -o jsonpath="{.data.admin-user}" | base64 --decode
+
+# Password
+kubectl get secret grafana -n monitoring -o jsonpath="{.data.admin-password}" | base64 --decode
+```
+
+<br>And use those credentials to login at: &nbsp;&nbsp;<b>localhost:{port_from_above}</b>
+![Grafana Login](./images/grafana_login.png)
+
+
+
+## Loki
+### Logs
+```
+Coming Soon
+```
+
+## Prometheus
+### Metrics
+```
+Coming Soon
+```
