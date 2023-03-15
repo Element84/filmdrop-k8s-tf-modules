@@ -288,3 +288,19 @@ said, the `test` command will run any executables found in the `flop.d/tests`
 directory.
 
 Please extend the existing test scripts or add new ones, as necessary.
+
+### VM resource requirements
+
+Operating a complex cluster within a single VM can be resource limited, and
+strange behavior can result. For example, the default resource allocation for a
+colima VM is barely adequate for a single cluster with the current pod count.
+Adding a second cluster without increasing resources to the VM will cause
+instability, such as network requests timing out and services being
+unresponsive.
+
+In cases where cluster behavior is unexplainably weird, consider that it might
+be a resource issue within the VM. Sometimes destroying and re-creating the VM
+with no state helps free up resources without having to allocate more, but as
+the cluster requirements grow we will need to keep an eye on specific
+requirements.
+
