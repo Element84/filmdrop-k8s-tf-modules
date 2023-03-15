@@ -34,10 +34,8 @@ set -euo pipefail
 
 declare -a OPTS
 declare -a ARGS
-declare -a EXTRA
 OPTS=()
 ARGS=()
-EXTRA=()
 
 
 usage () {
@@ -66,7 +64,7 @@ EXAMPLE
 Running:
 
     $0 -o "r:s::t" --longoptions "redo:,stop::,time" -- \\
-        -s -tr hello world "" --redo="some routine" "another routine" --stop yes --time abcd -- and 'other input'
+        -s -tr hello world "" --redo="some routine" "another routine" --stop yes --time abcd -- --and 'other input'
 
 Yields:
 
@@ -85,21 +83,19 @@ Yields:
 
     another routine
     abcd
-    --
-    and
+    --and
     other input
 
 The output can be parsed using a while loop with a case statement
 matching on each option name, like getopt. Add a case for
 '--' and break parsing, leaving the positional arguments in
-order. Iterate through those and everything after another '--'
-is an extra non-parsed argument.
+order.
 
-Note that newlines in the arguments are not supported. If such
-support is required, this script can also be sourced, which will
-provide access to three bash arrays: '\$OPTS', '\$ARGS', and '\$EXTRA'.
-The '\$OPTS' can similarly be iterated with a case statement like
-the output above, but will retain newlines any array elements.
+Note that newlines in the arguments are not supported. If such support is
+required, this script can also be sourced, which will provide access to two
+bash arrays: '\$OPTS' and '\$ARGS'.  The '\$OPTS' can similarly be iterated
+with a case statement like the output above, but will retain newlines any array
+elements.
 EOF
 }
 
@@ -237,18 +233,14 @@ parse_opt () {
 
 
 parse_opts_args () {
-    local NEXT N ARG_INDEX IN_EXTRA=false
+    local NEXT N ARG_INDEX
     for ((ARG_INDEX=1; ARG_INDEX<=$#; ++ARG_INDEX)); do
         ARG="${!ARG_INDEX}"
 
-        [ "${IN_EXTRA}" != "true" ] || {
-            EXTRA+=("$ARG")
-            continue
-        }
-
         case $ARG in
             --)
-                IN_EXTRA=true
+                ARGS=( "${ARGS:+"${ARGS[@]}" }" "${@:$ARG_INDEX+1}" )
+                break
                 ;;
             -*)
                 N=$((ARG_INDEX+1))
@@ -306,7 +298,7 @@ main () {
     IFS=',' read -ra LOPTS <<< "${_LOPTS:-}"
 
     parse_opts_args "$@"
-    ${SOURCED} || printf '%s\n' ${OPTS:+"${OPTS[@]}"} -- ${ARGS:+"${ARGS[@]}"} -- ${EXTRA:+"${EXTRA[@]}"}
+    ${SOURCED} || printf '%s\n' ${OPTS:+"${OPTS[@]}"} -- ${ARGS:+"${ARGS[@]}"}
 }
 
 
