@@ -31,11 +31,38 @@ variable "kubernetes_config_file" {
 variable "kubernetes_config_context" {
   description = "Kubernetes config context."
   type        = string
-  default     = "rancher-desktop"
+  default     = ""
 }
 
 variable "ingress_controller" {
   description = "Type of Ingress Controller."
   type        = string
   default     = "nginx"
+}
+
+variable "nginx_http_port" {
+  description = "Port number for Nginx nodeport HTTP binding"
+  type        = string
+  default     = ""
+
+
+  /*
+  validation {
+    condition     = var.nginx_http_port == null || (1025 <= var.nginx_http_port && var.nginx_http_port <= 65535)
+    error_message = "nginx_http_port must be between 1025 and 65535"
+  }
+  */
+}
+
+variable "nginx_https_port" {
+  description = "Port number for Nginx nodeport HTTPS binding"
+  type        = string
+  default     = ""
+
+  /*
+  validation {
+    condition     = var.nginx_https_port == null || (1025 <= var.nginx_https_port && var.nginx_https_port <= 65535)
+    error_message = "nginx_https_port must be between 1025 and 65535"
+  }
+  */
 }
