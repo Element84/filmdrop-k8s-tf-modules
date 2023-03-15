@@ -119,7 +119,7 @@ Alternatively, you can go into the directory containing this file and simply pas
 
 You will see the workflow running in the command line and if everything goes well, it should successfully execute.
 
-You can see the status of any currently running or previously run workflow by port-forwarding the Argo Server UI to a port on your machine. You can do this easily using Rancher Desktop (via the Port Forwarding section of the console) if that is the K8s tool that you are using. By default, the Argo Server UI runs on port 2746 inside the cluster. You can also do this using `kubectl`. 
+You can see the status of any currently running or previously run workflow by port-forwarding the Argo Server UI to a port on your machine. You can do this easily using Rancher Desktop (via the Port Forwarding section of the console) if that is the K8s tool that you are using. By default, the Argo Server UI runs on port 2746 inside the cluster. You can also do this using `kubectl`.
 
 For example, to port-forward the Argo Server UI onto a local port 50000 on your machine:
 
@@ -128,16 +128,16 @@ kubectl -n argo-workflows port-forward deployment/argo-workflows-server 2746:500
 ```
 
 
-You can observe the log files that were created by the workflow by opening up the MinIO console by port-forwarding the MinIO dashboard to a port on your machine. By default, the MinIO dashboard runs on port 9001 inside the cluster. For example, to port-forward onto a local port 60000 on your machine: 
+You can observe the log files that were created by the workflow by opening up the MinIO console by port-forwarding the MinIO dashboard to a port on your machine. By default, the MinIO dashboard runs on port 9001 inside the cluster. For example, to port-forward onto a local port 60000 on your machine:
 ```
 kubectl -n argo-other port-forward deployment/minio 9001:60000
 ```
 
-and then go to localhost:50000 and localhost:60000, respectively, to see the different consoles. 
+and then go to localhost:50000 and localhost:60000, respectively, to see the different consoles.
 
 The username and password for the MinIO console are `admin` and `password`, respectively.
 
-When the Argo Server UI opens up, you might have to click on the 'x' next to the namespace if there is already a value in the namespace field. 
+When the Argo Server UI opens up, you might have to click on the 'x' next to the namespace if there is already a value in the namespace field.
 
 Note: The workflows you run should have `serviceAccountName: argo-workflow` within their `spec` declaration in the YAML file in order for the workflow to have the proper permissions to run. Also, in order to see the logs in MinIO, you should have the `archiveLogs: true` within the `spec` declaration as well. For example:
 
@@ -166,6 +166,10 @@ An nginx ingress proxy has been added by default to the local development enviro
 to http://localhost/ and see the default ngnix page not found.
 
 ![default ngnix page](./images/nginx_default_page.png)
+
+#### Grafana Loki
+
+[Grafana Loki](https://grafana.com/docs/loki/latest/) is a set of components that can be composed into a fully featured logging stack.
 
 #### Two load balanced test applications
 
