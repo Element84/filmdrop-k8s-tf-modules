@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+. "${FLOP_LIB}"
+find_this "${BASH_SOURCE[0]}" 
+
+
+main () {
+    local USAGE=$(cat <<EOF
+USAGE: ${FLOP_CLI} ${FLOP_COMMAND} FLOP_CLUSTER_NAME [ -- ] [ TERRAFORM OPTS/ARGS ]
+
+Run terraform against the specified cluster.
+All options/arguments other than the cluster name will be passed to terraform.
+
+Command arguments:
+    FLOP_CLUSTER_NAME  name of the cluster to run terraform against
+
+Supported options:
+    -h|--help          show this message
+EOF
+    )
+
+    local arg_index arg 
+    for ((arg_index=1; arg_index<=$#; ++arg_index)); do
+        arg="${!arg_index}"
+
+        case "${arg}" in
+            -h|--help|help)
+               fatal "$USAGE" 0
+               ;;
+        esac
+    done
+
+    FLOP_CLUSTER="${1:?"must provide the cluster name"}"; shift
+    set_vars "${FLOP_CLUSTER}"
+
+    set -x
+    TF_WORKSPACE="${TF_WORKSPACE}" \
+        TF_VAR_kubernetes_config_file="${KUBECONFIG}" \
+        TF_VAR_nginx_http_port=${FLOP_HTTP_PORT} \
+        TF_VAR_nginx_https_port=${FLOP_HTTPS_PORT} \
+        exec terraform -chdir="${TF_DIR}" "${@}"
+}
+
+
+main "$@"

@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+. "${FLOP_LIB}"
+
+
+curl () {
+    command curl \
+        --connect-to hello-world.local:80:localhost:${FLOP_HTTP_PORT} \
+        --connect-to hello-world.local:443:localhost:${FLOP_HTTPS_PORT} \
+        "$@"
+}
+
+export -f curl
+
+
+curl http://hello-world.local || fatal "Could not load 'http://hello-world.local'" 
+curl http://hello-world.local/v1 || fatal "Could not load 'http://hello-world.local/v1'"
+curl http://hello-world.local/v2 || fatal "Could not load 'http://hello-world.local/v2'"
+curl http://hello-world.local/v5 && fatal "Shouldn't be able to load 'http://hello-world.local/v5'!"

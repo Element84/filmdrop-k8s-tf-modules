@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+. "${FLOP_LIB}"
+find_this "${BASH_SOURCE[0]}" 
+
+
+main () {
+    local USAGE=$(cat <<EOF
+USAGE: ${FLOP_CLI} ${FLOP_COMMAND} [ OPTIONS ]
+
+List all available clusters.
+
+Supported options:
+    -h|--help          show this message
+EOF
+    )
+
+    . "$FLOP_GETOPT" -n "${FLOP_CLI}: ${FLOP_COMMAND}" -o "h" -l "help" -- "$@"
+
+    local arg i=0
+    while [ "$i" -lt "${#OPTS[@]}" ]; do
+        arg="${OPTS[$i]}"
+        i=$((i+1))
+        case $arg in
+            -h|--help)
+                fatal "$USAGE" 0
+                ;;
+            --)
+                break
+                ;;
+            *)
+                fatal "${FLOP_COMMAND}: unknown option: '$arg'" 1
+                ;;
+        esac
+    done
+
+    # handle unknown arguments (allowing 'help')
+    i=0
+    while [ "$i" -lt "${#ARGS[@]}" ]; do
+        arg="${ARGS[$i]}"
+        i=$((i+1))
+        [ "$arg" == "help" ] && fatal "$USAGE" 0
+    done
+
+    find_all_flops
+}
+
+
+main "$@"

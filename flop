@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+
+find_this () {
+    THIS="${1:?'must provide script path, like "${BASH_SOURCE[0]}"'}"
+    trap "fatal >&2 'FATAL: could not resolve parent directory of ${THIS}'" EXIT
+    [ "${THIS:0:1}"  == "/" ] || THIS="$(pwd -P)/${THIS}"
+    THIS_DIR="$(dirname -- "${THIS}")"
+    THIS_DIR="$(cd -P -- "${THIS_DIR}" && pwd)"
+    THIS="${THIS_DIR}/$(basename -- "${THIS}")"
+    trap "" EXIT
+}
+
+
+export -f find_this
+
+find_this "${BASH_SOURCE[0]}"
+
+
+export FLOP_CLI="flop"
+
+
+. "${THIS_DIR}/flop.d/lib.bash"
+
+
+main () {
+    local USAGE=$(cat <<EOF
+USAGE: ${FLOP_CLI} COMMAND [ COMMAND_OPTS ] [ COMMAND_ARGS ]
+
+FilmDrop-on-K8s test utility
+
+Supported commands:
+    help (-h, --help)    show this message
+    create (mk)          create a new flop cluster
+    destroy (rm)         destroy a flop cluster and associated state
+    list (ls)            list all known flop clusters
+    kubeconfig           get the path to the kubeconfig for a given cluster
+    kubectl              run kubectl against a given cluster
+    terraform (tf)       run terraform against a given cluster
+    test                 run tests against a given cluster
+    
+All commmands support 'help' for more information.
+EOF
+    )
+
+    export FLOP_COMMAND="${1:-}"; shift ||:
+    case "${FLOP_COMMAND:-}" in
+        create|mk)      "${FLOP_COMMANDS}/create" "$@" ;;
+        destroy|rm)     "${FLOP_COMMANDS}/destroy" "$@" ;;
+        kubeconfig)     "${FLOP_COMMANDS}/kubeconfig" "$@" ;;
+        kubectl)        "${FLOP_COMMANDS}/kubectl" "$@" ;;
+        list|ls)        "${FLOP_COMMANDS}/list" "$@" ;;
+        terraform|tf)   "${FLOP_COMMANDS}/terraform" "$@" ;;
+        test)           "${FLOP_COMMANDS}/test" "$@" ;;
+        help|-h|--help) echo2 "$USAGE"; exit ;;
+        ?*) fatal "unknown command: '$FLOP_COMMAND'" 1 ;;
+        *)  echo2 "$USAGE"; exit ;;
+    esac
+}
+
+
+# check if we have been sourced and exit
+# allows us to do testing by sourcing this file
+(return 0 2>/dev/null) && return
+
+
+main "$@"

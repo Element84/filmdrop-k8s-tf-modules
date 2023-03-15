@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# option defaults
+K8S_VERSION='1.26.2'
+CLUSTER_TYPE='k3d'
+FLOP_PREFIX='flop-'
+
+. "${FLOP_LIB}"
+find_this "${BASH_SOURCE[0]}" 
+
+
+main () {
+    local USAGE=$(cat <<EOF
+USAGE: ${FLOP_CLI} ${FLOP_COMMAND} [ OPTIONS ] [ FLOP_CLUSTER_NAME ]
+
+Create a flop cluster using k3d or kind.
+Requires that docker or equivalent be running on the local machine.
+
+Command arguments:
+    FLOP_CLUSTER_NAME  optional name of the cluster to create
+                       default: a random string prefixed with '${FLOP_PREFIX}'
+
+Supported options:
+    -h|--help          show this message
+    -v|--version       kubernetes version to use for cluster
+                       default: '${K8S_VERSION}'
+    -t|--cluster-type  type of cluster to create, 'k3d' or 'kind'
+                       default: '${CLUSTER_TYPE}'
+EOF
+    )
+
+    . "$FLOP_GETOPT" -n "${FLOP_CLI}: ${FLOP_COMMAND}" -o "hv:t:" -l "help,version:,cluster-type:" -- "$@"
+
+    local arg i=0
+    while [ "$i" -lt "${#OPTS[@]}" ]; do
+        arg="${OPTS[$i]}"
+        i=$((i+1))
+        case $arg in
+            -h|--help)
+                fatal "$USAGE" 0
+                ;;
+            -t|--cluster-type)
+                CLUSTER_TYPE="${OPTS[$i]}"
+                i=$((i+1))
+                case "${arg}" in
+                    kind|k3d)
+                        ;;
+                    *)
+                        fatal "${FLOP_COMMAND}: supported cluster types: 'kind' or 'k3d'" 1
+                        ;;
+                esac
+                ;;
+            -v|--version)
+                K8S_VERSION="${OPTS[$i]}"
+                i=$((i+1))
+                ;;
+            --)
+                break
+                ;;
+            *)
+                fatal "${FLOP_COMMAND}: unknown option: '$arg'" 1
+                ;;
+        esac
+    done
+
+    # handle unknown arguments (allowing 'help')
+    i=0
+    while [ "$i" -lt "${#ARGS[@]}" ]; do
+        arg="${ARGS[$i]}"
+        i=$((i+1))
+        [ "$arg" == "help" ] && fatal "$USAGE" 0
+    done
+
+    FLOP_CLUSTER="${ARGS[0]:-"${FLOP_PREFIX}$(tr -dc a-z0-9 </dev/urandom | head -c 5 ||:)"}"
+
+    set_vars "${FLOP_CLUSTER}"
+
+    echo2 "Using test cluster name '${FLOP_CLUSTER}'"
+    echo2 "K8s version: v${K8S_VERSION}"
+    echo2 "Cluster type: '${CLUSTER_TYPE}'"
+
+    mkdir "${TF_WORKSPACE_DIR}" || {
+        ! [ -d "${TF_WORKSPACE_DIR}" ] || fatal "Cluster state already exists; choose a different name or run 'flop destroy ${FLOP_CLUSTER}'"
+        fatal "Unable to make cluster state directory: '${TF_WORKSPACE_DIR}'"
+    }
+
+    trap "'${CLUSTER_TYPE}_cleanup' >&2" EXIT
+    persist_port_mapping
+    (
+        set -x
+        "${CLUSTER_TYPE}_create" >&2
+    ) || fatal "\n 😭 Failed to create cluster 😭"
+    trap "" EXIT
+    echo2 "\n 🎉 Cluster created successfully! 🎉"
+    echo2 ""
+    echo2 "Cluster port forwarding:"
+    echo2 "    localhost:${FLOP_HTTP_PORT} -> 80"
+    echo2 "    localhost:${FLOP_HTTPS_PORT} -> 443"
+    echo2 ""
+    echo2 "Cluster name:"
+    echo "${FLOP_CLUSTER}"
+}
+
+
+main "$@"
