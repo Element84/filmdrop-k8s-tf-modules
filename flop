@@ -47,13 +47,13 @@ EOF
 
     export FLOP_COMMAND="${1:-}"; shift ||:
     case "${FLOP_COMMAND:-}" in
-        create|mk)      "${FLOP_COMMANDS}/create" "$@" ;;
-        destroy|rm)     "${FLOP_COMMANDS}/destroy" "$@" ;;
-        kubeconfig)     "${FLOP_COMMANDS}/kubeconfig" "$@" ;;
-        kubectl)        "${FLOP_COMMANDS}/kubectl" "$@" ;;
-        list|ls)        "${FLOP_COMMANDS}/list" "$@" ;;
-        terraform|tf)   "${FLOP_COMMANDS}/terraform" "$@" ;;
-        test)           "${FLOP_COMMANDS}/test" "$@" ;;
+        create|mk)      exec "${FLOP_COMMANDS}/create" "$@" ;;
+        destroy|rm)     exec "${FLOP_COMMANDS}/destroy" "$@" ;;
+        kubeconfig)     exec "${FLOP_COMMANDS}/kubeconfig" "$@" ;;
+        kubectl)        exec "${FLOP_COMMANDS}/kubectl" "$@" ;;
+        list|ls)        exec "${FLOP_COMMANDS}/list" "$@" ;;
+        terraform|tf)   exec "${FLOP_COMMANDS}/terraform" "$@" ;;
+        test)           exec "${FLOP_COMMANDS}/test" "$@" ;;
         help|-h|--help) echo2 "$USAGE"; exit ;;
         ?*) fatal "unknown command: '$FLOP_COMMAND'" 1 ;;
         *)  echo2 "$USAGE"; exit ;;
