@@ -73,7 +73,7 @@ EOF
         [ "$arg" == "help" ] && fatal "$USAGE" 0
     done
 
-    FLOP_CLUSTER="${ARGS[0]:-"${FLOP_PREFIX}$(tr -dc a-z0-9 </dev/urandom | head -c 5 ||:)"}"
+    FLOP_CLUSTER="${ARGS[0]:-"${FLOP_PREFIX}$(LC_ALL=C tr -dc a-z0-9 </dev/urandom | head -c 5 ||:)"}"
 
     set_vars "${FLOP_CLUSTER}"
 
