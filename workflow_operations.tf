@@ -50,64 +50,36 @@ resource "kubernetes_secret" "argo_events_my_minio_cred" {
 
 }
 
-resource "null_resource" "argo_events_cleanup" {
+resource "null_resource" "argo_events" {
   triggers = {
+    key                       = kubernetes_namespace.argo_events.id
+    file_hash                 = filemd5("${path.module}/argo-ops/argo-events-stable.yaml")
     kubernetes_config_file    = var.kubernetes_config_file
     kubernetes_config_context = var.kubernetes_config_context
-    namespace                 = kubernetes_namespace.argo_events.id
+    namespace                 = "argo-events"
+  }
+
+  provisioner "local-exec" {
+    command = <<EOF
+      printf "\nInstalling Argo Events...\n"
+      kubectl --kubeconfig ${var.kubernetes_config_file} \
+      --context ${var.kubernetes_config_context} apply \
+      --namespace argo-events -f ${path.module}/argo-ops/argo-events-stable.yaml
+    EOF
   }
 
   provisioner "local-exec" {
     when    = destroy
     command = <<EOF
-      printf "\Destroying Everything in Argo Events...\n"
+      printf "\Deleting Argo Events...\n"
       kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
-      --context ${self.triggers.kubernetes_config_context} \
-      delete all --all -n ${self.triggers.namespace}
-
-      kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
-      --context ${self.triggers.kubernetes_config_context} \
-      patch crd/sensors.argoproj.io -p '{"metadata":{"finalizers":[]}}' --type=merge
-
-      kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
-      --context ${self.triggers.kubernetes_config_context} \
-      patch crd/eventsources.argoproj.io -p '{"metadata":{"finalizers":[]}}' --type=merge
-
-      kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
-      --context ${self.triggers.kubernetes_config_context} \
-      patch crd/eventbus.argoproj.io -p '{"metadata":{"finalizers":[]}}' --type=merge
-
-      kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
-      --context ${self.triggers.kubernetes_config_context} \
-      delete crd sensors.argoproj.io
-
-      kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
-      --context ${self.triggers.kubernetes_config_context} \
-      delete crd eventsources.argoproj.io
-
-      kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
-      --context ${self.triggers.kubernetes_config_context} \
-      delete crd eventbus.argoproj.io
+      --context ${self.triggers.kubernetes_config_context} delete \
+      --namespace ${self.triggers.namespace} -f ${path.module}/argo-ops/argo-events-stable.yaml
     EOF
   }
 
   depends_on = [
     kubernetes_namespace.argo_events
-  ]
-}
-
-resource "helm_release" "argo_events" {
-  name              = "argo-events"
-  repository        = "https://argoproj.github.io/argo-helm"
-  chart             = "argo-events"
-  version           = "2.1.3"
-  namespace         = "argo-events"
-  create_namespace  = false
-  wait              = true
-  atomic            = true
-
-  depends_on = [
-    null_resource.argo_events_cleanup
   ]
 }
 
@@ -117,21 +89,10 @@ resource "kubernetes_service_account_v1" "argo_ops_workflow_sa" {
     namespace = "argo-events"
   }
 
-  secret {
-    name = "${kubernetes_secret_v1.argo_ops_workflow_sa_default_secret.metadata.0.name}"
-  }
-
   depends_on = [
-    helm_release.argo_events
+    null_resource.argo_events
   ]
 }
-
-resource "kubernetes_secret_v1" "argo_ops_workflow_sa_default_secret" {
-  metadata {
-    name = "operate-workflow-sa-default-secret"
-  }
-}
-
 
 resource "kubernetes_cluster_role_v1" "argo_ops_workflow_role" {
   metadata {
@@ -177,20 +138,11 @@ resource "kubernetes_service_account_v1" "argo_ops_pods_sa" {
     namespace = "argo-events"
   }
 
-  secret {
-    name = "${kubernetes_secret_v1.argo_ops_pods_sa_default_secret.metadata.0.name}"
-  }
-
   depends_on = [
-    helm_release.argo_events
+    null_resource.argo_events
   ]
 }
 
-resource "kubernetes_secret_v1" "argo_ops_pods_sa_default_secret" {
-  metadata {
-    name = "workflow-pods-sa-default-secret"
-  }
-}
 
 resource "kubernetes_cluster_role_v1" "argo_ops_pods_role" {
   metadata {
@@ -252,7 +204,7 @@ resource "kubernetes_cluster_role_binding_v1" "argo_ops_pods_default_role_bindin
 
 resource "null_resource" "argo_ops_eventbus_default" {
   triggers = {
-    key                       = helm_release.argo_events.id
+    key                       = null_resource.argo_events.id
     file_hash                 = filemd5("${path.module}/argo-ops/default-event-bus.yaml")
     kubernetes_config_file    = var.kubernetes_config_file
     kubernetes_config_context = var.kubernetes_config_context
@@ -274,19 +226,20 @@ resource "null_resource" "argo_ops_eventbus_default" {
       printf "\Destroying Argo Events EventSource Webhook...\n"
       kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
       --context ${self.triggers.kubernetes_config_context} delete \
-      --namespace ${self.triggers.namespace} service eventbus-default-stan-svc
+      --namespace ${self.triggers.namespace} -f ${path.module}/argo-ops/default-event-bus.yaml
     EOF
   }
 
   depends_on = [
-    helm_release.argo_events,
-    kubernetes_cluster_role_binding_v1.argo_ops_pods_default_role_binding
+    null_resource.argo_events,
+    kubernetes_cluster_role_binding_v1.argo_ops_workflow_role_binding,
+    kubernetes_cluster_role_binding_v1.argo_ops_pods_role_binding
   ]
 }
 
 resource "null_resource" "argo_ops_eventsource_webhook" {
   triggers = {
-    key                       = helm_release.argo_events.id
+    key                       = null_resource.argo_events.id
     file_hash                 = filemd5("${path.module}/argo-ops/webhook-event-source.yaml")
     kubernetes_config_file    = var.kubernetes_config_file
     kubernetes_config_context = var.kubernetes_config_context
@@ -309,7 +262,7 @@ resource "null_resource" "argo_ops_eventsource_webhook" {
       printf "\Destroying Argo Events EventSource Webhook...\n"
       kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
       --context ${self.triggers.kubernetes_config_context} delete \
-      --namespace ${self.triggers.namespace} service webhook-eventsource-svc
+      --namespace ${self.triggers.namespace} -f ${path.module}/argo-ops/webhook-event-source.yaml
     EOF
   }
 
@@ -320,11 +273,10 @@ resource "null_resource" "argo_ops_eventsource_webhook" {
 
 resource "null_resource" "argo_ops_sensor" {
   triggers = {
-    key                       = helm_release.argo_events.id
+    key                       = null_resource.argo_events.id
     event_bus                 = null_resource.argo_ops_eventbus_default.id
     event_source              = null_resource.argo_ops_eventsource_webhook.id
-    pods_role                 = kubernetes_cluster_role_v1.argo_ops_pods_role.id
-    pods_role_binding         = kubernetes_cluster_role_binding_v1.argo_ops_pods_role_binding.id
+    pods_role                 = kubernetes_service_account_v1.argo_ops_pods_sa.id
     file_hash                 = filemd5("${path.module}/argo-ops/argo-ops-workflow-sensor.yaml")
     kubernetes_config_file    = var.kubernetes_config_file
     kubernetes_config_context = var.kubernetes_config_context
@@ -340,8 +292,18 @@ resource "null_resource" "argo_ops_sensor" {
     EOF
   }
 
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<EOF
+      printf "\Destroying Argo Events Sensor...\n"
+      kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
+      --context ${self.triggers.kubernetes_config_context} delete \
+      --namespace ${self.triggers.namespace} -f ${path.module}/argo-ops/argo-ops-workflow-sensor.yaml
+    EOF
+  }
+
   depends_on = [
-    helm_release.argo_events,
+    null_resource.argo_events,
     null_resource.argo_ops_eventbus_default,
     null_resource.argo_ops_eventsource_webhook
   ]
@@ -349,7 +311,7 @@ resource "null_resource" "argo_ops_sensor" {
 
 resource "null_resource" "argo_ops_eventsource_tracker" {
   triggers = {
-    key                       = helm_release.argo_events.id
+    key                       = null_resource.argo_events.id
     file_hash                 = filemd5("${path.module}/argo-ops/tracker-event-source.yaml")
     kubernetes_config_file    = var.kubernetes_config_file
     kubernetes_config_context = var.kubernetes_config_context
@@ -365,14 +327,13 @@ resource "null_resource" "argo_ops_eventsource_tracker" {
     EOF
   }
 
-
   provisioner "local-exec" {
     when    = destroy
     command = <<EOF
       printf "\Destroying Argo Events EventSource Webhook...\n"
       kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
       --context ${self.triggers.kubernetes_config_context} delete \
-      --namespace ${self.triggers.namespace} service workflow-events-listener-eventsource-svc
+      --namespace ${self.triggers.namespace} -f ${path.module}/argo-ops/tracker-event-source.yaml
     EOF
   }
 
@@ -383,11 +344,10 @@ resource "null_resource" "argo_ops_eventsource_tracker" {
 
 resource "null_resource" "argo_ops_tracker_sensor" {
   triggers = {
-    key                       = helm_release.argo_events.id
+    key                       = null_resource.argo_events.id
     event_bus                 = null_resource.argo_ops_eventbus_default.id
     event_source              = null_resource.argo_ops_eventsource_webhook.id
-    pods_role                 = kubernetes_cluster_role_v1.argo_ops_pods_role.id
-    pods_role_binding         = kubernetes_cluster_role_binding_v1.argo_ops_pods_role_binding.id
+    pods_role                 = kubernetes_service_account_v1.argo_ops_pods_sa.id
     file_hash                 = filemd5("${path.module}/argo-ops/argo-ops-tracker-sensor.yaml")
     kubernetes_config_file    = var.kubernetes_config_file
     kubernetes_config_context = var.kubernetes_config_context
@@ -400,6 +360,16 @@ resource "null_resource" "argo_ops_tracker_sensor" {
       kubectl --kubeconfig ${var.kubernetes_config_file} \
       --context ${var.kubernetes_config_context} apply \
       --namespace argo-events -f ${path.module}/argo-ops/argo-ops-tracker-sensor.yaml
+    EOF
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<EOF
+      printf "\Destroying Argo Events Tracker Sensor...\n"
+      kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
+      --context ${self.triggers.kubernetes_config_context} delete \
+      --namespace ${self.triggers.namespace} -f ${path.module}/argo-ops/argo-ops-tracker-sensor.yaml
     EOF
   }
 
