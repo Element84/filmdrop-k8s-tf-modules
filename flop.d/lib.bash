@@ -14,6 +14,7 @@ FLOP_PREFIX='flop-'
 TF_DIR="${TF_DIR:-"$(cd -P -- "${LIB_DIR}/.." && pwd)"}"
 TF_VARFILE="${TF_VARFILE:-"${TF_DIR}/flop.tfvars"}"
 TF_STATE_DIR="${TF_DIR}/terraform.tfstate.d"
+mkdir -p "${TF_STATE_DIR}"
 
 
 set_vars () {
