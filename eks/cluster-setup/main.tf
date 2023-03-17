@@ -1,3 +1,3 @@
-module "other_components" {
+module "linkerd" {
   source = "../"
 }

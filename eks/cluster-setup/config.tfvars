@@ -1,1 +1,1 @@
-kubernetes_config_context="arn:aws:eks:us-west-2:806042826993:cluster/eks-cluster"
+kubernetes_config_context=""
