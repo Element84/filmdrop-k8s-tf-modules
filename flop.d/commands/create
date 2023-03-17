@@ -7,8 +7,8 @@ K8S_VERSION='1.26.2'
 CLUSTER_TYPE='k3d'
 FLOP_PREFIX='flop-'
 
-. "${FLOP_LIB}"
 find_this "${BASH_SOURCE[0]}" 
+. "${FLOP_LIB}"
 
 
 main () {

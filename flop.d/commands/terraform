@@ -2,8 +2,8 @@
 
 set -euo pipefail
 
-. "${FLOP_LIB}"
 find_this "${BASH_SOURCE[0]}" 
+. "${FLOP_LIB}"
 
 
 main () {
