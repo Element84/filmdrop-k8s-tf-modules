@@ -254,6 +254,15 @@ kubectl get secret grafana -n monitoring -o jsonpath="{.data.admin-password}" | 
 
 
 ## Loki
+
+[Grafana Loki](https://grafana.com/docs/loki/latest/) is a set of components that can be composed into a fully featured logging stack.
+
+Make sure to have Grafana configured and launched using the instructions [here](#grafana). Click on the Gear icon at the bottom left and choose "Data sources". Click "Add data source"; scroll down and select "Loki". For the URL enter `http://loki-read:3100` and then click "Save and Test". This should result in a success message.
+
+To view basic Loki monitoring logs click "Explore". For Label Filters enter "namespace = monitoring". Click "Run Query" and you should see monitoring logs from the Loki instance.
+
+![Grafana monitoring logs](./images/grafana-monitoring-logs.png)
+
 ### Logs
 ```
 Coming Soon
