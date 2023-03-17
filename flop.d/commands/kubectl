@@ -21,20 +21,30 @@ Supported options:
 EOF
     )
 
-    local arg_index arg 
+    local arg_index arg args=() in_extra=false
     for ((arg_index=1; arg_index<=$#; ++arg_index)); do
         arg="${!arg_index}"
+
+        if [ "${in_extra}" == "true" ]; then
+            args+=("${arg}")
+            continue
+        fi
 
         case "${arg}" in
             -h|--help|help)
                fatal "$USAGE" 0
                ;;
+            --)
+                in_extra=true 
+                continue
+                ;;
         esac
+        args+=("${arg}")
     done
 
-    FLOP_CLUSTER="${1:?"must provide the cluster name"}"; shift
+    FLOP_CLUSTER="${args[0]:?"must provide the cluster name"}"; shift
     set_vars "${FLOP_CLUSTER}"
-    exec kubectl "${@}"
+    exec kubectl "${args[@]:1}"
 }
 
 
