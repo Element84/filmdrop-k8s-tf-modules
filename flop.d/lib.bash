@@ -11,10 +11,6 @@ FLOP_GETOPT="${LIB_DIR}/lib.d/getopt.bash"
 FLOP_COMMANDS="${LIB_DIR}/commands"
 FLOP_PREFIX='flop-'
 
-# make sure these match those in ${TF_DIR}/nginx/nginx_ingress_values.yaml
-CLUSTER_HTTP_PORT=30080
-CLUSTER_HTTPS_PORT=30443
-
 TF_DIR="${TF_DIR:-"$(cd -P -- "${LIB_DIR}/.." && pwd)"}"
 TF_VARFILE="${TF_VARFILE:-"${TF_DIR}/flop.tfvars"}"
 TF_STATE_DIR="${TF_DIR}/terraform.tfstate.d"
