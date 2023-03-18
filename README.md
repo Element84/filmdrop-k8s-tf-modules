@@ -260,3 +260,46 @@ Coming Soon
 ```
 Coming Soon
 ```
+
+## Workflow Operations
+
+To learn more about the motivations of Workflow Operations with Argo Events, take a look at: https://element84.atlassian.net/wiki/spaces/ES/pages/3068035079/SWOOP+Workflow+Operations
+
+In this section we want to provide a guide of how to run the Workflow Operations demo with Argo Events.
+
+Start by running a terraform init, plan and apply with your local or remote tfvars
+```
+terraform init -upgrade
+```
+```
+terraform plan -var-file=local.tfvars
+```
+```
+terraform apply -var-file=local.tfvars
+```
+
+After the terraform apply succeeds proceed to perform a port forwarding for the webhook-eventsource-svc and the argo-workflows-server.
+
+![Argo Events Port Forwarding](./images/argo_events_port_forwarding.png)
+
+Log into the Argo Workflow Server, by accessing `http://localhost:<ARGO_WORKFLOW_SERVER_PORT>` and head to the Event Flow panel, uncheck the `undefined` namespace, and you should see two Argo Events Pipelines (you may need to scroll down).
+
+![Argo Events Flow](./images/argo_event_flow.png)
+
+![Argo Events Pipeline](./images/argo_events_pipeline.png)
+
+Open a terminal window, find the workflow-event-tracker-sensor pod name and tail the logs of that pod. The pod will log all workflow events happening on the same namespace.
+
+![Argo Events Tracker](./images/argo_events_tracker.png)
+
+Open a separate terminal window, and call the run workflow webhook to start a new workflow.
+
+![Argo Events Workflow Run](./images/argo_events_run.png)
+
+If you head back to the Argo Workflow Server Event Flow page `http://localhost:<ARGO_WORKFLOW_SERVER_PORT>/event-flow/?showWorkflows=true` you should see a new workflow running and eventually succeeding.
+
+![Argo Events Flow Workflow](./images/argo_workflow_server_event_flow.png)
+
+Finally, if you look back at the terminal that you used to tail the logs of the workflow-event-tracker-sensor you should see all the events of the workflow that just ran.
+
+![Argo Events Tracker Logs](./images/argo_events_tracker_logs.png)
