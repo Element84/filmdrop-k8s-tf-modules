@@ -23,7 +23,6 @@ resource "helm_release" "ingress_nginx" {
   depends_on = [
     helm_release.linkerd_crds,
     helm_release.linkerd_control_plane,
-    helm_release.linkerd_viz
   ]
 }
 

@@ -16,6 +16,10 @@ terraform {
       source  = "hashicorp/null"
       version = "3.2.1"
     }
+    grafana = {
+      source  = "grafana/grafana"
+      version = "1.36.0"
+    }
   }
   required_version = ">= 1"
 }
