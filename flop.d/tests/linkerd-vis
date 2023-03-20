@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+. "${FLOP_LIB}"
+
+
+linkerd --kubeconfig "${KUBECONFIG}" viz check || fatal "Failed linkerd viz check"

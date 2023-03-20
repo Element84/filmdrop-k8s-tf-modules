@@ -119,7 +119,7 @@ Alternatively, you can go into the directory containing this file and simply pas
 
 You will see the workflow running in the command line and if everything goes well, it should successfully execute.
 
-You can see the status of any currently running or previously run workflow by port-forwarding the Argo Server UI to a port on your machine. You can do this easily using Rancher Desktop (via the Port Forwarding section of the console) if that is the K8s tool that you are using. By default, the Argo Server UI runs on port 2746 inside the cluster. You can also do this using `kubectl`. 
+You can see the status of any currently running or previously run workflow by port-forwarding the Argo Server UI to a port on your machine. You can do this easily using Rancher Desktop (via the Port Forwarding section of the console) if that is the K8s tool that you are using. By default, the Argo Server UI runs on port 2746 inside the cluster. You can also do this using `kubectl`.
 
 For example, to port-forward the Argo Server UI onto a local port 50000 on your machine:
 
@@ -128,16 +128,16 @@ kubectl -n argo-workflows port-forward deployment/argo-workflows-server 2746:500
 ```
 
 
-You can observe the log files that were created by the workflow by opening up the MinIO console by port-forwarding the MinIO dashboard to a port on your machine. By default, the MinIO dashboard runs on port 9001 inside the cluster. For example, to port-forward onto a local port 60000 on your machine: 
+You can observe the log files that were created by the workflow by opening up the MinIO console by port-forwarding the MinIO dashboard to a port on your machine. By default, the MinIO dashboard runs on port 9001 inside the cluster. For example, to port-forward onto a local port 60000 on your machine:
 ```
 kubectl -n argo-other port-forward deployment/minio 9001:60000
 ```
 
-and then go to localhost:50000 and localhost:60000, respectively, to see the different consoles. 
+and then go to localhost:50000 and localhost:60000, respectively, to see the different consoles.
 
 The username and password for the MinIO console are `admin` and `password`, respectively.
 
-When the Argo Server UI opens up, you might have to click on the 'x' next to the namespace if there is already a value in the namespace field. 
+When the Argo Server UI opens up, you might have to click on the 'x' next to the namespace if there is already a value in the namespace field.
 
 Note: The workflows you run should have `serviceAccountName: argo-workflow` within their `spec` declaration in the YAML file in order for the workflow to have the proper permissions to run. Also, in order to see the logs in MinIO, you should have the `archiveLogs: true` within the `spec` declaration as well. For example:
 
@@ -224,6 +224,86 @@ Do you really want to destroy all resources?
 ```
 
 After you have destroyed your environment, go back to the [Start your environment via Terraform](#start-your-environment-via-terraform) section for instructions on how to run your local development environment.
+<br><br>
+
+## Using `flop`
+
+### What is `flop`?
+
+`flop` is a cli utility for creating and interacting with FilmDrop-on-K8s test
+environments. The name is a portmanteau of FiLmdrOP.
+
+### `flop` dependencies and getting started
+
+* Modern bash
+  * tested with bash 5, but it might work with older versions, like that
+  included with MacOS
+* Some way to run docker such as Docker Desktop or colima
+* `kind` and/or `k3d`
+* kubectl
+* terraform
+
+On Mac, minimally do something like this:
+
+```shell
+brew install colima terraform k3d kubectl
+colima start
+```
+
+Other useful tools:
+
+* helm cli
+* linkerd (required for current tests)
+* lima (if using colima, sometimes helpful for lower-level troubleshooting)
+* shellcheck (for checking `flop` scripts when developing)
+
+### Using `flop`
+
+`flop` is designed to be discoverable from it's help output. Just try it out:
+
+```shell
+./flop
+```
+
+A typical workflow might look something like this:
+
+```shell
+CLUSTER="$(flop create)  # stdout contains cluster name
+flop terraform "${CLUSTER}" apply -var-file ./flop.tfvars -auto-approve
+flop kubectl "${CLUSTER}" get svc -A
+flop test "${CLUSTER}"
+flop destory "${CLUSTER}"
+```
+
+If everything goes sideways, it's easy to delete all the state:
+
+```shell
+flop destroy --all
+```
+
+### `flop` tests
+
+Right now the test functionality is pretty limited. We should likely consider
+using a test framework with more expressivity and control like `pytest`. That
+said, the `test` command will run any executables found in the `flop.d/tests`
+directory.
+
+Please extend the existing test scripts or add new ones, as necessary.
+
+### VM resource requirements
+
+Operating a complex cluster within a single VM can be resource limited, and
+strange behavior can result. For example, the default resource allocation for a
+colima VM is barely adequate for a single cluster with the current pod count.
+Adding a second cluster without increasing resources to the VM will cause
+instability, such as network requests timing out and services being
+unresponsive.
+
+In cases where cluster behavior is unexplainably weird, consider that it might
+be a resource issue within the VM. Sometimes destroying and re-creating the VM
+with no state helps free up resources without having to allocate more, but as
+the cluster requirements grow we will need to keep an eye on specific
+requirements.
 
 
 <br><br>
