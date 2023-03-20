@@ -10,6 +10,12 @@ variable "high_availability" {
   description = "Install Linkerd in high availability (HA) mode"
 }
 
+variable "ingress_controller" {
+  description = "Type of Ingress Controller."
+  type        = string
+  default     = "nginx"
+}
+
 variable "cert_validity_period_hours" {
   description = "The number of hours after initial issuing that the certificate will become invalid."
   type        = number
@@ -34,10 +40,10 @@ variable "kubernetes_config_context" {
   default     = ""
 }
 
-variable "ingress_controller" {
-  description = "Type of Ingress Controller."
+variable "local_or_eks" {
+  description = "local or EKS deployment"
   type        = string
-  default     = "nginx"
+  default     = "local"
 }
 
 variable "nginx_http_port" {
