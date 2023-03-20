@@ -20,6 +20,16 @@ resource "helm_release" "ingress_nginx" {
     value = "true"
   }
 
+  set {
+    name  = "controller.service.nodePorts.http"
+    value = var.nginx_http_port
+  }
+
+  set {
+    name  = "controller.service.nodePorts.https"
+    value = var.nginx_https_port
+  }
+
   depends_on = [
     helm_release.linkerd_crds,
     helm_release.linkerd_control_plane,
@@ -34,7 +44,8 @@ resource "null_resource" "wait_for_ingress_nginx_ready" {
   provisioner "local-exec" {
     command = <<EOF
       printf "\nWaiting for the nginx ingress controller...\n"
-      kubectl wait --namespace ${helm_release.ingress_nginx.namespace} \
+      kubectl --kubeconfig ${var.kubernetes_config_file} wait \
+        --namespace ${helm_release.ingress_nginx.namespace} \
         --for=condition=ready pod \
         --selector=app.kubernetes.io/component=controller \
         --timeout=120s

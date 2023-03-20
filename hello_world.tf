@@ -19,7 +19,7 @@ resource "kubernetes_namespace" "hello_world" {
 resource "helm_release" "hello_world_v1" {
   name              = "hello-world-v1"
   namespace         = "hello-world"
-  chart             = "./charts/hello-world"
+  chart             = "${path.module}/charts/hello-world"
   atomic            = true
 
    set {
@@ -56,7 +56,7 @@ resource "helm_release" "hello_world_v1" {
 resource "helm_release" "hello_world_v2" {
   name              = "hello-world-v2"
   namespace         = "hello-world"
-  chart             = "./charts/hello-world"
+  chart             = "${path.module}/charts/hello-world"
   atomic            = true
 
    set {

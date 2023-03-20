@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+find_this "${BASH_SOURCE[0]}" 
+. "${FLOP_LIB}"
+
+
+main () {
+    local USAGE=$(cat <<EOF
+USAGE: ${FLOP_CLI} ${FLOP_COMMAND} FLOP_CLUSTER_NAME [ -- ] [ KUBECTL OPTS/ARGS ]
+
+Run kubectl against the specified cluster.
+All options/arguments other than the cluster name will be passed to kubectl.
+
+Command arguments:
+    FLOP_CLUSTER_NAME  name of the cluster to run terraform against
+
+Supported options:
+    -h|--help          show this message
+EOF
+    )
+
+    local arg_index arg args=() in_extra=false
+    for ((arg_index=1; arg_index<=$#; ++arg_index)); do
+        arg="${!arg_index}"
+
+        if [ "${in_extra}" == "true" ]; then
+            args+=("${arg}")
+            continue
+        fi
+
+        case "${arg}" in
+            -h|--help|help)
+               fatal "$USAGE" 0
+               ;;
+            --)
+                in_extra=true 
+                continue
+                ;;
+        esac
+        args+=("${arg}")
+    done
+
+    FLOP_CLUSTER="${args[0]:?"must provide the cluster name"}"; shift
+    set_vars "${FLOP_CLUSTER}"
+    exec kubectl "${args[@]:1}"
+}
+
+
+main "$@"
