@@ -23,6 +23,8 @@ To deploy the remaining components onto the cluster:
 * ```local_or_eks```: ```eks``` 
 * ```kubernetes_config_context``` : ```arn:aws:eks:us-west-2:806042826993:cluster/ekscluster3-cluster```
 
+Comment out the entire ```providers.tf``` file in the root directory as well.
+
 7) Run ```terraform apply --var-file=config.tfvars --auto-approve```. This process will take approximately 3-5 minutes. 
 
 You can verify if everything has been deployed by running ```kubectl get namespace``` in a terminal window, which should then show the ```argo-workflows```, ```hello-world```, ```monitoring```, ```argo-other```, and ```linkerd```namespaces in addition to any other namespaces that were defined in the root module.
