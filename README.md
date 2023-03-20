@@ -48,6 +48,17 @@ nginx ingress controller, thus the ingress-nginx controller pods won't be able t
 </p>
 <br>
 
+#### Recommended VM Settings
+
+When testing locally it's advised to use a virtual machine with at least 4 CPUs.
+
+In rancher-desktop you can change this setting under Preferences -> Virtual Machine.
+
+<p align="center">
+  <img src="./images/rancher_desktop_vm_settings.png" alt="Rancher Desktop Virtual Machine settings" width="754">
+</p>
+<br>
+
 ### Modify the [local.tfvars](./local.tfvars)
 Every customization input for your local environment will go in the [local.tfvars](./local.tfvars) file.
 
@@ -363,6 +374,15 @@ kubectl get secret grafana -n monitoring -o jsonpath="{.data.admin-password}" | 
 
 
 ## Loki
+
+[Grafana Loki](https://grafana.com/docs/loki/latest/) is a set of components that can be composed into a fully featured logging stack.
+
+Make sure to have Grafana configured and launched using the instructions [here](#grafana). Click on the Gear icon at the bottom left and choose "Data sources". Click "Add data source"; scroll down and select "Loki". For the URL enter `http://loki-read:3100` and then click "Save and Test". This should result in a success message.
+
+To view basic Loki monitoring logs click "Explore". For Label Filters enter "namespace = monitoring". Click "Run Query" and you should see monitoring logs from the Loki instance.
+
+![Grafana monitoring logs](./images/grafana-monitoring-logs.png)
+
 ### Logs
 ```
 Coming Soon

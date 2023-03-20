@@ -1,9 +1,5 @@
 resource "kubernetes_namespace" "monitoring" {
   metadata {
-    annotations = {
-      "linkerd.io/inject" = "enabled"
-    }
-
     labels = {
       app = "monitoring"
     }
@@ -12,6 +8,6 @@ resource "kubernetes_namespace" "monitoring" {
   }
 
   depends_on = [
-    helm_release.ingress_nginx
+    helm_release.linkerd_control_plane
   ]
 }

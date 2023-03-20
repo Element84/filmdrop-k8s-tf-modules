@@ -6,6 +6,12 @@ resource "helm_release" "grafana" {
   version          = "6.52.1"
   timeout          = 1800
 
+# Manually inject linkerd to avoid attaching it to minio jobs
+  set {
+    name = "podAnnotations.linkerd\\.io/inject"
+    value = "enabled"
+  }
+
   values = [
     file("${path.module}/charts/grafana/values.yaml")
   ]
