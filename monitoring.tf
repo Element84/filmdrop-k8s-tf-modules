@@ -6,4 +6,8 @@ resource "kubernetes_namespace" "monitoring" {
 
     name = "monitoring"
   }
+
+  depends_on = [
+    helm_release.linkerd_control_plane
+  ]
 }
