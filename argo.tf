@@ -104,7 +104,6 @@ resource "helm_release" "argo_artifact_repo" {
   depends_on = [
     kubernetes_secret.my_minio_cred,
     kubernetes_config_map.artifact_repositories,
-    helm_release.argo_postgres
   ]
 }
 
