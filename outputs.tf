@@ -12,4 +12,5 @@ output "tls_locally_signed_cert_issuer_cert_cert_pem" {
 
 output "tls_private_key_issuer_key_private_key_pem" {
   value = tls_private_key.issuer_key.private_key_pem
+  sensitive = true
 }
