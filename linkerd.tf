@@ -1,4 +1,5 @@
 resource "helm_release" "linkerd_crds" {  
+  count = var.local_or_eks == "eks" ? 0 : 1
   name              = "linkerd-crds"
   namespace         = "linkerd"
   repository        = "https://helm.linkerd.io/stable"
@@ -9,6 +10,7 @@ resource "helm_release" "linkerd_crds" {
 }
 
 resource "helm_release" "linkerd_control_plane" {  
+  count = var.local_or_eks == "eks" ? 0 : 1
   name       = "linkerd-control-plane"
   namespace  = "linkerd"
   repository = "https://helm.linkerd.io/stable"
@@ -47,6 +49,7 @@ resource "helm_release" "linkerd_control_plane" {
 }
 
 resource "helm_release" "linkerd_viz" {
+  count = var.local_or_eks == "eks" ? 0 : 1
   name       = "linkerd-viz"
   chart      = "linkerd-viz"
   namespace  = "linkerd"

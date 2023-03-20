@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# option defaults
+REMOVE_ALL=false
+
+find_this "${BASH_SOURCE[0]}" 
+. "${FLOP_LIB}"
+
+
+main () {
+    local USAGE=$(cat <<EOF
+USAGE: ${FLOP_CLI} ${FLOP_COMMAND} [ OPTIONS ] [ FLOP_CLUSTER_NAME ]
+
+Tear down a cluster and remove all assocated state.
+
+Command arguments:
+    FLOP_CLUSTER_NAME  name of the cluster destroy
+                       ignored if '--all' option is used
+
+Supported options:
+    -h|--help          show this message
+    --all              destroy all clusters with prefix '${FLOP_PREFIX}'
+EOF
+    )
+
+    . "$FLOP_GETOPT" -n "${FLOP_CLI}: ${FLOP_COMMAND}" -o "h" -l "help,all" -- "$@"
+
+    local arg i=0
+    while [ "$i" -lt "${#OPTS[@]}" ]; do
+        arg="${OPTS[$i]}"
+        i=$((i+1))
+        case $arg in
+            -h|--help)
+                fatal "$USAGE" 0
+                ;;
+            --all)
+                REMOVE_ALL=true
+                ;;
+            --)
+                break
+                ;;
+            *)
+                fatal "${FLOP_COMMAND}: unknown option: '$arg'" 1
+                ;;
+        esac
+    done
+
+    # handle unknown arguments (allowing 'help')
+    i=0
+    while [ "$i" -lt "${#ARGS[@]}" ]; do
+        arg="${ARGS[$i]}"
+        i=$((i+1))
+        [ "$arg" == "help" ] && fatal "$USAGE" 0
+    done
+
+    FLOP_CLUSTERS=()
+
+    if [ "${REMOVE_ALL}" == "true" ]; then
+        FLOP_CLUSTERS=( "$(find_all_flops)" )
+        [ "${#FLOP_CLUSTERS[@]}" -gt 0 ] || fatal "used '--all' and no clusters found"
+    else
+        FLOP_CLUSTERS=( "${ARGS[0]:?"must provide the cluster name to destroy or use '--all'"}" )
+    fi
+
+    for FLOP_CLUSTER in "${FLOP_CLUSTERS[@]}"; do
+        set_vars "${FLOP_CLUSTER}"
+        echo2 "Removing cluster: '${FLOP_CLUSTER}'"
+        
+        if CLUSTER_TYPE="$(get_cluster_type)" && [ -n "${CLUSTER_TYPE:-}" ]; then
+            echo2 "Cluster type: '${CLUSTER_TYPE}'"
+            "${CLUSTER_TYPE}_cleanup" || fatal "Failed to destroy cluster"
+        else
+            echo2 "Warning: failed to get cluster type for '${FLOP_CLUSTER}', trying both"
+            kind_cleanup
+            k3d_cleanup
+        fi
+    done
+}
+
+
+main "$@"

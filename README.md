@@ -2,7 +2,6 @@
 
 This repository contains the packaging of FilmDrop terraform modules with Kubernetes.
 
-
 ## Pre-requisites
 
 Before starting local development, you will need to install the following packages:
@@ -32,6 +31,7 @@ curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install | sh
 ```
 
 Do not run the additional steps that the Linkerd installation will suggest. Refer to [Linkerd](https://linkerd.io/2.12/overview/) official documentation for more details.
+<br><br>
 
 ## Starting your local development environment
 
@@ -43,7 +43,10 @@ If you use rancher-desktop or other k3s, make sure you have disabled the traefik
 this can be disabled under the kubernetes settings. The result of enabling traefik will be a conflict with the
 nginx ingress controller, thus the ingress-nginx controller pods won't be able to start.
 
-![Disable traefik](./images/disable_traefik.png)
+<p align="center">
+  <img src="./images/disable_traefik.png" alt="Disable traefik" width="754">
+</p>
+<br>
 
 ### Modify the [local.tfvars](./local.tfvars)
 Every customization input for your local environment will go in the [local.tfvars](./local.tfvars) file.
@@ -97,10 +100,14 @@ Enter a value: yes
 ```
 
 The deployment will take 5-10 minutes to complete, and if it succeeds, your local environment should be up!
+<br><br>
 
-### Run an Argo workflow
+### Running an Argo workflow
 
-![Argo Workflows](./images/argo_arch_diagram.png)
+<p align="center">
+  <img src="./images/argo_arch_diagram.png" alt="Argo Workflows" width="1587">
+</p>
+<br>
 
 Argo Workflows will also get deployed onto the cluster as a part of this deployment. Its components will get deployed into two separate namespaces: `argo-workflows` and `argo-other`. The pods that will be spun up where workflows execute will run in the `argo-workflows` namespace; the Postgres database where the workflow archive is stored and the MinIO object storage where any logs from the workflow are put both run on pods inside the `argo-other` namespace.
 
@@ -146,11 +153,16 @@ spec:
   serviceAccountName: argo-workflow # set this so the proper permissions are assigned
   archiveLogs: true # enables logs for this workflow
 ```
+<br>
 
-### What is included on my local environment
+### Included in the local environment:
 
-![Local Kubernetes Development Environment](./images/local_development_environment.png)
-#### Linkerd
+<p align="center">
+  <img src="./images/local_development_environment.png" alt="Local Kubernetes Development Environment" width="1776">
+</p>
+<br>
+
+### Linkerd
 
 [Linkerd](https://linkerd.io/) is a service mesh, and Terraform will deploy the service mesh along with some visualization tools.
 
@@ -159,19 +171,22 @@ For example, after the terraform apply, you shoul be able to see the local Linke
 linkerd viz dashboard &
 ```
 
-![Linkerd Dashboard](./images/linkerd_dashboard.png)
-#### Nginx ingress proxy
+<p align="center">
+  <img src="./images/linkerd_dashboard.png" alt="Linkerd Dashboard" width="1566">
+</p>
+<br>
+
+### Nginx ingress proxy
 
 An nginx ingress proxy has been added by default to the local development environment, you should be able to go
 to http://localhost/ and see the default ngnix page not found.
 
-![default ngnix page](./images/nginx_default_page.png)
+<p align="center">
+  <img src="./images/nginx_default_page.png" alt="default ngnix page" width="650">
+</p>
+<br>
 
-#### Grafana Loki
-
-[Grafana Loki](https://grafana.com/docs/loki/latest/) is a set of components that can be composed into a fully featured logging stack.
-
-#### Two load balanced test applications
+### Two load balanced test applications
 
 Two test applications have been deployed, with the specifications in the [hello_world.tf](./hello_world.tf) file.
 
@@ -188,20 +203,32 @@ kubectl get svc -n ingress-nginx ingress-nginx-controller
 
 Now, you should be able to see the two applications, with the ingress path based routing.
 
-![Nginx HTTP NodePort](./images/nginx_port.png)
+<p align="center">
+  <img src="./images/nginx_port.png" alt="Nginx HTTP NodePort" width="900">
+</p>
+<br>
 
 First access the default application by going to `http://hello-world.local:{NGINX_NODE_PORT}`
 
-![Hello World](./images/hello_world.png)
+<p align="center">
+  <img src="./images/hello_world.png" alt="Hello World" width="800">
+</p>
+<br>
 
 For accessing
 application 1, you can go to: `http://hello-world.local:{NGINX_NODE_PORT}/v1`
 
-![Hello World V1](./images/hello_world_v1.png)
+<p align="center">
+  <img src="./images/hello_world_v1.png" alt="Hello World v1" width="800">
+</p>
+<br>
 
 For accessing application 2, you can go to: `http://hello-world.local:{NGINX_NODE_PORT}/v2`
 
-![Hello World V2](./images/hello_world_v2.png)
+<p align="center">
+  <img src="./images/hello_world_v2.png" alt="Hello World v2" width="800">
+</p>
+<br>
 
 
 ## Re-creating your local environment
@@ -228,6 +255,88 @@ Do you really want to destroy all resources?
 ```
 
 After you have destroyed your environment, go back to the [Start your environment via Terraform](#start-your-environment-via-terraform) section for instructions on how to run your local development environment.
+
+<br><br>
+# `flop` CLI
+## What is `flop`?
+
+`flop` is a utility for creating and interacting with FilmDrop-on-K8s test environments. The name is a portmanteau of FiLmdrOP.
+
+## Dependencies and Setup
+
+* Bash &nbsp;<sub><sup>(versions tested: 5, 3.2)<sub><sup>
+* Container Manager &nbsp;<sub><sup>(e.g. Docker Desktop, Colima)<sub><sup>
+* `kind` and/or `k3d`
+* kubectl
+* terraform
+
+On Mac, install any missing dependencies with:
+
+```shell
+brew install colima terraform k3d kubectl
+colima start
+```
+
+Other useful tools:
+
+* helm cli
+* linkerd (required for current tests)
+* lima (if using colima, sometimes helpful for lower-level troubleshooting)
+* shellcheck (for checking `flop` scripts when developing)
+<br><br>
+
+## Using `flop`
+
+### Run `flop` to list all of the available features:
+
+```shell
+./flop
+```
+
+### A typical example of a `flop` workflow:
+
+```shell
+CLUSTER="$(flop create)"  # stdout contains cluster name
+
+flop terraform "${CLUSTER}" apply -var-file ./flop.tfvars -auto-approve
+
+flop kubectl "${CLUSTER}" get svc -A
+
+flop test "${CLUSTER}"
+
+flop destroy "${CLUSTER}"
+```
+
+### If things go sideways, you can delete the entire state:
+
+```shell
+flop destroy --all
+```
+<br>
+
+## `flop` tests
+
+Right now the test functionality is pretty limited. We should likely consider
+using a test framework with more expressivity and control like `pytest`. That
+said, the `test` command will run any executables found in the `flop.d/tests`
+directory.
+
+Please extend the existing test scripts or add new ones, as necessary.
+<br><br>
+## Resource Requirements
+
+Operating a complex cluster within a single VM can be resource limited, and
+strange behavior can result. For example, the default resource allocation for a
+colima VM is barely adequate for a single cluster with the current pod count.
+Adding a second cluster without increasing resources to the VM will cause
+instability, such as network requests timing out and services being
+unresponsive.
+
+In cases where cluster behavior is unexplainably weird, consider that it might
+be a resource issue within the VM. Sometimes destroying and re-creating the VM
+with no state helps free up resources without having to allocate more, but as
+the cluster requirements grow we will need to keep an eye on specific
+requirements.
 
 
 <br><br>

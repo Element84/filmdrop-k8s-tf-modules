@@ -85,7 +85,7 @@ resource "kubernetes_config_map" "artifact_repositories" {
 resource "helm_release" "argo_postgres" {
   name              = "argo-postgres"
   namespace         = "argo-other"
-  chart             = "./charts/argo-postgres"
+  chart             = "${path.module}/charts/argo-postgres"
   atomic            = true
 
   depends_on = [
@@ -98,7 +98,7 @@ resource "helm_release" "argo_postgres" {
 resource "helm_release" "argo_artifact_repo" {
   name              = "argo-artifact-repo"
   namespace         = "argo-other"
-  chart             = "./charts/argo-artifact-repo"
+  chart             = "${path.module}/charts/argo-artifact-repo"
   atomic            = true
 
   depends_on = [
