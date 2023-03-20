@@ -186,11 +186,7 @@ to http://localhost/ and see the default ngnix page not found.
 </p>
 <br>
 
-#### Grafana Loki
-
-[Grafana Loki](https://grafana.com/docs/loki/latest/) is a set of components that can be composed into a fully featured logging stack.
-
-#### Two load balanced test applications
+### Two load balanced test applications
 
 Two test applications have been deployed, with the specifications in the [hello_world.tf](./hello_world.tf) file.
 
