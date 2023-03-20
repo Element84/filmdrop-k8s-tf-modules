@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Sensor
+metadata:
+  name: workflow-event-tracker
+spec:
+  eventBus: default
+  dependencies:
+    - name: new-events
+      eventSourceName: workflow-events-listener
+      eventName: workflow-events-changes
+  triggers:
+    - template:
+        name: log-trigger
+        log:
+          intervalSeconds: 1
