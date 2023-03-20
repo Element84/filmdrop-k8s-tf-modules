@@ -48,6 +48,17 @@ nginx ingress controller, thus the ingress-nginx controller pods won't be able t
 </p>
 <br>
 
+#### Recommended VM Settings
+
+When testing locally it's advised to use a virtual machine with at least 4 CPUs.
+
+In rancher-desktop you can change this setting under Preferences -> Virtual Machine.
+
+<p align="center">
+  <img src="./images/rancher_desktop_vm_settings.png" alt="Rancher Desktop Virtual Machine settings" width="754">
+</p>
+<br>
+
 ### Modify the [local.tfvars](./local.tfvars)
 Every customization input for your local environment will go in the [local.tfvars](./local.tfvars) file.
 
