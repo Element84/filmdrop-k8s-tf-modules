@@ -1,6 +1,7 @@
 resource "helm_release" "promtail" {
   name = "promtail"
   namespace = "monitoring"
+  create_namespace = true
   repository = "https://grafana.github.io/helm-charts"
   chart = "promtail"
   version = "6.9.3"
@@ -17,6 +18,6 @@ resource "helm_release" "promtail" {
   ]
 
   depends_on = [
-    kubernetes_namespace.monitoring
+    helm_release.linkerd_control_plane
   ]
 }

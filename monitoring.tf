@@ -1,13 +1,13 @@
-resource "kubernetes_namespace" "monitoring" {
-  metadata {
-    labels = {
-      app = "monitoring"
-    }
+# resource "kubernetes_namespace" "monitoring" {
+#   metadata {
+#     labels = {
+#       app = "monitoring"
+#     }
 
-    name = "monitoring"
-  }
+#     name = "monitoring"
+#   }
 
-  depends_on = [
-    helm_release.linkerd_control_plane
-  ]
-}
+#   depends_on = [
+#     helm_release.linkerd_control_plane
+#   ]
+# }
