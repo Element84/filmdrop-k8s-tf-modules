@@ -20,22 +20,22 @@ resource "helm_release" "linkerd_control_plane" {
 
   set {
     name  = "identityTrustAnchorsPEM"
-    value = tls_self_signed_cert.trustanchor_cert.cert_pem
+    value = tls_self_signed_cert.trustanchor_cert[0].cert_pem
   }
 
   set {
     name  = "identity.issuer.crtExpiry"
-    value = tls_locally_signed_cert.issuer_cert.validity_end_time
+    value = tls_locally_signed_cert.issuer_cert[0].validity_end_time
   }
 
   set {
     name  = "identity.issuer.tls.crtPEM"
-    value = tls_locally_signed_cert.issuer_cert.cert_pem
+    value = tls_locally_signed_cert.issuer_cert[0].cert_pem
   }
 
   set {
     name  = "identity.issuer.tls.keyPEM"
-    value = tls_private_key.issuer_key.private_key_pem
+    value = tls_private_key.issuer_key[0].private_key_pem
   }
 
   values = concat(

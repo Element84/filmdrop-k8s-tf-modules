@@ -1,9 +1,3 @@
-module "filmdrop" {
-  source = "../"
-
-  # ... additional inputs
-}
-
 resource "helm_release" "crds" {
   chart            = var.crds_helm_chart_name
   create_namespace = var.helm_create_namespace
@@ -140,25 +134,34 @@ resource "helm_release" "control_plane" {
 
   set {
     name  = "identityTrustAnchorsPEM"
-    value = module.filmdrop.tls_self_signed_cert_trustanchor_cert_cert_pem
+    value = tls_self_signed_cert.trustanchor_cert.cert_pem
   }
 
   set {
     name  = "identity.issuer.crtExpiry"
-    value = module.filmdrop.tls_locally_signed_cert_issuer_cert_validity_end_time
+    value = tls_locally_signed_cert.issuer_cert.validity_end_time
   }
 
   set {
     name  = "identity.issuer.tls.crtPEM"
-    value = module.filmdrop.tls_locally_signed_cert_issuer_cert_cert_pem
+    value = tls_locally_signed_cert.issuer_cert.cert_pem
   }
 
   set {
     name  = "identity.issuer.tls.keyPEM"
-    value = module.filmdrop.tls_private_key_issuer_key_private_key_pem
+    value = tls_private_key.issuer_key.private_key_pem
   }
 
   depends_on = [
     time_sleep.wait_for_crds
   ]
+}
+
+module "filmdrop" {
+  source = "../"
+
+  depends_on = [
+    helm_release.control_plane
+  ]
+
 }

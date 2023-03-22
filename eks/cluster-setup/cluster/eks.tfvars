@@ -10,7 +10,7 @@ subnet_ids = ["subnet-09f3943e1430bac14","subnet-05dd19ab08f935564"]
 # ------------------------------------------------------------
 cluster_name = "eks"
 cluster_version = "1.25"
-node_group_instance_type = ["t3.large"]
+node_group_instance_type = ["t3.xlarge"]
 autoscaling_group_min_size = 1
 autoscaling_group_max_size = 3
 autoscaling_group_desired_capacity = 1
