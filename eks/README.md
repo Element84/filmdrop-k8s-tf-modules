@@ -13,7 +13,7 @@ To create an EKS cluster using the provided Terraform module:
 
 After cluster creation, you will see an output value in the terminal window for the ```eks_cluster_arn```. You will need this value in step 7. 
 
-The above steps will create an EKS cluster with an EKS Managed Node Group (see [Managed Node Groups](https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html)). By default, this creates the worker node EC2 instances inside of an Auto Scaling Group that is managed by EKS. The required IAM roles/policies for the EKS cluster are also created.
+The above steps will create an EKS cluster with an EKS Managed Node Group (see [Managed Node Groups](https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html)). By default, this creates the worker node EC2 instances inside of an Auto Scaling Group that is managed by EKS. The required IAM roles/policies for the EKS cluster are also created. You can view the cluster that was created in the AWS EKS console.
 
 To deploy the remaining components onto the cluster: 
 
