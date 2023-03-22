@@ -17,8 +17,8 @@ The above steps will create an EKS cluster with an EKS Managed Node Group (see [
 
 To deploy the remaining components onto the cluster: 
 
-5) ```cd``` up a level into the ```cluster-setup``` directory. Run ```terraform init```. 
-6) Comment out the entire ```providers.tf``` and ```loki.tf``` files in the root directory. ```loki.tf``` has some issues with EKS that need to be investigated.
+5) Comment out the entire ```providers.tf``` and ```loki.tf``` files in the root directory. ```loki.tf``` has some issues with EKS that need to be investigated.
+6) ```cd``` up a level into the ```cluster-setup``` directory. Run ```terraform init```. 
 7) Provide the EKS cluster ARN from step 4 into the ```kubernetes_config_context``` variable in the ```config.tfvars``` file in this directory. For example, if the cluster ARN is ```arn:aws:eks:us-west-2:806042826993:cluster/eks```, the ```config.tfvars``` file would contain ```kubernetes_config_context=arn:aws:eks:us-west-2:806042826993:cluster/eks```. Also, make sure that the ```inputs.tf``` file in the root directory (i.e. ```FilmDrop K8S TF Modules```) has these defaults set for variables:
 
 * ```local_or_eks```: ```eks``` 
