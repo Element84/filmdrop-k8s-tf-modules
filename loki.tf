@@ -12,6 +12,7 @@ variable "loki_replicas" {
 resource "helm_release" "loki" {
   name = "loki"
   namespace = "monitoring"
+  create_namespace = true
   repository = "https://grafana.github.io/helm-charts"
   chart = "loki"
   version = "4.8.0"
@@ -64,6 +65,6 @@ resource "helm_release" "loki" {
   ]
 
   depends_on = [
-    kubernetes_namespace.monitoring
+    helm_release.linkerd_control_plane
   ]
 }
