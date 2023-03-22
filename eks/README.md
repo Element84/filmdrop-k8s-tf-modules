@@ -30,6 +30,8 @@ To deploy the remaining components onto the cluster:
 You can verify if everything has been deployed by running ```kubectl get namespace``` in a terminal window, which should then show the ```argo-workflows```, ```hello-world```, ```monitoring```, ```argo-other```, and ```linkerd```namespaces in addition to any other namespaces that were defined in the root module.
 
 
+To destroy the EKS cluster, run a ```terraform destroy``` and provide the ARN of the EKS cluster when requested.
+
 
 ### Viewing the Linkerd Dashboard
 
