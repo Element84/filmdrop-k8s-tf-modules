@@ -13,13 +13,13 @@ To create an EKS cluster using the provided Terraform module:
 
 After cluster creation, you will see an output value in the terminal window for the ```eks_cluster_arn```. You will need this value in step 7. 
 
-The above steps will create an EKS cluster with an EKS Managed Node Group (see [Managed Node Groups](https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html)). By default, this creates the worker node EC2 instances inside of an Auto Scaling Group that is managed by EKS. The required IAM roles/policies for the EKS cluster are also created.
+The above steps will create an EKS cluster with an EKS Managed Node Group (see [Managed Node Groups](https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html)). By default, this creates the worker node EC2 instances inside of an Auto Scaling Group that is managed by EKS. The required IAM roles/policies for the EKS cluster are also created. You can view the cluster that was created in the AWS EKS console.
 
 To deploy the remaining components onto the cluster: 
 
-5) ```cd``` up a level into the ```cluster-setup``` directory. Run ```terraform init```. 
-6) Comment out the entire ```providers.tf``` and ```loki.tf``` files in the root directory. ```loki.tf``` has some issues with EKS that need to be investigated.
-7) Provide the EKS cluster ARN from step 4 into the ```kubernetes_config_context``` variable in the ```config.tfvars``` file in this directory. For example, if the cluster ARN is ```arn:aws:eks:us-west-2:806042826993:cluster/eks```, the ```config.tfvars``` file would contain ```kubernetes_config_context=arn:aws:eks:us-west-2:806042826993:cluster/eks```. Also, make sure that the ```inputs.tf``` file in the root directory (i.e. ```FilmDrop K8S TF Modules```) has these defaults set for variables:
+5) Comment out the entire ```providers.tf``` and ```loki.tf``` files in the root (i.e. ```FilmDrop K8S TF Modules```) directory. ```loki.tf``` has some issues with EKS that need to be investigated.
+6) ```cd``` up a level into the ```cluster-setup``` directory. Run ```terraform init```. 
+7) Provide the EKS cluster ARN from step 4 into the ```kubernetes_config_context``` variable in the ```config.tfvars``` file in this directory. For example, if the cluster ARN is ```arn:aws:eks:us-west-2:806042826993:cluster/eks```, the ```config.tfvars``` file would contain ```kubernetes_config_context=arn:aws:eks:us-west-2:806042826993:cluster/eks```. Also, make sure that the ```inputs.tf``` file in the root directory has these defaults set for variables:
 
 * ```local_or_eks```: ```eks``` 
 * ```kubernetes_config_context``` : ```arn:aws:eks:us-west-2:806042826993:cluster/eks```
@@ -29,6 +29,8 @@ To deploy the remaining components onto the cluster:
 
 You can verify if everything has been deployed by running ```kubectl get namespace``` in a terminal window, which should then show the ```argo-workflows```, ```hello-world```, ```monitoring```, ```argo-other```, and ```linkerd```namespaces in addition to any other namespaces that were defined in the root module.
 
+
+To destroy the EKS cluster, run a ```terraform destroy``` and provide the ARN of the EKS cluster when requested.
 
 
 ### Viewing the Linkerd Dashboard
