@@ -59,6 +59,7 @@ resource "helm_release" "crds" {
       binary_path = postrender.value
     }
   }
+
 }
 
 resource "time_sleep" "wait_for_crds" {
@@ -158,7 +159,9 @@ resource "helm_release" "control_plane" {
 }
 
 module "filmdrop" {
-  source = "../"
+  source = "../../"
+  local_or_eks = "eks"
+  kubernetes_config_context = var.kubernetes_config_context
 
   depends_on = [
     helm_release.control_plane

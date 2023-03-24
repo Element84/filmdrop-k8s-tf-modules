@@ -32,7 +32,7 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_role" "cluster_role" {
-  name               = "eks-cluster-role-${var.cluster_name}" 
+  name               = "eks-cluster-role-${var.cluster_name}"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
@@ -130,4 +130,3 @@ resource "null_resource" "merge_kubeconfig" {
 locals {
   context = aws_eks_cluster.cluster.arn
 }
-
