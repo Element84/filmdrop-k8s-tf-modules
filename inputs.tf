@@ -40,12 +40,6 @@ variable "kubernetes_config_context" {
   default     = ""
 }
 
-variable "local_or_eks" {
-  description = "local or EKS deployment"
-  type        = string
-  default     = "local"
-}
-
 variable "nginx_http_port" {
   description = "Port number for Nginx nodeport HTTP binding"
   type        = string

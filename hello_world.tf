@@ -77,7 +77,7 @@ resource "helm_release" "hello_world_v2" {
      name  = "ingress.annotations.kubernetes\\.io/ingress\\.class"
      value = "nginx"
    }
-  
+
    set {
      name  = "deployment.container.image.tag"
      value = "2.0"
