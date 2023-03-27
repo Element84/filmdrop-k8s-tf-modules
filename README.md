@@ -358,12 +358,14 @@ requirements.
 ### Charts and visualizations for viewing system usage and performance are available in the Grafana Dashboard.
 <br>
 For developer access to the Grafana dashboard, first enable port forwarding:
-
+<br>
 ![Grafana Port Forwarding](./images/grafana_port_forward.png)
 
 or run this on the command line:
 
+```
 kubectl port-forward --namespace monitoring svc/kube-prometheus-stack-grafana 8080:3009
+```
 
 This will allow you to access the Grafana dashboard at `http://localhost:8080`
 
@@ -378,6 +380,7 @@ kubectl get secret kube-prometheus-stack-grafana -n monitoring -o jsonpath="{.da
 ```
 
 <br>And use those credentials to login at: &nbsp;&nbsp;<b>localhost:{port_from_above}</b>
+
 ![Grafana Login](./images/grafana_login.png)
 
 Loki and Prometheus have automatically been added as data sources into Grafana- therefore, there is no need to configure these data sources manually.
@@ -399,7 +402,9 @@ Coming Soon
 
 The Prometheus server UI can be accessed by port-forwarding to a localhost port:
 
+```
 kubectl port-forward --namespace monitoring svc/kube-prometheus-stack-prometheus 9090:9090
+```
 
 You could also port-forward the `kube-prometheus-stack-prometheus` service using the Rancher Desktop UI.
 
