@@ -1,6 +1,0 @@
-# All defaults can be found at:
-# https://github.com/grafana/helm-charts/blob/main/charts/grafana/README.md#configuration
-
-# Service
-service:
-  port: 3009

@@ -50,7 +50,7 @@ nginx ingress controller, thus the ingress-nginx controller pods won't be able t
 
 #### Recommended VM Settings
 
-When testing locally it's advised to use a virtual machine with at least 4 CPUs.
+When testing locally it's advised to use a virtual machine with at least 4 CPUs and 6 GB of memory (RAM). Also, make sure that your MacOS is updated to the latest version (i.e. perform all software updates related to the OS). This can resolve some issues with deployment that arise due to the VM that runs the Kubernetes cluster running out of memory as the Terraform modules are deployed.
 
 In rancher-desktop you can change this setting under Preferences -> Virtual Machine.
 
@@ -361,27 +361,32 @@ For developer access to the Grafana dashboard, first enable port forwarding:
 
 ![Grafana Port Forwarding](./images/grafana_port_forward.png)
 
+or run this on the command line:
+
+kubectl port-forward --namespace monitoring svc/kube-prometheus-stack-grafana 8080:3009
+
+This will allow you to access the Grafana dashboard at `http://localhost:8080`
+
+
 If you don't already have your Grafana credentials, they can be obtained with:
 ```
 # Username
-kubectl get secret grafana -n monitoring -o jsonpath="{.data.admin-user}" | base64 --decode
+kubectl get secret kube-prometheus-stack-grafana -n monitoring -o jsonpath="{.data.admin-user}" | base64 --decode
 
 # Password
-kubectl get secret grafana -n monitoring -o jsonpath="{.data.admin-password}" | base64 --decode
+kubectl get secret kube-prometheus-stack-grafana -n monitoring -o jsonpath="{.data.admin-password}" | base64 --decode
 ```
 
 <br>And use those credentials to login at: &nbsp;&nbsp;<b>localhost:{port_from_above}</b>
 ![Grafana Login](./images/grafana_login.png)
 
-
+Loki and Prometheus have automatically been added as data sources into Grafana- therefore, there is no need to configure these data sources manually.
 
 ## Loki
 
 [Grafana Loki](https://grafana.com/docs/loki/latest/) is a set of components that can be composed into a fully featured logging stack.
 
-Make sure to have Grafana configured and launched using the instructions [here](#grafana). Click on the Gear icon at the bottom left and choose "Data sources". Click "Add data source"; scroll down and select "Loki". For the URL enter `http://loki-read:3100` and then click "Save and Test". This should result in a success message.
-
-To view basic Loki monitoring logs click "Explore". For Label Filters enter "namespace = monitoring". Click "Run Query" and you should see monitoring logs from the Loki instance.
+To view basic Loki monitoring logs click "Explore" on the left-side menu. For Label Filters enter "namespace = monitoring". Click "Run Query" and you should see monitoring logs from the Loki instance.
 
 ![Grafana monitoring logs](./images/grafana-monitoring-logs.png)
 
@@ -391,6 +396,17 @@ Coming Soon
 ```
 
 ## Prometheus
+
+The Prometheus server UI can be accessed by port-forwarding to a localhost port:
+
+kubectl port-forward --namespace monitoring svc/kube-prometheus-stack-prometheus 9090:9090
+
+You could also port-forward the `kube-prometheus-stack-prometheus` service using the Rancher Desktop UI.
+
+This will allow you to access the Prometheus dashboard at `http://localhost:9090`
+
+There is no login needed. Observe/monitor the cluster status by clicking on 'Status' on the top ribbon and exploring the various options on that tab.
+
 ### Metrics
 ```
 Coming Soon
