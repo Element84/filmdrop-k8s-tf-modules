@@ -412,6 +412,10 @@ This will allow you to access the Prometheus dashboard at `http://localhost:9090
 
 There is no login needed. Observe/monitor the cluster status by clicking on 'Status' on the top ribbon and exploring the various options on that tab.
 
+![Prometheus](./images/prometheus.png)
+
+<br>
+
 ### Metrics
 ```
 Coming Soon
