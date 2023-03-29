@@ -1,7 +1,3 @@
-# Configure local storage for Loki
-minio:
-  enabled: true
-
 read:
   extraEnv:
     - name: MY_POD_IP

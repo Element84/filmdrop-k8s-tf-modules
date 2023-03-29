@@ -12,12 +12,4 @@ resource "helm_release" "promtail" {
     name = "podAnnotations.linkerd\\.io/inject"
     value = "enabled"
   }
-
-  values = [
-    file("${path.module}/charts/promtail/values.yaml")
-  ]
-
-  depends_on = [
-    helm_release.linkerd_control_plane
-  ]
 }

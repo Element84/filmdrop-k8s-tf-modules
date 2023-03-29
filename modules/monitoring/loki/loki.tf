@@ -1,14 +1,3 @@
-variable "loki_replicas" {
-  type = number
-  description = "The number of read, write, and backend replicas to deploy. Defaults to 1."
-  default = 1
-
-  validation {
-    condition = var.loki_replicas >= 1 && var.loki_replicas <= 3
-    error_message = "Replicas value must be greater than or equal to 1 and less than or equal to 3."
-  }
-}
-
 resource "helm_release" "loki" {
   name = "loki"
   namespace = "monitoring"
@@ -60,11 +49,12 @@ resource "helm_release" "loki" {
     value = false
   }
 
-  values = [
-    file("${path.module}/charts/loki/values.yaml")
-  ]
+  set {
+    name = "minio.enabled"
+    value = var.minio_enabled
+  }
 
-  depends_on = [
-    helm_release.linkerd_control_plane
+  values = [
+    file("${path.module}/values.yaml")
   ]
 }

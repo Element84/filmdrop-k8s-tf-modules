@@ -6,11 +6,6 @@ resource "helm_release" "kube-prometheus" {
   chart      = "kube-prometheus-stack"
 
   values = [
-    file("${path.module}/charts/prometheus-stack/values.yml")
+    file("${path.module}/values.yml")
   ]
-
-  depends_on = [
-    helm_release.loki
-  ]
-
 }
