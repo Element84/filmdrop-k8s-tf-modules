@@ -115,8 +115,15 @@ If a certain namespace is consuming a lot of CPU or memory, this can help you to
 In this way, you can isolate your resource problem by starting out at the cluster level and drilling down to the namespace, pod, and container levels. You can then delete the faulty pod(s) using a `kubectl delete` command.
 
 
-### Creating Alerts with Prometheus AlertManager
+### Creating Alerts with Grafana Alerting
 
 
+You can set up alerting rules that will notify you whenever certain events occur in your K8s cluster. An alert rule consists of one or more queries and expressions, a condition, the frequency of evaluation, and optionally, the duration over which the condition is met. Various target integrations are supported by Grafana, including Email, Slack, Pagerduty, and Webhook. Grafana has its own Alert Manager, but also supports sending notifications from other Alert Managers such as the Prometheus Alert Manager.
 
-TODO
+You can get started with Alerts in Grafana by clicking on the 'Alerting' tab on the left-side menu. Then, create a new Alert Rule and assign it a label key/value pair. Then, create a new Notification Policy that specifies a set of label matchers to indicate which alerts they are responsible for. A notification policy has a contact point assigned to it that consists of one or more notifiers. Then, create a Contact Point (such as an email address) that specifies how and which contacts need to be notified when an alert fires.
+
+You can set up Alert Rules for both Prometheus and Loki data sources. This is extremely beneficial as you can analyze the time series metrics from Prometheus as well as the logs from Loki. You can choose any of the time series metrics or a combination of multiple metrics. You can build complex expressions that combine multiple metrics into a new metric for which you can setup an alerting rule. You can also define complex operations that can be applied to those expressions, such as quantiles, binary, trigonometric, or time functions.
+
+
+![AlertingRules](../images/grafana_alertmanager.png)
+
