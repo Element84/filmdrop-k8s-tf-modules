@@ -9,10 +9,10 @@
 #     labels = {
 #       app = "monitoring"
 #     }
-
+#
 #     name = "monitoring"
 #   }
-
+#
 #   depends_on = [
 #     helm_release.linkerd_control_plane
 #   ]
@@ -20,7 +20,7 @@
 
 # Install all monitoring sub modules
 module "grafana_prometheus" {
-  source = "./grafana-prometheus"
+  source = "./grafana-prometheus-stack"
 
   grafana_additional_data_sources = [{
     name = "Loki"
@@ -40,9 +40,9 @@ module "grafana_prometheus" {
 }
 
 module "loki" {
-  source = "./loki"
+  source = "./loki-stack"
 }
 
 module "promtail" {
-  source = "./promtail"
+  source = "./promtail-stack"
 }
