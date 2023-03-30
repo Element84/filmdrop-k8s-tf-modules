@@ -82,7 +82,7 @@ If you wanted to plot the total percentage of free memory on a node in the K8s c
 
 If you enter this expression into the 'Metric' field and click 'Run Query', you will see a graph depicting the values of this time series plotted over the chosen time range.
 
-![Prom_FreeMemory](./images/prom_freememory.png)
+![Prom_FreeMemory](../images/prom_freememory.png)
 
 NOTE: You can also build this expression in the Prometheus server UI running at `http://localhost:9090/graph` by copying/pasting this string into the 'Expression' field and clicking 'Execute'. Switching to the Graph view helps in visualizing the results.
 
@@ -92,7 +92,7 @@ If you happen to start a pod with an image but the pod cannot pull the image fro
 
 Prometheus will also automatically fire a 'KubePodNotReady' alert alerting you that a pod has entered into that state. It will also provide the name and namespace of the affected pod. See the picture below.
 
-![ImagePullBackOff](./images/kubepodnotready.png)
+![ImagePullBackOff](../images/kubepodnotready.png)
 
 
 ### CrashLoopBackOff
@@ -110,7 +110,7 @@ To monitor the overall CPU and Memory consumption of your cluster, navigate to t
 
 If a certain namespace is consuming a lot of CPU or memory, this can help you to identify that namespace. You can then click on the namespace name in the 'CPU Quota', 'Memory Requests', or 'Current Network Usage' panels. This will bring you to the *Kubernetes - Compute Resources - Namespace (Pods)* dashboard, whichshows a breakdown of the CPU, Memory, and Network usages across the pods within that namespace. Furthermore, clicking on a specific pod within this dashboard will bring you to the *Kubernetes - Compute Resources - Pod* dashboard, which will show a breakdown of the resource consumption for each container within that pod.
 
-![ResourceConsumption](./images/resource_consumption_by_containerpod.png)
+![ResourceConsumption](../images/resource_consumption_by_containerpod.png)
 
 In this way, you can isolate your resource problem by starting out at the cluster level and drilling down to the namespace, pod, and container levels. You can then delete the faulty pod(s) using a `kubectl delete` command.
 
