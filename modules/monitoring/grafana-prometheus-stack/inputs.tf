@@ -7,7 +7,14 @@ variable grafana_additional_data_sources {
     url = string
     version = optional(number, 1)
   }))
-  default = []
+  default = [{
+      name        = "Loki"
+      type        = "loki"
+      isDefault   = "no"
+      access      = "proxy"
+      url         = "http://loki-read:3100"
+      version     = 1
+  }]
   description = "Additional data sources to be configured in Grafana."
 }
 
