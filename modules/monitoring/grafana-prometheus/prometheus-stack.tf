@@ -8,4 +8,19 @@ resource "helm_release" "kube-prometheus" {
   values = [
     file("${path.module}/values.yml")
   ]
+
+  set {
+    name = "grafana.service.port"
+    value = var.grafana_service_port
+  }
+
+  # set_list {
+  #   name = "grafana.additionalDataSources"
+  #   value = var.grafana_additional_data_sources
+  # }
+
+  set {
+    name = "grafana.additionalDataSources"
+    value = "{${var.grafana_additional_data_sources}}"
+  }
 }

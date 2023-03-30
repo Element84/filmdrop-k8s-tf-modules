@@ -19,8 +19,20 @@
 # }
 
 # Install all monitoring sub modules
-module "grafana-prometheus" {
+module "grafana_prometheus" {
   source = "./grafana-prometheus"
+
+  grafana_additional_data_sources = [{
+    name = "Loki"
+    type = "loki"
+    url = "http://loki-read:3100"
+  #   - name: Loki
+  #     type: loki
+  #     isDefault: no
+  #     access: proxy
+  #     url: http://loki-read:3100
+  #     version: 1
+  }]
 
   depends_on = [
     module.loki

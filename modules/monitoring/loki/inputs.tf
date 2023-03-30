@@ -9,8 +9,8 @@ variable "loki_replicas" {
   }
 }
 
-variable "minio_enabled" {
+variable "loki_auth_enabled" {
   type = bool
-  description = "Whether or not to use minio as local block storage. Defaults to true."
-  default = true
+  description = "Whether or not authentication is required for the Loki server. Defaults to false."
+  default = false
 }

@@ -43,15 +43,9 @@ resource "helm_release" "loki" {
     value = "enabled"
   }
 
-  # TODO: When integrating services we should probably enable authentication.
   set {
     name = "loki.auth_enabled"
-    value = false
-  }
-
-  set {
-    name = "minio.enabled"
-    value = var.minio_enabled
+    value = var.loki_auth_enabled
   }
 
   values = [
