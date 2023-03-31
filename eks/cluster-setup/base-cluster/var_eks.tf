@@ -1,13 +1,11 @@
 variable "aws_profile" {
   description = "Named profile for authenticating with AWS."
   type        = string
-  default     = "manta"
 }
 
 variable "aws_region" {
   description = "AWS availability zone in which to deploy EKS Cluster"
   type        = string
-  default     = "us-west-2"
 }
 
 variable "cluster_name" {
@@ -31,13 +29,11 @@ variable "node_group_instance_type" {
 variable "vpc_id" {
   type        = string
   description = "ID of the VPC that already exists where the EKS cluster should be created."
-  default     = "vpc-06af2b87705a6a4b9"
 }
 
 variable "subnet_ids" {
   type        = list(string)
   description = "Subnets within the VPC where the EKS cluster should be created."
-  default     = ["subnet-0c1003dd976e32c42","subnet-03fe2af0ca106636e"]
 }
 
 variable "autoscaling_group_desired_capacity" {
