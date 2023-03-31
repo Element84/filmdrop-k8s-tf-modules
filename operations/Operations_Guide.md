@@ -88,7 +88,7 @@ The Prometheus Server UI (obtained by port-forwarding the `kube-prometheus-stack
 Most important on the Alerts tab are those alerts in a firing (active) state. By clicking on the alert and observing its attached labels, you can isolate the problem to the Kubernetes resources that are affected. For example:
 
 
-![AlertingRules](./images/prometheus_alerts.png)
+![AlertingRules](./images/prom_alerts.png)
 
 This alert indicates that there is a pod/container that is in a *CrashLoopBackOff* state. The labels attached to the alert specify the exact location of the container that is in this state. The labels indicate that the 'liveness' container within the 'liveness' pod inside of the 'default' namespace is the one with the issue. The expression below the alert name is the expression that Prometheus is using to fire off this alert. By observing the labels, you can rectify the situation by then doing a `kubectl logs <POD_NAME>` or `kubectl describe <POD_NAME>` on the failing pod to diagnose the error.
 
@@ -108,7 +108,7 @@ If you wanted to plot the total percentage of free memory on a node in the K8s c
 
 If you select 'Code' as the mode and enter this expression into the empty text box and click 'Run Query', you will see a graph depicting the values of this time series plotted over the chosen time range. See picture below for clarification.
 
-![Prom_FreeMemory](./images/prom_freememory.png)
+![Prom_FreeMemory](./images/prom_free_memory.png)
 
 NOTE: You can also build this expression in the Prometheus server UI running at `http://localhost:9090/graph` by copying/pasting this string into the 'Expression' field and clicking 'Execute'. Switching to the Graph view helps in visualizing the results.
 
@@ -118,7 +118,7 @@ If you happen to start a pod with an image but the pod cannot pull the image fro
 
 Prometheus will also automatically fire a 'KubePodNotReady' alert alerting you that a pod has entered into that state. It will also provide the name and namespace of the affected pod within the labels. See the picture below.
 
-![ImagePullBackOff](./images/kubepodnotready.png)
+![ImagePullBackOff](./images/kube_pod_not_ready.png)
 
 
 ### CrashLoopBackOff
@@ -166,7 +166,7 @@ The following graphic depicts the setup of an Alert Rule, Notification Policy, a
 You can set up Alert Rules for both Prometheus and Loki data sources (choose the proper data source first). This is extremely beneficial as you can analyze the time series metrics from Prometheus as well as the logs from Loki. Any of the time series metrics or a combination of multiple metrics can be chosen as the evaluation queries. You can also define complex operations that can be applied to those evaluation queries, such as quantiles, binary, trigonometric, or time functions. Alerts can be set for any expression you can construct on the Alerting tab. There are two options on the UI for constructing queries- 'Builder' or 'Code' (these can be found on the right-side of the screen). 'Builder' provides a more user-friendly guided query builder, whereas 'Code' allows for easier experimentation and customization.
 
 
-![AlertingRules](./images/grafana_alertmanager.png)
+![AlertingRules](./images/grafana_alert_manager.png)
 
 
 For a detailed guide on how to construct LogQL queries for Loki, refer to this guide: [Grafana Loki](https://grafana.com/docs/loki/latest/logql/).
