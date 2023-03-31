@@ -1,11 +1,13 @@
 variable "aws_profile" {
   description = "Named profile for authenticating with AWS."
   type        = string
+  default = ""
 }
 
 variable "aws_region" {
   description = "AWS availability zone in which to deploy EKS Cluster"
   type        = string
+  default = ""
 }
 
 variable "cluster_name" {
@@ -29,11 +31,13 @@ variable "node_group_instance_type" {
 variable "vpc_id" {
   type        = string
   description = "ID of the VPC that already exists where the EKS cluster should be created."
+  default = ""
 }
 
 variable "subnet_ids" {
   type        = list(string)
   description = "Subnets within the VPC where the EKS cluster should be created."
+  default= ["", ""]
 }
 
 variable "autoscaling_group_desired_capacity" {
