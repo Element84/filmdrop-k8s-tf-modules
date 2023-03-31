@@ -6,7 +6,7 @@ This repository contains the packaging of FilmDrop terraform modules with Kubern
 
 Before starting local development, you will need to install the following packages:
 * terraform >= 1 (Recommed using latest version 1.3.9)
-* [Kubernetes Development Tools](https://element84.atlassian.net/wiki/spaces/ES/pages/3013804035/Local+k8s+development#Ways-to-run-a-local-k8s-cluster)
+* Kubernetes Development Tools (kubectl) and a Kubernetes Engine (Rancher Desktop, Docker Desktop, Colima, Kind, etc)
 * Linkerd CLI
 
 The easiest way to install terraform on Mac is to use Homebrew and tfenv. TF Env is a version
@@ -37,7 +37,7 @@ Do not run the additional steps that the Linkerd installation will suggest. Refe
 
 ### Run a local kubernetes cluster
 First make sure that your local Kubernetes cluster is running, if you need help creating your local
-Kubernetes cluster, check the  [Kubernetes Development Tools](https://element84.atlassian.net/wiki/spaces/ES/pages/3013804035/Local+k8s+development#Ways-to-run-a-local-k8s-cluster) wiki.
+Kubernetes cluster, check your Kubernetes Engine official documentation.
 
 If you use rancher-desktop or other k3s, make sure you have disabled the traefik ingress. For rancher-desktop,
 this can be disabled under the kubernetes settings. The result of enabling traefik will be a conflict with the
@@ -69,7 +69,7 @@ kubernetes_config_context = "rancher-desktop"
 ```
 
 The `kubernetes_config_file` should point to the path of your kubernetes config file, while the `kubernetes_config_context` should identify your kubernetes context
-depending on your [Kubernetes Development Tools](https://element84.atlassian.net/wiki/spaces/ES/pages/3013804035/Local+k8s+development#Ways-to-run-a-local-k8s-cluster). For example, Rancher Desktop will likely use `kubernetes_config_context = "rancher-desktop"` while Docker Desktop will use `kubernetes_config_context = "docker-desktop"`.
+depending on your Kubernetes Engine. For example, Rancher Desktop will likely use `kubernetes_config_context = "rancher-desktop"` while Docker Desktop will use `kubernetes_config_context = "docker-desktop"`.
 
 ### Start your environment via Terraform
 1. First step is to initialize terraform via:
@@ -421,8 +421,6 @@ There is no login needed. Observe/monitor the cluster status by clicking on 'Sta
 Coming Soon
 ```
 ## Workflow Operations
-
-To learn more about the motivations of Workflow Operations with Argo Events, take a look at: https://element84.atlassian.net/wiki/spaces/ES/pages/3068035079/SWOOP+Workflow+Operations
 
 In this section we want to provide a guide of how to run the Workflow Operations demo with Argo Events.
 
