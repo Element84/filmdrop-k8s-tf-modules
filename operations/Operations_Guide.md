@@ -14,6 +14,15 @@ Grafana will automatically have Prometheus and Loki configured as data sources t
 
 Note: Prometheus is automatically configured as the **default** data source. Therefore, if you want to see any metrics on any dashboard that use Loki as the data source, you will explicitly have to select Loki as the data source (if it is available) from the 'datasource' drop-down at the top of the dashboard.
 
+## Prometheus, Grafana, and Loki
+
+Prometheus is a time series database that runs atop a Kubernetes cluster and provides metrics and alerting for processes and events occuring in the cluster.
+
+Loki is a datastore optimized for efficiently holding log data. The efficient indexing of log data distinguishes Loki from other logging systems. Unlike other logging systems, a Loki index is built from labels, leaving the original log message unindexed- this is similar to Prometheus, which also uses labels to query time series metric data.
+
+The Grafana service is the front-end application used to visualize the data collected by Prometheus and Loki (in addition to any other data sources that are configured). Grafana provides a web interface with rich functionality for monitoring and alerting through the use of dashboards and alerting rules.
+
+
 ## Grafana dashboards
 
 Click on the 'Dashboards' icon (the four-squares) on the left-side menu. This will present a list of pre-configured dashboards. Each dashboard is composed of multiple panels, and each panel showcases one or more metrics that provide observability into the functioning of the K8s cluster.
@@ -65,10 +74,25 @@ Prometheus metrics are useful for troubleshooting a variety of issues.
 
 This section provides resolution steps for common problems reported with these modules.
 
-kube-state-metrics: collects cluster-level metrics (pods, deployments)
+There are two main processes operating within Prometheus that are collecting metrics.
 
-node-exporter: runs on all nodes for host-related metrics (cpu, memory, network)
+*kube-state-metrics*: collects object-level metrics (pods, deployments). It is not focused on the health of the health of the various Kubernetes objects inside your cluster, such as deployments, nodes and pods.
 
+*node-exporter*: runs on all nodes for host-related metrics (cpu, memory, network). This service is needed to get details about the nodes running in your cluster and is deployed as a DaemonSet on all nodes.
+
+
+## Prometheus Server UI
+
+The Prometheus Server UI provides a lot of useful information. The 'Alerts' tab provides the current state of any alerts that are in inactive, pending, or firing states on the cluster. This is a single place where you can view all of the issues with your cluster. The most important alerts here are those in a 'firing' (color-coded red) or 'pending' (color-coded yellow) state. A variety of alerts have already been pre-configured for monitoring your cluster. A list of all of these alerting rules can be viewed on the 'Rules' tab on the 'Status' menu.
+
+Most important on the Alerts tab are those alerts in a firing (active) state. By clicking on the alert and observing its attached labels, you can isolate the problem to the Kubernetes resources that are affected. For example,
+
+
+![AlertingRules](./images/prometheus_alerts.png)
+
+This alert indicates that there is a pod/container that is in a *CrashLoopBackOff* state. The labels attached to the alert specify the exact location of the container that is in this state. The labels indicate that the 'liveness' container within the 'liveness' pod inside of the 'default' namespace is the one with the issue. The expression below the alert name is the expression that Prometheus is using to fire off this alert. By observing the labels, you can rectify the situation by then doing a `kubectl logs <POD_NAME>` or `kubectl describe <POD_NAME>` on the failing pod to diagnose the error.
+
+In addition to the default set of alerts that come with Prometheus, you can add your own rules by adding your own rule file to the folder containing the Prometheus rule files. This path to this folder can be found in the Prometheus configuration (*Status-Configuration* tab) by searching for the keyword `rule_files:`. This folder exists on the Prometheus server pod which is being exposed by the Prometheus server service.
 
 ### Plotting the amount (or %) of free memory on a node across time
 
@@ -82,17 +106,17 @@ If you wanted to plot the total percentage of free memory on a node in the K8s c
 
 If you enter this expression into the 'Metric' field and click 'Run Query', you will see a graph depicting the values of this time series plotted over the chosen time range.
 
-![Prom_FreeMemory](../images/prom_freememory.png)
+![Prom_FreeMemory](./images/prom_freememory.png)
 
 NOTE: You can also build this expression in the Prometheus server UI running at `http://localhost:9090/graph` by copying/pasting this string into the 'Expression' field and clicking 'Execute'. Switching to the Graph view helps in visualizing the results.
 
-## ImagePullBackOff
+### ImagePullBackOff
 
 If you happen to start a pod with an image but the pod cannot pull the image from the associated image repository, the pod will move into an 'ImagePullBackOff' state. In this case, none of the Grafana dashboards would show any CPU or memory information for that pod- it will be empty- since the pod isn't in a running state and the image cannot be pulled in order to create the pod successfully.
 
 Prometheus will also automatically fire a 'KubePodNotReady' alert alerting you that a pod has entered into that state. It will also provide the name and namespace of the affected pod. See the picture below.
 
-![ImagePullBackOff](../images/kubepodnotready.png)
+![ImagePullBackOff](./images/kubepodnotready.png)
 
 
 ### CrashLoopBackOff
@@ -101,6 +125,8 @@ A pod can fail due to various reasons. Sometimes, a pod can also enter into a *C
 
 To view the logs of each pod running within the cluster, click on the 'Explore' icon on the left-side menu. Choose 'Loki' as the data source, and construct an appropriate label filter. Choose 'pod', and then choose the name of the pod from the drop-down list at the right. You can enter a log message such as 'Error' in the 'Line contains' textbox to only show the log messages containing the string 'Error'. Then, click 'Run Query' at the top right. This will populate the Logs panel with the list of log messages for that specific pod. These log messages are helpful to diagnose common errors that can occur that can cause pods to transition to a CrashLoopBackOff state, or have trouble acquiring the resources they need to enter into a successful running state. These are the exact same log messages that you can also retrieve using the command-line `kubectl logs <POD_NAME>` command.
 
+Furthermore, the Prometheus server UI can display alerts for pods that are in a *CrashLoopBackOff* state. See the [Prometheus Server UI](#prometheus-server-ui) section for an example.
+
 ### Memory or CPU issues
 
 
@@ -108,22 +134,28 @@ To quickly get an idea of what resources (CPU, memory) each pod in a namespace i
 
 To monitor the overall CPU and Memory consumption of your cluster, navigate to the *Kubernetes - Compute Resources - Cluster* dashboard, where you can see a detailed breakdown of which namespaces are currently using the most CPU, memory, or network bandwidth.
 
-If a certain namespace is consuming a lot of CPU or memory, this can help you to identify that namespace. You can then click on the namespace name in the 'CPU Quota', 'Memory Requests', or 'Current Network Usage' panels. This will bring you to the *Kubernetes - Compute Resources - Namespace (Pods)* dashboard, whichshows a breakdown of the CPU, Memory, and Network usages across the pods within that namespace. Furthermore, clicking on a specific pod within this dashboard will bring you to the *Kubernetes - Compute Resources - Pod* dashboard, which will show a breakdown of the resource consumption for each container within that pod.
+If a certain namespace is consuming a lot of CPU or memory, this dashboard can help you to identify that namespace. You can then click on the namespace name in the 'CPU Quota', 'Memory Requests', or 'Current Network Usage' panels. This will bring you to the *Kubernetes - Compute Resources - Namespace (Pods)* dashboard, which shows a breakdown of the CPU, Memory, and Network usages across the pods within that namespace (i.e. at a finer level of aggregation). Furthermore, clicking on a specific pod within this dashboard will bring you to the *Kubernetes - Compute Resources - Pod* dashboard, which will show a breakdown of the resource consumption for each container within that pod.
 
-![ResourceConsumption](../images/resource_consumption_by_containerpod.png)
+![ResourceConsumption](./images/resource_consumption_by_containerpod.png)
 
-In this way, you can isolate your resource problem by starting out at the cluster level and drilling down to the namespace, pod, and container levels. You can then delete the faulty pod(s) using a `kubectl delete` command.
+In this way, you can isolate your resource problem by starting out at the cluster level and drilling down to the namespace, pod, and container levels. You can then delete (or force-delete) the faulty pod(s) or resource-hungry namespaces using a `kubectl delete` command.
 
 
 ### Creating Alerts with Grafana Alerting
 
 
-You can set up alerting rules that will notify you whenever certain events occur in your K8s cluster. An alert rule consists of one or more queries and expressions, a condition, the frequency of evaluation, and optionally, the duration over which the condition is met. Various target integrations are supported by Grafana, including Email, Slack, Pagerduty, and Webhook. Grafana has its own Alert Manager, but also supports sending notifications from other Alert Managers such as the Prometheus Alert Manager.
+You can set up alerting rules that will notify you whenever certain events occur in your K8s cluster. An alert rule consists of one or more queries/expressions, a condition, the frequency of evaluation, and optionally, the duration over which the condition is met. Various target integrations are supported by Grafana, including Email, Slack, Pagerduty, and Webhook. Grafana has its own Alert Manager, but also supports sending notifications from other Alert Managers such as the Prometheus Alert Manager (which is a separate service altogether).
 
-You can get started with Alerts in Grafana by clicking on the 'Alerting' tab on the left-side menu. Then, create a new Alert Rule and assign it a label key/value pair. Then, create a new Notification Policy that specifies a set of label matchers to indicate which alerts they are responsible for. A notification policy has a contact point assigned to it that consists of one or more notifiers. Then, create a Contact Point (such as an email address) that specifies how and which contacts need to be notified when an alert fires.
+You can get started with Alerts in Grafana by clicking on the 'Alerting' tab on the left-side menu. Then, create a new Alert Rule and assign it a label key/value pair. Next, create a Contact Point (such as an email address) that specifies how and which contacts need to be notified when an alert fires. Then, create a new Notification Policy that specifies a set of label matchers to indicate which alerts they are responsible for. The Alert Rule should have the same label as the Notification Policy's 'matching labels' parameter. A Notification Policy has a contact point assigned to it that consists of one or more notifiers. In this way, an Alert Rule is tied to a Contact Point through a Notification Policy (see the below graphic for a depiction of the associations).
 
-You can set up Alert Rules for both Prometheus and Loki data sources. This is extremely beneficial as you can analyze the time series metrics from Prometheus as well as the logs from Loki. You can choose any of the time series metrics or a combination of multiple metrics. You can build complex expressions that combine multiple metrics into a new metric for which you can setup an alerting rule. You can also define complex operations that can be applied to those expressions, such as quantiles, binary, trigonometric, or time functions.
+The following graphic depicts the setup of an Alert Rule, Notification Policy, and Contact Point.
+
+![Alert_Rule_Flow](./images/grafana_alert_flow.png)
+
+You can set up Alert Rules for both Prometheus and Loki data sources (choose the proper data source first). This is extremely beneficial as you can analyze the time series metrics from Prometheus as well as the logs from Loki. Any of the time series metrics or a combination of multiple metrics can be chosen as the evaluation queries. You can also define complex operations that can be applied to those evaluation queries, such as quantiles, binary, trigonometric, or time functions. Alerts can be set for any expression you can construct on the Alerting tab. There are two options on the UI for constructing queries- 'Builder' or 'Code' (these can be found on the right-side of the screen). 'Builder' provides a more user-friendly guided query builder, whereas 'Code' allows for easier experimentation and customization.
 
 
-![AlertingRules](../images/grafana_alertmanager.png)
+![AlertingRules](./images/grafana_alertmanager.png)
 
+
+For a detailed guide on how to construct LogQL queries for Loki, refer to this guide: [Grafana Loki](https://grafana.com/docs/loki/latest/logql/)
