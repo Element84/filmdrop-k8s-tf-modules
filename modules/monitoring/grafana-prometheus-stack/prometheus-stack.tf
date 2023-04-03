@@ -8,4 +8,13 @@ resource "helm_release" "kube-prometheus" {
   values = [templatefile("${path.module}/values.yml.tpl", {
     grafana_additional_data_sources   = var.grafana_additional_data_sources
   })]
+
+  dynamic "set" {
+    for_each = var.extra_values
+
+    content {
+      name = set.key
+      value = set.value
+    }
+  }
 }

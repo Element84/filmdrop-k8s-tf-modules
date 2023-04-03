@@ -14,3 +14,8 @@ variable "loki_auth_enabled" {
   description = "Whether or not authentication is required for the Loki server. Defaults to false."
   default = false
 }
+
+variable extra_values {
+  type = map(string)
+  description = "MAP of extra Helm values"
+}

@@ -31,6 +31,8 @@ module "grafana_prometheus" {
       version     = 1
   }]
 
+  extra_values = var.grafana_prometheus_extra_values
+
   depends_on = [
     module.loki
   ]
@@ -38,8 +40,12 @@ module "grafana_prometheus" {
 
 module "loki" {
   source = "./loki-stack"
+
+  extra_values = var.loki_extra_values
 }
 
 module "promtail" {
   source = "./promtail-stack"
+
+  extra_values = var.promtail_extra_values
 }

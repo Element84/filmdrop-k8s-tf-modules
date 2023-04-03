@@ -1,14 +1,4 @@
-prometheusOperator:
-  admissionWebhooks:
-    patch:
-      podAnnotations:
-        linkerd.io/inject: disabled
-  podAnnotations:
-    linkerd.io/inject: enabled
-
 grafana:
-  podAnnotations:
-    linkerd.io/inject: enabled
   service:
     port: 3009
   additionalDataSources:
@@ -20,7 +10,3 @@ grafana:
       url: ${grafana_data_source.url}
       version: ${grafana_data_source.version}
 %{ endfor ~}
-
-kube-state-metrics:
-  podAnnotations:
-    linkerd.io/inject: enabled

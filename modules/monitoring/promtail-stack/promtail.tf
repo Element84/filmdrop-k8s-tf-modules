@@ -7,9 +7,12 @@ resource "helm_release" "promtail" {
   version = "6.9.3"
   atomic = true
 
-  # Manually inject linkerd
-  set {
-    name = "podAnnotations.linkerd\\.io/inject"
-    value = "enabled"
+  dynamic "set" {
+    for_each = var.extra_values
+
+    content {
+      name = set.key
+      value = set.value
+    }
   }
 }

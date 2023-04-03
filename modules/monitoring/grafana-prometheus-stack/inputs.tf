@@ -10,8 +10,7 @@ variable grafana_additional_data_sources {
   description = "Additional data sources to be configured in Grafana."
 }
 
-variable grafana_service_port {
-  type = number
-  default = 3009
-  description = "Port exposing the Grafana service. Defaults to 3009."
+variable extra_values {
+  type = map(string)
+  description = "MAP of extra Helm values"
 }

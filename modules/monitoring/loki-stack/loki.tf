@@ -7,6 +7,10 @@ resource "helm_release" "loki" {
   version = "4.8.0"
   atomic = true
 
+  values = [
+    file("${path.module}/values.yaml")
+  ]
+
   set {
     name = "loki.commonConfig.replication_factor"
     value = var.loki_replicas
@@ -27,28 +31,17 @@ resource "helm_release" "loki" {
     value = var.loki_replicas
   }
 
-  # Manually inject linkerd to avoid attaching it to minio jobs
-  set {
-    name = "backend.podAnnotations.linkerd\\.io/inject"
-    value = "enabled"
-  }
-
-  set {
-    name = "read.podAnnotations.linkerd\\.io/inject"
-    value = "enabled"
-  }
-
-  set {
-    name = "write.podAnnotations.linkerd\\.io/inject"
-    value = "enabled"
-  }
-
   set {
     name = "loki.auth_enabled"
     value = var.loki_auth_enabled
   }
 
-  values = [
-    file("${path.module}/values.yaml")
-  ]
+  dynamic "set" {
+    for_each = var.extra_values
+
+    content {
+      name = set.key
+      value = set.value
+    }
+  }
 }
