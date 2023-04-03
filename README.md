@@ -9,7 +9,7 @@ Before starting local development, you will need to install the following packag
 * Kubernetes Development Tools (kubectl) and a Kubernetes Engine (Rancher Desktop, Docker Desktop, Colima, Kind, etc)
 * Linkerd CLI
 
-The easiest way to install terraform on Mac is to use Homebrew and tfenv. TF Env is a version
+The easiest way to install Terraform on Mac is to use Homebrew and tfenv. TF Env is a version
 manager for terraform. To inistall latest terraform via tfenv in a Mac and Homebrew, run
 the following commands:
 ```
@@ -359,6 +359,7 @@ requirements.
 <br>
 For developer access to the Grafana dashboard, first enable port forwarding:
 <br>
+
 ![Grafana Port Forwarding](./images/grafana_port_forward.png)
 
 or run this on the command line:
