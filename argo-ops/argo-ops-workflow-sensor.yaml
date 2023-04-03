@@ -23,6 +23,7 @@ spec:
               kind: Workflow
               metadata:
                 generateName: workflow-
+                namespace: argo-workflows
               spec:
                 entrypoint: whalesay
                 arguments:
