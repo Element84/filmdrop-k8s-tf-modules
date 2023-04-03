@@ -63,7 +63,7 @@ resource "null_resource" "argo_events" {
     command = <<EOF
       printf "\nInstalling Argo Events...\n"
       kubectl --kubeconfig ${var.kubernetes_config_file} \
-      --context ${var.kubernetes_config_context} apply \
+      --context '${var.kubernetes_config_context}' apply \
       --namespace argo-events -f ${path.module}/argo-ops/argo-events-stable.yaml
     EOF
   }
@@ -73,7 +73,7 @@ resource "null_resource" "argo_events" {
     command = <<EOF
       printf "\Deleting Argo Events...\n"
       kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
-      --context ${self.triggers.kubernetes_config_context} delete \
+      --context '${self.triggers.kubernetes_config_context}' delete \
       --namespace ${self.triggers.namespace} -f ${path.module}/argo-ops/argo-events-stable.yaml
     EOF
   }
@@ -215,7 +215,7 @@ resource "null_resource" "argo_ops_eventbus_default" {
     command = <<EOF
       printf "\nCreating Argo Events default EventBus...\n"
       kubectl --kubeconfig ${var.kubernetes_config_file} \
-      --context ${var.kubernetes_config_context} apply \
+      --context '${var.kubernetes_config_context}' apply \
       --namespace argo-events -f ${path.module}/argo-ops/default-event-bus.yaml
     EOF
   }
@@ -225,7 +225,7 @@ resource "null_resource" "argo_ops_eventbus_default" {
     command = <<EOF
       printf "\Destroying Argo Events EventSource Webhook...\n"
       kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
-      --context ${self.triggers.kubernetes_config_context} delete \
+      --context '${self.triggers.kubernetes_config_context}' delete \
       --namespace ${self.triggers.namespace} -f ${path.module}/argo-ops/default-event-bus.yaml
     EOF
   }
@@ -250,7 +250,7 @@ resource "null_resource" "argo_ops_eventsource_webhook" {
     command = <<EOF
       printf "\nCreating Argo Events EventSource Webhook...\n"
       kubectl --kubeconfig ${var.kubernetes_config_file} \
-      --context ${var.kubernetes_config_context} apply \
+      --context '${var.kubernetes_config_context}' apply \
       --namespace argo-events -f ${path.module}/argo-ops/webhook-event-source.yaml
     EOF
   }
@@ -261,7 +261,7 @@ resource "null_resource" "argo_ops_eventsource_webhook" {
     command = <<EOF
       printf "\Destroying Argo Events EventSource Webhook...\n"
       kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
-      --context ${self.triggers.kubernetes_config_context} delete \
+      --context '${self.triggers.kubernetes_config_context}' delete \
       --namespace ${self.triggers.namespace} -f ${path.module}/argo-ops/webhook-event-source.yaml
     EOF
   }
@@ -287,7 +287,7 @@ resource "null_resource" "argo_ops_sensor" {
     command = <<EOF
       printf "\nCreating Argo Events Sensor...\n"
       kubectl --kubeconfig ${var.kubernetes_config_file} \
-      --context ${var.kubernetes_config_context} apply \
+      --context '${var.kubernetes_config_context}' apply \
       --namespace argo-events -f ${path.module}/argo-ops/argo-ops-workflow-sensor.yaml
     EOF
   }
@@ -297,7 +297,7 @@ resource "null_resource" "argo_ops_sensor" {
     command = <<EOF
       printf "\Destroying Argo Events Sensor...\n"
       kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
-      --context ${self.triggers.kubernetes_config_context} delete \
+      --context '${self.triggers.kubernetes_config_context}' delete \
       --namespace ${self.triggers.namespace} -f ${path.module}/argo-ops/argo-ops-workflow-sensor.yaml
     EOF
   }
@@ -322,7 +322,7 @@ resource "null_resource" "argo_ops_eventsource_tracker" {
     command = <<EOF
       printf "\nCreating Argo Events EventSource Tracker...\n"
       kubectl --kubeconfig ${var.kubernetes_config_file} \
-      --context ${var.kubernetes_config_context} apply \
+      --context '${var.kubernetes_config_context}' apply \
       --namespace argo-events -f ${path.module}/argo-ops/tracker-event-source.yaml
     EOF
   }
@@ -332,7 +332,7 @@ resource "null_resource" "argo_ops_eventsource_tracker" {
     command = <<EOF
       printf "\Destroying Argo Events EventSource Webhook...\n"
       kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
-      --context ${self.triggers.kubernetes_config_context} delete \
+      --context '${self.triggers.kubernetes_config_context}' delete \
       --namespace ${self.triggers.namespace} -f ${path.module}/argo-ops/tracker-event-source.yaml
     EOF
   }
@@ -358,7 +358,7 @@ resource "null_resource" "argo_ops_tracker_sensor" {
     command = <<EOF
       printf "\nCreating Argo Events Tracker Sensor...\n"
       kubectl --kubeconfig ${var.kubernetes_config_file} \
-      --context ${var.kubernetes_config_context} apply \
+      --context '${var.kubernetes_config_context}' apply \
       --namespace argo-events -f ${path.module}/argo-ops/argo-ops-tracker-sensor.yaml
     EOF
   }
@@ -368,7 +368,7 @@ resource "null_resource" "argo_ops_tracker_sensor" {
     command = <<EOF
       printf "\Destroying Argo Events Tracker Sensor...\n"
       kubectl --kubeconfig ${self.triggers.kubernetes_config_file} \
-      --context ${self.triggers.kubernetes_config_context} delete \
+      --context '${self.triggers.kubernetes_config_context}' delete \
       --namespace ${self.triggers.namespace} -f ${path.module}/argo-ops/argo-ops-tracker-sensor.yaml
     EOF
   }
