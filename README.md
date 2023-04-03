@@ -356,45 +356,6 @@ requirements.
 
 
 <br><br>
-<<<<<<< HEAD
-=======
-# Monitoring
-## Grafana
-### Charts and visualizations for viewing system usage and performance are available in the Grafana Dashboard.
-<br>
-For developer access to the Grafana dashboard, first enable port forwarding:
-<br>
-
-![Grafana Port Forwarding](./images/grafana_port_forward.png)
-
-or run this on the command line:
-
-```
-kubectl port-forward --namespace monitoring svc/kube-prometheus-stack-grafana 8080:3009
-```
-
-This will allow you to access the Grafana dashboard at `http://localhost:8080`
-
-
-If you don't already have your Grafana credentials, they can be obtained with:
-```
-# Username
-kubectl get secret kube-prometheus-stack-grafana -n monitoring -o jsonpath="{.data.admin-user}" | base64 --decode
-
-# Password
-kubectl get secret kube-prometheus-stack-grafana -n monitoring -o jsonpath="{.data.admin-password}" | base64 --decode
-```
-
-<br>And use those credentials to login at: &nbsp;&nbsp;<b>localhost:{port_from_above}</b>
-
-![Grafana Login](./images/grafana_login.png)
-
-Loki and Prometheus have automatically been added as data sources into Grafana- therefore, there is no need to configure these data sources manually.
-
-## Loki
-
-[Grafana Loki](https://grafana.com/docs/loki/latest/) is a set of components that can be composed into a fully featured logging stack.
->>>>>>> main
 
 ## Workflow Operations
 
