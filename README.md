@@ -6,10 +6,10 @@ This repository contains the packaging of FilmDrop terraform modules with Kubern
 
 Before starting local development, you will need to install the following packages:
 * terraform >= 1 (Recommed using latest version 1.3.9)
-* [Kubernetes Development Tools](https://element84.atlassian.net/wiki/spaces/ES/pages/3013804035/Local+k8s+development#Ways-to-run-a-local-k8s-cluster)
+* Kubernetes Development Tools (kubectl) and a Kubernetes Engine (Rancher Desktop, Docker Desktop, Colima, Kind, etc)
 * Linkerd CLI
 
-The easiest way to install terraform on Mac is to use Homebrew and tfenv. TF Env is a version
+The easiest way to install Terraform on Mac is to use Homebrew and tfenv. TF Env is a version
 manager for terraform. To inistall latest terraform via tfenv in a Mac and Homebrew, run
 the following commands:
 ```
@@ -37,7 +37,7 @@ Do not run the additional steps that the Linkerd installation will suggest. Refe
 
 ### Run a local kubernetes cluster
 First make sure that your local Kubernetes cluster is running, if you need help creating your local
-Kubernetes cluster, check the  [Kubernetes Development Tools](https://element84.atlassian.net/wiki/spaces/ES/pages/3013804035/Local+k8s+development#Ways-to-run-a-local-k8s-cluster) wiki.
+Kubernetes cluster, check your Kubernetes Engine official documentation.
 
 If you use rancher-desktop or other k3s, make sure you have disabled the traefik ingress. For rancher-desktop,
 this can be disabled under the kubernetes settings. The result of enabling traefik will be a conflict with the
@@ -69,7 +69,7 @@ kubernetes_config_context = "rancher-desktop"
 ```
 
 The `kubernetes_config_file` should point to the path of your kubernetes config file, while the `kubernetes_config_context` should identify your kubernetes context
-depending on your [Kubernetes Development Tools](https://element84.atlassian.net/wiki/spaces/ES/pages/3013804035/Local+k8s+development#Ways-to-run-a-local-k8s-cluster). For example, Rancher Desktop will likely use `kubernetes_config_context = "rancher-desktop"` while Docker Desktop will use `kubernetes_config_context = "docker-desktop"`.
+depending on your Kubernetes Engine. For example, Rancher Desktop will likely use `kubernetes_config_context = "rancher-desktop"` while Docker Desktop will use `kubernetes_config_context = "docker-desktop"`.
 
 ### Start your environment via Terraform
 1. First step is to initialize terraform via:
@@ -356,10 +356,47 @@ requirements.
 
 
 <br><br>
+<<<<<<< HEAD
+=======
+# Monitoring
+## Grafana
+### Charts and visualizations for viewing system usage and performance are available in the Grafana Dashboard.
+<br>
+For developer access to the Grafana dashboard, first enable port forwarding:
+<br>
+
+![Grafana Port Forwarding](./images/grafana_port_forward.png)
+
+or run this on the command line:
+
+```
+kubectl port-forward --namespace monitoring svc/kube-prometheus-stack-grafana 8080:3009
+```
+
+This will allow you to access the Grafana dashboard at `http://localhost:8080`
+
+
+If you don't already have your Grafana credentials, they can be obtained with:
+```
+# Username
+kubectl get secret kube-prometheus-stack-grafana -n monitoring -o jsonpath="{.data.admin-user}" | base64 --decode
+
+# Password
+kubectl get secret kube-prometheus-stack-grafana -n monitoring -o jsonpath="{.data.admin-password}" | base64 --decode
+```
+
+<br>And use those credentials to login at: &nbsp;&nbsp;<b>localhost:{port_from_above}</b>
+
+![Grafana Login](./images/grafana_login.png)
+
+Loki and Prometheus have automatically been added as data sources into Grafana- therefore, there is no need to configure these data sources manually.
+
+## Loki
+
+[Grafana Loki](https://grafana.com/docs/loki/latest/) is a set of components that can be composed into a fully featured logging stack.
+>>>>>>> main
 
 ## Workflow Operations
-
-To learn more about the motivations of Workflow Operations with Argo Events, take a look at: https://element84.atlassian.net/wiki/spaces/ES/pages/3068035079/SWOOP+Workflow+Operations
 
 In this section we want to provide a guide of how to run the Workflow Operations demo with Argo Events.
 
