@@ -5,7 +5,7 @@ resource "helm_release" "kube-prometheus" {
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
 
-  values = [
-    file("${path.module}/values.yml")
-  ]
+  values = [templatefile("${path.module}/values.yml.tpl", {
+    grafana_additional_data_sources   = var.grafana_additional_data_sources
+  })]
 }

@@ -7,7 +7,6 @@ variable grafana_additional_data_sources {
     url = string
     version = optional(number, 1)
   }))
-  default = []
   description = "Additional data sources to be configured in Grafana."
 }
 
