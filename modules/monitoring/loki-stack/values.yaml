@@ -1,4 +1,3 @@
-# Configure local storage for Loki
 minio:
   enabled: true
 

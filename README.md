@@ -241,6 +241,9 @@ For accessing application 2, you can go to: `http://hello-world.local:{NGINX_NOD
 </p>
 <br>
 
+### Monitoring
+
+The local development environment includes resources for aggregating and visualizing logs and metrics. More information is available [here](./modules/monitoring/README.md).
 
 ## Re-creating your local environment
 
@@ -353,74 +356,7 @@ requirements.
 
 
 <br><br>
-# Monitoring
-## Grafana
-### Charts and visualizations for viewing system usage and performance are available in the Grafana Dashboard.
-<br>
-For developer access to the Grafana dashboard, first enable port forwarding:
-<br>
 
-![Grafana Port Forwarding](./images/grafana_port_forward.png)
-
-or run this on the command line:
-
-```
-kubectl port-forward --namespace monitoring svc/kube-prometheus-stack-grafana 8080:3009
-```
-
-This will allow you to access the Grafana dashboard at `http://localhost:8080`
-
-
-If you don't already have your Grafana credentials, they can be obtained with:
-```
-# Username
-kubectl get secret kube-prometheus-stack-grafana -n monitoring -o jsonpath="{.data.admin-user}" | base64 --decode
-
-# Password
-kubectl get secret kube-prometheus-stack-grafana -n monitoring -o jsonpath="{.data.admin-password}" | base64 --decode
-```
-
-<br>And use those credentials to login at: &nbsp;&nbsp;<b>localhost:{port_from_above}</b>
-
-![Grafana Login](./images/grafana_login.png)
-
-Loki and Prometheus have automatically been added as data sources into Grafana- therefore, there is no need to configure these data sources manually.
-
-## Loki
-
-[Grafana Loki](https://grafana.com/docs/loki/latest/) is a set of components that can be composed into a fully featured logging stack.
-
-To view basic Loki monitoring logs click "Explore" on the left-side menu. For Label Filters enter "namespace = monitoring". Click "Run Query" and you should see monitoring logs from the Loki instance.
-
-![Grafana monitoring logs](./images/grafana-monitoring-logs.png)
-
-### Logs
-```
-Coming Soon
-```
-
-## Prometheus
-
-The Prometheus server UI can be accessed by port-forwarding to a localhost port:
-
-```
-kubectl port-forward --namespace monitoring svc/kube-prometheus-stack-prometheus 9090:9090
-```
-
-You could also port-forward the `kube-prometheus-stack-prometheus` service using the Rancher Desktop UI.
-
-This will allow you to access the Prometheus dashboard at `http://localhost:9090`
-
-There is no login needed. Observe/monitor the cluster status by clicking on 'Status' on the top ribbon and exploring the various options on that tab.
-
-![Prometheus](./images/prometheus.png)
-
-<br>
-
-### Metrics
-```
-Coming Soon
-```
 ## Workflow Operations
 
 In this section we want to provide a guide of how to run the Workflow Operations demo with Argo Events.
