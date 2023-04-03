@@ -7,7 +7,7 @@ This module defines the resources required for monitoring the state of system. T
 - [Loki](https://grafana.com/oss/loki/) for log storage and disovery.
 - [Promtail](https://grafana.com/docs/loki/latest/clients/promtail/) for log scraping.
 
-## Installation
+## Installation - All Monitoring Services
 
 1. First, initialize terraform:
 
@@ -32,6 +32,8 @@ terraform plan
 ```bash
 terraform apply
 ```
+
+<sub><sup>Instructions for installing individual monitoring services can be found in their specific README files.</sup></sub>
 
 ## Resources
 
