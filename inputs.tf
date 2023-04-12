@@ -66,3 +66,9 @@ variable "nginx_https_port" {
   }
   */
 }
+
+variable "deploy_stacfastapi" {
+  description = "Whether or not to deploy the STAC-FastAPI module resources"
+  type        = bool
+  default     = true
+}
