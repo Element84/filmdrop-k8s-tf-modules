@@ -247,7 +247,7 @@ The local development environment includes resources for aggregating and visuali
 
 ### Tiling
 
-The local development environment incldues resources for rendering and serving tiles. More information is available [here](./modules/tiling/README.md).
+The local development environment includes resources for rendering and serving tiles. More information is available [here](./modules/tiling/README.md).
 
 **Currently Titiler does not distribute a docker image for an ARM architecture. If you're running an Apple silicon (M1, M2) or similar machine you should skip installation of the tiling namespace.**
 
