@@ -67,6 +67,12 @@ variable "nginx_https_port" {
   */
 }
 
+variable "deploy_tiling" {
+  description = "Whether or not to include the tiling module resources"
+  type        = bool
+  default     = true
+}
+
 variable "deploy_stacfastapi" {
   description = "Whether or not to deploy the STAC-FastAPI module resources"
   type        = bool
