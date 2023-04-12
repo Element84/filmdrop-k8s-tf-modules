@@ -252,6 +252,7 @@ The local development environment includes resources for rendering and serving t
 **Currently Titiler does not distribute a docker image for an ARM architecture. If you're running an Apple silicon (M1, M2) or similar machine you should skip installation of the tiling namespace.**
 
 You can configure whether or not tiling resources are included in deployment by setting the `deploy_tiling` flag in the [inputs](./inputs.tf) file.
+
 ### STAC-FastAPI
 
 The local development environment includes a module for deploying STAC-FastAPI, which provides an API that exposes a STAC catalog that is persisted in a backend Postgres database with its component STAC Collections and Items. More information is available [here](./modules/stac-fastapi/README.md).
