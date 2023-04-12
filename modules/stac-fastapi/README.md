@@ -30,7 +30,7 @@ terraform plan
 terraform apply
 ```
 
-Once installed you can verify STAC-FastAPI is running by first configuring port forwarding the PgSTAC service:
+Once installed you can verify STAC-FastAPI is running by first port-forwarding the PgSTAC service:
 
 `kubectl port-forward service/pgstac 5439:5439`
 
