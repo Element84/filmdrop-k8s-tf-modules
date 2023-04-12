@@ -1,4 +1,6 @@
 module "tiling" {
+  count = var.deploy_tiling == true ? 1 : 0
+
   source = "./modules/tiling"
 
   namespace_annotations = {

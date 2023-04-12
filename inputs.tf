@@ -66,3 +66,9 @@ variable "nginx_https_port" {
   }
   */
 }
+
+variable "deploy_tiling" {
+  description = "Whether or not to include the tiling module resources"
+  type        = bool
+  default     = true
+}
