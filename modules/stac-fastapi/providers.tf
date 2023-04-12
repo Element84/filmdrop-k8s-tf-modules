@@ -9,7 +9,7 @@ terraform {
   }
 }
 
-# Uncomment this portion if installing from the module directory
+#Uncomment this portion if installing from the module directory
 
 # provider "kubernetes" {
 #   config_path = pathexpand("~/.kube/config")

@@ -245,6 +245,12 @@ For accessing application 2, you can go to: `http://hello-world.local:{NGINX_NOD
 
 The local development environment includes resources for aggregating and visualizing logs and metrics. More information is available [here](./modules/monitoring/README.md).
 
+### STAC-FastAPI
+
+The local development environment includes a module for deploying STAC-FastAPI, which provides an API that exposes a STAC catalog that is persisted in a backend Postgres database with its component STAC Collections and Items. More information is available [here](./modules/stac-fastapi/README.md).
+
+You can configure whether or not STAC-FastAPI is included in deployment by setting the `deploy_stacfastapi` flag in the [inputs](./inputs.tf) file.
+
 ## Re-creating your local environment
 
 Depending on which tool you use to run Kubernetes, it is possible that you will need to re-create your
