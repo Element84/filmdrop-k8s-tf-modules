@@ -28,7 +28,7 @@ users:
         - --cluster-name
         - $cluster_name
         # - "- --role"
-        # - "arn:aws:iam::$account_id:role/my-role"
+        # - "arn:aws:iam::$account_id:role/$eks_role"
       command: aws
       env:
       - name: "AWS_PROFILE"
