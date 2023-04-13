@@ -392,3 +392,23 @@ Do you really want to destroy all resources?
 <sub><sup>There is a Loki pod that may take longer to terminate than the default terraform timeout. It should eventually terminate and be removed from the cluster. Because of this the `monitoring` namespace has been deployed in a way that it will not be deleted on a terraform destroy. This will not interfere with subsequent deployments.</sup></sub>
 
 After you have destroyed your environment, go back to the [Start your environment via Terraform](#start-your-environment-via-terraform) section for instructions on how to run your local development environment.
+
+<br><br>
+
+## Resource Requirements
+
+Operating a complex cluster within a single VM can be resource limited, and
+strange behavior can result. For example, the default resource allocation for a
+colima VM is barely adequate for a single cluster with the current pod count.
+Adding a second cluster without increasing resources to the VM will cause
+instability, such as network requests timing out and services being
+unresponsive.
+
+In cases where cluster behavior is unexplainably weird, consider that it might
+be a resource issue within the VM. Sometimes destroying and re-creating the VM
+with no state helps free up resources without having to allocate more, but as
+the cluster requirements grow we will need to keep an eye on specific
+requirements.
+
+
+<br><br>
