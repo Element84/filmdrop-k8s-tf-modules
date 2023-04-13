@@ -22,4 +22,6 @@ module "local_environment" {
   nginx_extra_values                        = var.nginx_extra_values
   deploy_hello_world                        = var.deploy_hello_world
   namespace_annotations                     = var.namespace_annotations
+  deploy_titiler                            = var.deploy_titiler
+  deploy_stacfastapi                        = var.deploy_stacfastapi
 }

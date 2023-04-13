@@ -43,7 +43,7 @@ nginx_extra_values = {
   "controller.ingressClassResource.default"       = "true"
 }
 
-#### Component flags: Deploy everything with the exception of Nginx, Hello World App and Argo Events
+#### Component flags: Deploy everything with the exception of TiTiler, stac-fastapi, Nginx, Hello World App and Argo Events
 deploy_linkerd            = true
 deploy_ingress_nginx      = false
 deploy_hello_world        = false
@@ -52,3 +52,5 @@ deploy_loki               = true
 deploy_promtail           = true
 deploy_argo_workflows     = true
 deploy_argo_events        = false
+deploy_titiler            = false
+deploy_stacfastapi        = false

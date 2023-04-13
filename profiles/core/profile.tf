@@ -37,6 +37,28 @@ module "workflows" {
   ]
 }
 
+module "tiling" {
+  source = "../../modules/tiling"
+
+  deploy_titiler        = var.deploy_titiler
+  namespace_annotations = var.namespace_annotations
+
+  depends_on = [
+    module.service_mesh
+  ]
+}
+
+module "stac" {
+  source = "../../modules/stac"
+
+  deploy_stacfastapi    = var.deploy_stacfastapi
+  namespace_annotations = var.namespace_annotations
+
+  depends_on = [
+    module.service_mesh
+  ]
+}
+
 module "ingress_proxy" {
   source = "../../modules/ingress"
 

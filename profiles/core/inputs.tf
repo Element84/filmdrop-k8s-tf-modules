@@ -118,3 +118,16 @@ variable namespace_annotations {
   type        = map(string)
   description = "MAP of custom defined namespace annotations"
 }
+
+variable "deploy_titiler" {
+  description = "Whether or not to include the TiTiler tiling module resources"
+  type        = bool
+  default     = false
+}
+
+variable "deploy_stacfastapi" {
+  description = "Whether or not to deploy the STAC-FastAPI module resources"
+  type        = bool
+  default     = false
+}
+
