@@ -1,4 +1,4 @@
-variable "loki_replicas" {
+variable loki_replicas {
   type = number
   description = "The number of read, write, and backend replicas to deploy. Defaults to 1."
   default = 1
@@ -9,7 +9,7 @@ variable "loki_replicas" {
   }
 }
 
-variable "loki_auth_enabled" {
+variable loki_auth_enabled {
   type = bool
   description = "Whether or not authentication is required for the Loki server. Defaults to false."
   default = false

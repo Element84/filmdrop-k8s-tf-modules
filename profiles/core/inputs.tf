@@ -130,3 +130,4 @@ variable deploy_stacfastapi {
   type        = bool
   default     = false
 }
+

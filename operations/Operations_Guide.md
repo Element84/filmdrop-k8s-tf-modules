@@ -4,6 +4,155 @@ This document summarizes some of the most common problems found during the insta
 
 ## Pre-requisites
 
+### AWS Pre-Requisites
+
+Note: Follow these steps ***ONLY*** if you need to run your Kubernetes applications on AWS EKS. If you're running your environment locally, please skip this section.
+
+You will need to first set up your AWS CLI credentials, and there are different options like a credentials file or environment variables. Head to the [AWS Documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) for more info.
+
+If you need to add the eks cluster configuration to your kube config file, after configuring your AWS credentials, you will likely just need to run locally:
+
+```aws eks update-kubeconfig --region <AWS_REGION> --name <EKS_CLUSTER_NAME>```  <br />
+
+Replace the <AWS_REGION> for the AWS region code, and <EKS_CLUSTER_NAME> for your EKS Cluster Name.
+
+After running the command above, you should be able to select your EKS kubernetes context.
+
+![EKSKubernetesContext](./images/eks_kube_context.png)
+
+For more information, please go through the [AWS Documentation to set up your Kube Config file with EKS](https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html).
+
+### Viewing the Linkerd Dashboard with EKS
+
+After the cluster and all components are deployed, in order to view the Linkerd Dashboard:
+
+1) Install the Linkerd CLI onto your local machine using ```curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install | sh```
+
+2) Run a ```linkerd check``` to ensure that everything is running correctly. If the check for ```cluster networks contains all pods``` fails, it will tell you which of the pods are not getting discovered by the service mesh along with their IP addresses. In order to view the Dashboard, you need to update the default value for the ```clusterNetworks``` variable in the ```eks/cluster-setup/services.tf``` file to include the IP address of these pods. For example, if one of the pods at IP address ```13.0.1.236``` is unreachable, you need to append this to the end of the variable's default value list like this:
+
+```linkerd_additional_configuration_values = ["clusterNetworks: 10.0.0.0/8,100.64.0.0/10,172.16.0.0/12,192.168.0.0/16,13.0.1.236/24"]```
+
+4) Modify your local terraform variables to reflect the eks context, i.e. set `kubernetes_config_context = "<EKS_CLUSTER_ARN>"` and replace <EKS_CLUSTER_ARN> for the EKS Cluster ARN.
+
+5) Run a terraform apply with `terraform apply -var-file=local.tfvars` or replace the local.tfvars for the file that contains the updated `linkerd_additional_configuration_values` and `kubernetes_config_context` values.
+
+6) Run a ```linkerd check``` again to ensure that the check for ```cluster networks contains all pods``` succeeds.
+
+7) Run ```linkerd viz dashboard &```. This will automatically open up the Linkerd Dashboard on a new tab in your browser at a localhost port. This process can take up to 30 seconds.
+
+### Local Environment Pre-Requisites
+
+Before starting local development, you will need to install the following packages:
+* terraform >= 1 (Recommed using latest version 1.3.9)
+* Kubernetes Development Tools (kubectl) and a Kubernetes Engine (Rancher Desktop, Docker Desktop, Colima, Kind, etc)
+* Linkerd CLI
+
+The easiest way to install Terraform on Mac is to use Homebrew and tfenv. TF Env is a version
+manager for terraform. To inistall latest terraform via tfenv in a Mac and Homebrew, run
+the following commands:
+```
+brew install tfenv
+tfenv install latest
+tfenv use latest
+```
+
+Refer to [tfenv](https://github.com/tfutils/tfenv) official documentation for more details.
+
+Also, check the [Terraform Registry](https://registry.terraform.io/) for more Terraform guidelines about how to use terraform.
+
+Linkerd is the Service Mesh of choice for the Local Kubernetes Development environment.
+
+To install the Linkerd CLI manually, run:
+
+```
+curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install | sh
+```
+
+Do not run the additional steps that the Linkerd installation will suggest. Refer to [Linkerd](https://linkerd.io/2.12/overview/) official documentation for more details.
+<br><br>
+
+### Starting your local development environment
+
+### Run a local kubernetes cluster
+First make sure that your local Kubernetes cluster is running, if you need help creating your local
+Kubernetes cluster, check your Kubernetes Engine official documentation.
+
+If you use rancher-desktop or other k3s, make sure you have disabled the traefik ingress. For rancher-desktop,
+this can be disabled under the kubernetes settings. The result of enabling traefik will be a conflict with the
+nginx ingress controller, thus the ingress-nginx controller pods won't be able to start.
+
+<p align="center">
+  <img src="./images/disable_traefik.png" alt="Disable traefik" width="754">
+</p>
+<br>
+
+### Recommended VM Settings
+
+When testing locally it's advised to use a virtual machine with at least 4 CPUs and 6 GB of memory (RAM). Also, make sure that your MacOS is updated to the latest version (i.e. perform all software updates related to the OS). This can resolve some issues with deployment that arise due to the VM that runs the Kubernetes cluster running out of memory as the Terraform modules are deployed.
+
+In rancher-desktop you can change this setting under Preferences -> Virtual Machine.
+
+<p align="center">
+  <img src="./images/rancher_desktop_vm_settings.png" alt="Rancher Desktop Virtual Machine settings" width="754">
+</p>
+<br>
+
+### Modify the [local.tfvars](./local.tfvars)
+Every customization input for your local environment will go in the [local.tfvars](./local.tfvars) file.
+
+Within the [local.tfvars](./local.tfvars) file, it is important that you define the following kuberenetes parameters:
+```
+kubernetes_config_file = "~/.kube/config"
+kubernetes_config_context = "rancher-desktop"
+```
+
+The `kubernetes_config_file` should point to the path of your kubernetes config file, while the `kubernetes_config_context` should identify your kubernetes context
+depending on your Kubernetes Engine. For example, Rancher Desktop will likely use `kubernetes_config_context = "rancher-desktop"` while Docker Desktop will use `kubernetes_config_context = "docker-desktop"`.
+
+### Start your environment via Terraform
+1. First step is to initialize terraform via:
+```
+terraform init
+```
+
+The terraform init should pull the providers needed to run your terraform code.
+
+2. Validate your terraform code with:
+```
+terraform validate
+```
+
+If your terraform is valid, the validate command will respond with `Success! The configuration is valid.`
+
+3. Run a terraform plan
+```
+terraform plan -var-file=local.tfvars
+```
+
+The terraform plan will give you a summary of all the changes terraform will perform prior to deploying
+any change.
+
+4.  Run terraform apply
+```
+terraform apply -var-file=local.tfvars
+```
+
+The terraform apply will deploy the changes, but before doing so, terraform will perform an additional plan
+and ask you for a confirmation, for wich you need to answer `yes` to proceed with the deployment.
+
+```
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+Enter a value: yes
+```
+
+The deployment will take 5-10 minutes to complete, and if it succeeds, your local environment should be up!
+<br><br>
+
+## Monitoring Pre-Requisites
+
 Ensure that you follow all the directions in the Readme file to deploy the FilmDrop K8s Terraform Modules onto a Kubernetes cluster, whether one running locally or on EKS.
 
 Open the Prometheus server UI dashboard by port-forwarding the `kube-prometheus-stack-prometheus` service onto a localhost port (say, 9090).
@@ -14,7 +163,7 @@ Grafana will automatically have Prometheus and Loki configured as data sources t
 
 **Note**: Prometheus is automatically configured as the **default** data source. Therefore, if you want to see any metrics on any dashboard that use Loki as the data source, you will explicitly have to select Loki as the data source (if it is available) from the 'datasource' drop-down at the top of the dashboard.
 
-## Prometheus, Grafana, and Loki
+### Prometheus, Grafana, and Loki
 
 **Prometheus** is a time series database that runs atop a Kubernetes cluster and provides metrics and alerting for processes and events occuring in the cluster.
 
@@ -170,3 +319,51 @@ You can set up Alert Rules for both Prometheus and Loki data sources (choose the
 
 
 For a detailed guide on how to construct LogQL queries for Loki, refer to this guide: [Grafana Loki](https://grafana.com/docs/loki/latest/logql/).
+
+
+## Re-creating your local environment
+
+Depending on which tool you use to run Kubernetes, it is possible that you will need to re-create your
+local environment after rebooting your local computer or after a tool upgrade. You should check your
+Kubernetes tool of choice, to try to perform a factory reset when debugging an issue while you find that
+your local environment is broken.
+
+If for some reason you need to re-create your local environment, start by destroying the terraform state
+by executing:
+```
+terraform destroy
+```
+
+Terraform will perform a plan and ask you to confirm the destroy of all the resources on the terraform
+state. You will need to answer `yes` to proceed.
+```
+Do you really want to destroy all resources?
+  Terraform will destroy all your managed infrastructure, as shown above.
+  There is no undo. Only 'yes' will be accepted to confirm.
+
+  Enter a value: yes
+```
+
+<sub><sup>There is a Loki pod that may take longer to terminate than the default terraform timeout. It should eventually terminate and be removed from the cluster. Because of this the `monitoring` namespace has been deployed in a way that it will not be deleted on a terraform destroy. This will not interfere with subsequent deployments.</sup></sub>
+
+After you have destroyed your environment, go back to the [Start your environment via Terraform](#start-your-environment-via-terraform) section for instructions on how to run your local development environment.
+
+<br><br>
+
+## Resource Requirements
+
+Operating a complex cluster within a single VM can be resource limited, and
+strange behavior can result. For example, the default resource allocation for a
+colima VM is barely adequate for a single cluster with the current pod count.
+Adding a second cluster without increasing resources to the VM will cause
+instability, such as network requests timing out and services being
+unresponsive.
+
+In cases where cluster behavior is unexplainably weird, consider that it might
+be a resource issue within the VM. Sometimes destroying and re-creating the VM
+with no state helps free up resources without having to allocate more, but as
+the cluster requirements grow we will need to keep an eye on specific
+requirements.
+
+
+<br><br>
