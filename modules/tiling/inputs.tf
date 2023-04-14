@@ -4,7 +4,7 @@ variable namespace_annotations {
   default = {}
 }
 
-variable "deploy_titiler" {
+variable deploy_titiler {
   description = "Whether or not to include the titiler tiling module resources"
   type        = bool
   default     = true

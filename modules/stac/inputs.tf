@@ -4,7 +4,7 @@ variable namespace_annotations {
   default = {}
 }
 
-variable "deploy_stacfastapi" {
+variable deploy_stacfastapi {
   description = "Whether or not to deploy the STAC-FastAPI module resources"
   type        = bool
   default     = false
