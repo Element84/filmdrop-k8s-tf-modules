@@ -6,68 +6,21 @@ This document summarizes some of the most common problems found during the insta
 
 ### AWS Pre-Requisites
 
-1) You will need to first set up your AWS CLI credentials, and there are different options like a credentials file or environment variables. Head to the [AWS Documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) for more info.
+You will need to first set up your AWS CLI credentials, and there are different options like a credentials file or environment variables. Head to the [AWS Documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) for more info.
 
-2) Go through the AWS Documentation to set up your Kube Config file with EKS: https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html
+If you need to add the eks cluster configuration to your kube config file, after configuring your AWS credentials, you will likely just need to run locally:
 
-3) To create a new kube config file with EKS kubernetes credentials for your CICD system, follow the steps below: 
-#### Adding the EKS Kubernetes credentials to a new kube config file
-To add the EKS Kubernetes credentials to a new kube config file, run the following commands:
+```aws eks update-kubeconfig --region <AWS_REGION> --name <EKS_CLUSTER_NAME>```  <br />
 
-```export region_code=<AWS_REGION>```  <br />
-```export cluster_name=<EKS_CLUSTER_NAME>```  <br />
-```export account_id=<AWS_ACCOUNT_ID>```  <br />
-```export eks_aws_profile=<AWS_PROFILE>```  <br />
-```export aws_kube_config=<NEW_AWS_KUBECONFIG_PATH>```  <br />
+Replace the <AWS_REGION> for the AWS region code, and <EKS_CLUSTER_NAME> for your EKS Cluster Name.
 
-Replace the <AWS_REGION> for the AWS region code, <EKS_CLUSTER_NAME> for your EKS Cluster Name, the <AWS_ACCOUNT_ID> for the AWS Account number.
+After running the command above, you should be able to select your EKS kubernetes context.
 
-Replace <AWS_PROFILE> by your AWS profile with credentials to access your AWS account, typically found in the credentials file (located at ```~/.aws/credentials```).
+![EKSKubernetesContext](./images/eks_kube_context.png)
 
-Replace <NEW_AWS_KUBECONFIG_PATH> for a new kubeconfig file path, for example: ```~/.kube/awsconfig```
+For more information, please go through the [AWS Documentation to set up your Kube Config file with EKS](https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html).
 
-Rertrieve the cluster endpoint:
-```
-export cluster_endpoint=$(aws eks describe-cluster \
-    --region $region_code \
-    --name $cluster_name \
-    --query "cluster.endpoint" \
-    --output text)
-```
-
-Rertrieve the certificate:
-```
-export certificate_data=$(aws eks describe-cluster \
-    --region $region_code \
-    --name $cluster_name \
-    --query "cluster.certificateAuthority.data" \
-    --output text)
-```
-
-From the this repository top level directory run:
-```
-./createAWSKubeConfig.sh
-```
-Go through the AWS Documentation to set up your Kube Config file with EKS: https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html
-```aws eks wait cluster-active --name '<EKS_CLUSTER_NAME>' --profile '<AWS_PROFILE_NAME>' --region=<AWS_REGION>```  <br />
-```aws eks update-kubeconfig --name '<EKS_CLUSTER_NAME>' --profile '<AWS_PROFILE_NAME>' --region=<AWS_REGION>```  <br />
-
-
-Replace the <EKS_CLUSTER_NAME> for your EKS Cluster Name, the <EKS_CLUSTER_ARN> for the EKS Cluster ARN.
-
-Then modify your local terraform variables to reflect the eks context, i.e. set `kubernetes_config_context = "<EKS_CLUSTER_ARN>"` and replace <EKS_CLUSTER_ARN> for the EKS Cluster ARN.
-
-#### Removing the EKS Kubernetes credentials of your kube config file
-
-To add the EKS Kubernetes credentials to your kube config file, run the following commands:
-
-```kubectl config delete-cluster <EKS_CLUSTER_ARN>```  <br />
-```kubectl config delete-context <EKS_CLUSTER_ARN>```  <br />
-```kubectl config delete-user <EKS_CLUSTER_ARN>```  <br />
-
-Replace the <EKS_CLUSTER_ARN> for the EKS Cluster ARN.
-
-#### Viewing the Linkerd Dashboard with EKS
+### Viewing the Linkerd Dashboard with EKS
 
 After the cluster and all components are deployed, in order to view the Linkerd Dashboard:
 
