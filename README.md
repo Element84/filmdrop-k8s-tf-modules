@@ -41,6 +41,10 @@ The local development environment includes a module for deploying STAC-FastAPI, 
 
 You can configure whether or not STAC-FastAPI is included in deployment by setting the `deploy_stacfastapi` flag in the [inputs](./inputs.tf) file.
 
+### Profiles
+
+To view and extend profiles, head [here](./profiles/README.md).
+
 <br><br>
 # `flop` CLI
 ## What is `flop`?
