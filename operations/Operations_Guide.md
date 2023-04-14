@@ -6,6 +6,8 @@ This document summarizes some of the most common problems found during the insta
 
 ### AWS Pre-Requisites
 
+Note: Follow these steps ***ONLY*** if you need to run your Kubernetes applications on AWS EKS. If you're running your environment locally, please skip this section.
+
 You will need to first set up your AWS CLI credentials, and there are different options like a credentials file or environment variables. Head to the [AWS Documentation](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html) for more info.
 
 If you need to add the eks cluster configuration to your kube config file, after configuring your AWS credentials, you will likely just need to run locally:
