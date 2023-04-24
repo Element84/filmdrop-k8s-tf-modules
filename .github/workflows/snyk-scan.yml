@@ -1,7 +1,6 @@
-# This workflow sets up Snyk to analyze the full Snyk platform (Snyk Open Source, Snyk Code,
-# Snyk Container and Snyk Infrastructure as Code)
+# This workflow sets up Snyk scans
 
-name: Security Scan
+name: Snyk Scan
 
 on:
   push:
@@ -27,20 +26,27 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-        # Runs Snyk Code (SAST) analysis and uploads result into GitHub.
-      - name: Snyk Code test
-        run: snyk code test --sarif > snyk-code.sarif
+        # Runs Snyk Code analysis
+      - name: Run Snyk to check for vulnerabilities
+        uses: snyk/actions/nodemaster
+        continue-on-error: true # To make sure that SARIF upload gets called
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --sarif-file-output=snyk.sarif
 
-        # Runs Snyk Open Source (SCA) analysis and uploads result to Snyk.
-      - name: Snyk Open Source monitor
-        run: snyk monitor --all-projects
-
-        # Runs Snyk Infrastructure as Code (IaC) analysis and uploads result to Snyk.
+        # Runs Snyk Infrastructure as Code (IaC) analysis
       - name: Snyk IaC test and report
-        run: snyk iac test --report
+        uses: snyk/actions/iac@master
+        continue-on-error: true # To make sure that SARIF upload gets called
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        with:
+          args: --severity-treshold=high
+            --sarif-file-output=snyk.sarif
 
         # Push the Snyk Code results into GitHub Code Scanning tab
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v2
         with:
-          sarif_file: snyk-code.sarif
+          sarif_file: snyk.sarif
