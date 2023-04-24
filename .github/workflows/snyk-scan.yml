@@ -26,15 +26,6 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
-        # Runs Snyk Code analysis
-      - name: Run Snyk to check for vulnerabilities
-        uses: snyk/actions/node@master
-        continue-on-error: true # To make sure that SARIF upload gets called
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-        with:
-          args: --sarif-file-output=snyk.sarif
-
         # Runs Snyk Infrastructure as Code (IaC) analysis
       - name: Snyk IaC test and report
         uses: snyk/actions/iac@master
@@ -42,7 +33,7 @@ jobs:
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
-          args: --severity-treshold=high
+          args: --severity-threshold=high
             --sarif-file-output=snyk.sarif
 
         # Push the Snyk Code results into GitHub Code Scanning tab
