@@ -20,11 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Set up Snyk CLI to check for security issues
-        uses: snyk/actions/setup@master
-
-        env:
-          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
       - name: Snyk IaC report vulnerabilities
         uses: snyk/actions/iac@master
