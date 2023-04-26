@@ -254,7 +254,6 @@ rules:
 - apiGroups:
   - ""
   resources:
-  - pods
   - pods/exec
   - configmaps
   - services
@@ -264,17 +263,6 @@ rules:
   - get
   - list
   - watch
-  - update
-  - patch
-  - delete
-- apiGroups:
-  - ""
-  resources:
-  - secrets
-  verbs:
-  - create
-  - get
-  - list
   - update
   - patch
   - delete
