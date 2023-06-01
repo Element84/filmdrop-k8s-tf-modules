@@ -85,3 +85,15 @@ module "hello_world" {
     module.ingress_proxy
   ]
 }
+
+module "swoop_api" {
+  source = "../../modules/swoop"
+
+  deploy_swoop_api      = var.deploy_swoop_api
+  namespace_annotations = var.namespace_annotations
+  swoop_api_version     = var.swoop_api_version
+
+  depends_on = [
+    module.service_mesh
+  ]
+}

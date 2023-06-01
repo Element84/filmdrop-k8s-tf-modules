@@ -54,3 +54,5 @@ deploy_argo_workflows     = true
 deploy_argo_events        = false
 deploy_titiler            = false
 deploy_stacfastapi        = false
+deploy_swoop_api          = true
+swoop_api_version         = "0.0.1"
