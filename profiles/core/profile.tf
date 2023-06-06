@@ -86,12 +86,24 @@ module "hello_world" {
   ]
 }
 
-module "swoop_api" {
+module "swoop" {
   source = "../../modules/swoop"
 
-  deploy_swoop_api      = var.deploy_swoop_api
-  namespace_annotations = var.namespace_annotations
-  swoop_api_version     = var.swoop_api_version
+  deploy_swoop_api                          = var.deploy_swoop_api
+  deploy_postgres                           = var.deploy_postgres
+  deploy_minio                              = var.deploy_minio
+  create_swoop_namespace                    = var.create_swoop_namespace
+  namespace_annotations                     = var.namespace_annotations
+  swoop_namespace                           = var.swoop_namespace
+  swoop_api_version                         = var.swoop_api_version
+  postgres_version                          = var.postgres_version
+  minio_version                             = var.minio_version
+  swoop_api_additional_configuration_values = var.swoop_api_additional_configuration_values
+  custom_swoop_api_values_yaml              = var.custom_swoop_api_values_yaml
+  postgres_additional_configuration_values  = var.postgres_additional_configuration_values
+  custom_postgres_values_yaml               = var.custom_postgres_values_yaml
+  minio_additional_configuration_values     = var.minio_additional_configuration_values
+  custom_minio_values_yaml                  = var.custom_minio_values_yaml
 
   depends_on = [
     module.service_mesh

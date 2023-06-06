@@ -4,7 +4,7 @@ variable namespace_annotations {
   default = {}
 }
 
-variable swoop_api_version {
+variable minio_version {
   type = string
   description = "Version of SWOOP API Helm Chart"
   default = "0.1.0"
@@ -16,13 +16,13 @@ variable swoop_namespace {
   default     = "swoop"
 }
 
-variable swoop_api_additional_configuration_values {
+variable minio_additional_configuration_values {
   type        = list(string)
   default     = []
   description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options."
 }
 
-variable custom_swoop_api_values_yaml {
+variable custom_minio_values_yaml {
   type        = string
   default     = ""
   description = "Path to custom SWOOP API values.yaml"
