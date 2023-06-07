@@ -104,7 +104,7 @@ variable deploy_promtail {
 
 variable deploy_argo_workflows { 
   type        = bool
-  default     = false
+  default     = true
   description = "Deploy Argo Workflows"
 }
 
@@ -213,4 +213,77 @@ variable custom_minio_values_yaml {
   type        = string
   default     = ""
   description = "Path to custom MinIO values.yaml"
+}
+
+variable custom_swoop_api_input_map {
+  type        = map
+  description = "Input values for SWOOP API Helm Chart"
+  default = {
+    "swoopApi.image.repository"                = "quay.io/element84/swoop"
+    "swoopApi.image.tag"                       = "latest"
+    "swoopApi.container.port"                  = 8000
+    "swoopApi.service.type"                    = "ClusterIP"
+    "swoopApi.service.port"                    = 8000
+    "swoopApi.service.targetPort"              = 8000
+    "swoopApi.service.swoopExecutionDir"       = "s3://swoop/execution"
+    "swoopApi.service.swoopS3Endpoint"         = "http://minio.io:9000"
+    "swoopApi.service.swoopWorkflowConfigFile" = "workflow-config.yml"
+    "swoopApi.service.name"                    = "swoop-api"
+    "swoopApi.deployment.name"                 = "swoop-api"
+    "swoopApi.replicaCount"                    = 1
+  }
+}
+
+variable custom_minio_input_map {
+  type        = map
+  description = "Input values for MinIO Helm Chart"
+  default = {
+    "minio.image.repository"          = "quay.io/minio/minio"
+    "minio.image.tag"                 = "latest"
+    "minio.container.port"            = 9000
+    "minio.container.servicePort"     = 9001
+    "minio.service.type"              = "ClusterIP"
+    "minio.service.port"              = 9000
+    "minio.service.targetPort"        = 9000
+    "minio.service.servicePort"       = 9001
+    "minio.service.serviceTargetPort" = 9001
+    "minio.service.name"              = "minio"
+    "minio.service.bucketName"        = "swoop"
+    "minio.service.accessKeyId"       = "bWluaW8="
+    "minio.service.secretAccessKey"   = "cGFzc3dvcmQ="
+    "minio.deployment.name"           = "minio"
+    "minio.replicaCount"              = 1
+  }
+}
+variable custom_postgres_input_map {
+  type        = map
+  description = "Input values for SWOOP API Helm Chart"
+  default = {
+    "postgres.image.repository"               = "quay.io/element84/swoop-db"
+    "postgres.image.tag"                      = "latest"
+    "postgres.container.port"                 = 5432
+    "postgres.service.type"                   = "ClusterIP"
+    "postgres.service.port"                   = 5432
+    "postgres.service.targetPort"             = 5432
+    "postgres.service.name"                   = "postgres"
+    "postgres.service.dbName"                 = "swoop"
+    "postgres.service.authMethod"             = "trust"
+    "postgres.service.dbUser"                 = "cG9zdGdyZXM="
+    "postgres.service.dbPassword"             = "cGFzc3dvcmQ="
+    "postgres.service.sslMode"                = "disable"
+    "postgres.deployment.schemaVersionTable"  = "swoop.schema_version"
+    "postgres.replicaCount"                   = 1
+  }
+}
+
+variable minio_namespace {
+  type        = string
+  description = "Namespace for MinIO"
+  default     = "io"
+}
+
+variable postgres_namespace {
+  type        = string
+  description = "Namespace for Postgres"
+  default     = "db"
 }

@@ -2,7 +2,12 @@ module "argo_workflows" {
   count   = var.deploy_argo_workflows == true ? 1 : 0
   source  = "./argo_workflows"
 
-  namespace_annotations = var.namespace_annotations
+  namespace_annotations     = var.namespace_annotations
+  custom_minio_settings     = var.custom_minio_settings
+  custom_postgres_settings  = var.custom_postgres_settings
+  minio_namespace           = var.minio_namespace
+  postgres_namespace        = var.postgres_namespace
+  namespace                 = var.namespace
 }
 
 module "argo_events" {

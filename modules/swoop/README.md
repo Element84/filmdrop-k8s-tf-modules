@@ -40,14 +40,14 @@ terraform apply -var-file=local.tfvars
 Once the chart has been deployed, you should see at least 3 deployments: postgres, minio and swoop-api.
 <br></br>
 <p align="center">
-  <img src="./images/swoop-api-deployment-services.png" alt="SWOOP Deployment" width="1776">
+  <img src="./images/swoop-deployment-services.png" alt="SWOOP Deployment" width="1776">
 </p>
 <br></br>
 
 In order to start using the services used by this helm chart, you will need to port-forward `postgres` onto localhost port `5432`, port-forward `minio` onto localhost ports `9000` & `9001` and port-forward `swoop-api` onto localhost port `8000`.
 <br></br>
 <p align="center">
-  <img src="./images/swoop-api-port-forwarding.png" alt="Port forwarding SWOOP" width="1776">
+  <img src="./images/swoop-port-forwarding.png" alt="Port forwarding SWOOP" width="1776">
 </p>
 <br></br>
 
@@ -68,10 +68,10 @@ If you want database sample data to test the API, first clone the [https://githu
 After clonning the swoop repo, export the following postgres environment variables:
 ```
 export PGHOST="127.0.0.1"
-export PGUSER="`helm get values postgres -n swoop -a -o json | jq -r .postgres.service.dbUser | base64 --decode`"
-export PGPASSWORD="`helm get values postgres -n swoop -a -o json | jq -r .postgres.service.dbPassword | base64 --decode`"
-export PGPORT="`helm get values postgres -n swoop -a -o json | jq -r .postgres.service.port`"
-export PGDATABASE="`helm get values postgres -n swoop -a -o json | jq -r .postgres.service.dbName`"
+export PGUSER="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbUser | base64 --decode`"
+export PGPASSWORD="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbPassword | base64 --decode`"
+export PGPORT="`helm get values postgres -n db -a -o json | jq -r .postgres.service.port`"
+export PGDATABASE="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbName`"
 export PGAUTHMETHOD="trust"
 
 ```
@@ -176,8 +176,8 @@ brew install minio/stable/mc
 
 ### Then set the MinIO alias, find the ACCESS_KEY and SECRET_KEY by quering the Helm values
 ```
-export MINIO_ACCESS_KEY=`helm get values swoop-api -n swoop -a -o json | jq -r .minio.service.accessKeyId | base64 --decode`
-export MINIO_SECRET_KEY=`helm get values swoop-api -n swoop -a -o json | jq -r .minio.service.secretAccessKey | base64 --decode`
+export MINIO_ACCESS_KEY=`helm get values minio -n io -a -o json | jq -r .minio.service.accessKeyId | base64 --decode`
+export MINIO_SECRET_KEY=`helm get values minio -n io -a -o json | jq -r .minio.service.secretAccessKey | base64 --decode`
 mc alias set swoopminio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 ```
 
@@ -209,6 +209,18 @@ $ mc cp --recursive tests/fixtures/io/base_01/ swoopminio/swoop/execution/2595f2
 ```
 
 ### View your data on MinIO by opening your browser on [http://localhost:9001/](http://localhost:9001/) and logging into MinIO
+
+Retrieve username by running:
+```
+helm get values minio -n io -a -o json | jq -r .minio.service.accessKeyId | base64 --decode
+```
+
+Retrieve password by running:
+```
+helm get values minio -n io -a -o json | jq -r .minio.service.secretAccessKey | base64 --decode
+```
+
+Open MinIO dashboard by opening your browser on [http://localhost:9001/](http://localhost:9001/) and logging into MinIO using the credentials above:
 <p align="center">
   <img src="./images/swoop-minio-data.png" alt="SWOOP MinIO" width="1776">
 </p>

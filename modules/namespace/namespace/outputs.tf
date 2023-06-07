@@ -1,3 +1,3 @@
-output namespace {
+output name {
     value = var.namespace
 }

@@ -10,14 +10,14 @@ variable deploy_swoop_api {
   default     = true
 }
 
-variable create_swoop_namespace {
-  description = "Whether or not to include to create the SWOOP Namespace"
+variable create_namespace {
+  description = "Whether or not to include to create the namespace"
   type        = bool
   default     = true
 }
 
-variable swoop_namespace {
-  description = "Name of SWOOP Namespace"
+variable namespace {
+  description = "Name of namespace"
   type        = string
   default     = "swoop"
 }
@@ -25,30 +25,6 @@ variable swoop_namespace {
 variable swoop_api_version {
   type = string
   description = "Version of SWOOP API Helm Chart"
-  default = "0.1.0"
-}
-
-variable deploy_postgres {
-  description = "Whether or not to include the Postgres module resources"
-  type        = bool
-  default     = true
-}
-
-variable deploy_minio {
-  description = "Whether or not to include the MinIO module resources"
-  type        = bool
-  default     = true
-}
-
-variable postgres_version {
-  type = string
-  description = "Version of Postgres Helm Chart"
-  default = "0.1.0"
-}
-
-variable minio_version {
-  type = string
-  description = "Version of MinIO Helm Chart"
   default = "0.1.0"
 }
 
@@ -64,26 +40,45 @@ variable custom_swoop_api_values_yaml {
   description = "Path to custom SWOOP API values.yaml"
 }
 
-variable postgres_additional_configuration_values {
-  type        = list(string)
-  default     = []
-  description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options."
+variable custom_minio_settings {
+  type        = map
+  description = "Input values for MinIO"
+  default     = {}
 }
 
-variable custom_postgres_values_yaml {
+variable custom_postgres_settings {
+  type        = map
+  description = "Input values for Postgres"
+  default     = {}
+}
+
+variable minio_namespace {
   type        = string
-  default     = ""
-  description = "Path to custom Postgres values.yaml"
+  description = "Namespace for MinIO"
+  default     = "io"
 }
 
-variable minio_additional_configuration_values {
-  type        = list(string)
-  default     = []
-  description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options."
-}
-
-variable custom_minio_values_yaml {
+variable postgres_namespace {
   type        = string
-  default     = ""
-  description = "Path to custom MinIO values.yaml"
+  description = "Namespace for Postgres"
+  default     = "db"
+}
+
+variable custom_input_map {
+  type        = map
+  description = "Input values for SWOOP API Helm Chart"
+  default = {
+    "swoopApi.image.repository"                = "quay.io/element84/swoop"
+    "swoopApi.image.tag"                       = "latest"
+    "swoopApi.container.port"                  = 8000
+    "swoopApi.service.type"                    = "ClusterIP"
+    "swoopApi.service.port"                    = 8000
+    "swoopApi.service.targetPort"              = 8000
+    "swoopApi.service.swoopExecutionDir"       = "s3://swoop/execution"
+    "swoopApi.service.swoopS3Endpoint"         = "http://minio.io:9000"
+    "swoopApi.service.swoopWorkflowConfigFile" = "workflow-config.yml"
+    "swoopApi.service.name"                    = "swoop-api"
+    "swoopApi.deployment.name"                 = "swoop-api"
+    "swoopApi.replicaCount"                    = 1
+  }
 }

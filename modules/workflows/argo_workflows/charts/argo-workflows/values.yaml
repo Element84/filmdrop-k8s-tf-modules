@@ -124,18 +124,18 @@ controller:
     nodeStatusOffLoad: false
     # enable archiving of old workflows
     archive: true
-    postgresql:
-      host: postgres.argo-other
-      port: 5432
-      database: postgres
-      tableName: argo_workflows
-      # the database secrets must be in the same namespace of the controller
-      userNameSecret:
-        name: argo-postgres-config
-        key: username
-      passwordSecret:
-        name: argo-postgres-config
-        key: password
+    # postgresql:
+    #   host: postgres.argo-other
+    #   port: 5432
+    #   database: postgres
+    #   tableName: argo_workflows
+    #   # the database secrets must be in the same namespace of the controller
+    #   userNameSecret:
+    #     name: argo-postgres-config
+    #     key: username
+    #   passwordSecret:
+    #     name: argo-postgres-config
+    #     key: password
 
   # -- Default values that will apply to all Workflows from this controller, unless overridden on the Workflow-level.
   # Only valid for 2.7+
