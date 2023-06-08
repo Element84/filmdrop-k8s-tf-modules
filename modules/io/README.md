@@ -5,6 +5,10 @@ This module defines the resources required to support object storage for SWOOP: 
 - [MinIO](./minio/README.md): an object storage service for storing artifacts from the [SWOOP API](https://github.com/Element84/swoop). The helm chart for MinIO can be found at: [https://github.com/Element84/filmdrop-k8s-helm-charts/](https://github.com/Element84/filmdrop-k8s-helm-charts/)
 
 
+<br></br>
+***To run MinIO with SWOOP API check the [SWOOP API Guide](../swoop/Readme.md).***
+
+<br></br>
 ## Installation
 ***Please run the following steps at the top level of the filmdrop-k8s-tf-modules project.***
 

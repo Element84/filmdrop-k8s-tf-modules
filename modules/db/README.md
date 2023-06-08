@@ -4,7 +4,10 @@ This module defines the resources required to support a state database for SWOOP
 
 - [Postgres](./postgres/README.md): a database service to store the state database of [SWOOP API](https://github.com/Element84/swoop). The helm chart for MinIO can be found at: [https://github.com/Element84/filmdrop-k8s-helm-charts/](https://github.com/Element84/filmdrop-k8s-helm-charts/)
 
+<br></br>
+***To run Postgres with SWOOP API check the [SWOOP API Guide](../swoop/Readme.md).***
 
+<br></br>
 ## Installation
 ***Please run the following steps at the top level of the filmdrop-k8s-tf-modules project.***
 
