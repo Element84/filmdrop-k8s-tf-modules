@@ -4,7 +4,7 @@ This helm chart will deploy a MinIO object storage for the usage of the [SWOOP A
 
 
 <br></br>
-***To install and run MinIO check the [MinIO Installation Guide](../Readme.md).***
+***To install and run MinIO check the [MinIO Installation Guide](../README.md).***
 
 <br></br>
-***To run MinIO with SWOOP API check the [SWOOP API Guide](../../swoop/Readme.md).***
+***To run MinIO with SWOOP API check the [SWOOP API Guide](../../swoop/README.md).***

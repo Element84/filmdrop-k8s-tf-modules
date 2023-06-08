@@ -6,7 +6,7 @@ This module defines the resources required to support object storage for SWOOP: 
 
 
 <br></br>
-***To run MinIO with SWOOP API check the [SWOOP API Guide](../swoop/Readme.md).***
+***To run MinIO with SWOOP API check the [SWOOP API Guide](../swoop/README.md).***
 
 <br></br>
 ## Installation
