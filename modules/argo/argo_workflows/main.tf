@@ -1,14 +1,3 @@
-resource "kubernetes_namespace" "argo_workflows" {
-  metadata {
-
-    labels = {
-      app = var.namespace
-    }
-
-    name = var.namespace
-  }
-}
-
 resource "kubernetes_secret" "argo_postgres_config" {
   metadata {
     name = "argo-postgres-config"
@@ -19,11 +8,6 @@ resource "kubernetes_secret" "argo_postgres_config" {
     username = base64decode(var.custom_postgres_settings["postgres"]["service"]["dbUser"])
     password = base64decode(var.custom_postgres_settings["postgres"]["service"]["dbPassword"])
   }
-
-  depends_on = [
-    kubernetes_namespace.argo_workflows
-  ]
-
 }
 
 resource "kubernetes_secret" "my_minio_cred" {
@@ -36,11 +20,6 @@ resource "kubernetes_secret" "my_minio_cred" {
     accesskey = base64decode(var.custom_minio_settings["minio"]["service"]["accessKeyId"])
     secretkey = base64decode(var.custom_minio_settings["minio"]["service"]["secretAccessKey"])
   }
-
-  depends_on = [
-    kubernetes_namespace.argo_workflows
-  ]
-
 }
 
 resource "helm_release" "argo_workflows" {
@@ -151,11 +130,10 @@ resource "helm_release" "argo_workflows" {
   }
 
   values = [
-    file("${path.module}/charts/argo-workflows/values.yaml")
+    file("${path.module}/values.yaml")
   ]
 
   depends_on = [
-    kubernetes_namespace.argo_workflows,
     kubernetes_secret.argo_postgres_config,
     kubernetes_secret.my_minio_cred
   ]

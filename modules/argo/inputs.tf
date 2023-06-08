@@ -22,9 +22,22 @@ variable kubernetes_config_context {
   default     = ""
 }
 
+variable create_namespace {
+  description = "Whether or not to include to create the namespace"
+  type        = bool
+  default     = true
+}
+
 variable namespace_annotations {
-  type        = map(string)
-  description = "MAP of custom defined namespace annotations"
+  type = map(string)
+  description = "MAP of annotations applied to the created namespace"
+  default = {}
+}
+
+variable namespace {
+  description = "Name of namespace"
+  type        = string
+  default     = "argo-workflows"
 }
 
 variable custom_minio_settings {
@@ -49,10 +62,4 @@ variable postgres_namespace {
   type        = string
   description = "Namespace for Postgres"
   default     = "db"
-}
-
-variable namespace {
-  description = "Name of namespace"
-  type        = string
-  default     = "argo-workflows"
 }

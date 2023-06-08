@@ -1,8 +1,3 @@
-variable namespace_annotations {
-  type        = map(string)
-  description = "MAP of custom defined namespace annotations"
-}
-
 variable custom_minio_settings {
   type        = map
   description = "Input values for MinIO"

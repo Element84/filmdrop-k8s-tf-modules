@@ -127,18 +127,17 @@ module "swoop_api" {
   ]
 }
 
-module "workflows" {
-  source = "../../modules/workflows"
+module "argo_workflows" {
+  source = "../../modules/argo"
 
   deploy_argo_workflows       = var.deploy_argo_workflows
   deploy_argo_events          = var.deploy_argo_events
   kubernetes_config_file      = var.kubernetes_config_file
   kubernetes_config_context   = var.kubernetes_config_context
-  namespace_annotations       = var.namespace_annotations
-  minio_namespace                             = module.minio.namespace
-  custom_minio_settings                       = module.minio.minio_values
-  postgres_namespace                          = module.postgres.namespace
-  custom_postgres_settings                    = module.postgres.postgres_values
+  minio_namespace             = module.minio.namespace
+  custom_minio_settings       = module.minio.minio_values
+  postgres_namespace          = module.postgres.namespace
+  custom_postgres_settings    = module.postgres.postgres_values
 
   depends_on = [
     module.service_mesh,
