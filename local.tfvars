@@ -55,4 +55,5 @@ deploy_argo_events        = false
 deploy_titiler            = false
 deploy_stacfastapi        = false
 deploy_swoop_api          = true
-swoop_api_version         = "0.0.1"
+deploy_postgres           = true
+deploy_minio              = true

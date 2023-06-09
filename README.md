@@ -15,7 +15,7 @@ The local development environment includes Linkerd as a service mesh. More infor
 
 ### Workflow Operations
 
-The local development environment includes resources for running and managing workflows. More information is available [here](./modules/workflows/README.md).
+The local development environment includes resources for running and managing workflows. More information is available [here](./modules/argo/README.md).
 <br>
 
 ### Nginx ingress proxy

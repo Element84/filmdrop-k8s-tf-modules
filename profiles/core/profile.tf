@@ -23,20 +23,6 @@ module "monitoring" {
   ]
 }
 
-module "workflows" {
-  source = "../../modules/workflows"
-
-  deploy_argo_workflows       = var.deploy_argo_workflows
-  deploy_argo_events          = var.deploy_argo_events
-  kubernetes_config_file      = var.kubernetes_config_file
-  kubernetes_config_context   = var.kubernetes_config_context
-  namespace_annotations       = var.namespace_annotations
-
-  depends_on = [
-    module.service_mesh
-  ]
-}
-
 module "tiling" {
   source = "../../modules/tiling"
 
@@ -86,14 +72,77 @@ module "hello_world" {
   ]
 }
 
-module "swoop_api" {
-  source = "../../modules/swoop"
+module "minio" {
+  source = "../../modules/io"
 
-  deploy_swoop_api      = var.deploy_swoop_api
-  namespace_annotations = var.namespace_annotations
-  swoop_api_version     = var.swoop_api_version
+  deploy_minio                              = var.deploy_minio
+  minio_version                             = var.minio_version
+  namespace_annotations                     = var.namespace_annotations
+  namespace                                 = var.minio_namespace
+  minio_additional_configuration_values     = var.minio_additional_configuration_values
+  custom_minio_values_yaml                  = var.custom_minio_values_yaml
+  custom_input_map                          = var.custom_minio_input_map
 
   depends_on = [
     module.service_mesh
+  ]
+}
+
+module "postgres" {
+  source = "../../modules/db"
+
+  deploy_postgres                           = var.deploy_postgres
+  postgres_version                          = var.postgres_version
+  namespace_annotations                     = var.namespace_annotations
+  namespace                                 = var.postgres_namespace
+  postgres_additional_configuration_values  = var.postgres_additional_configuration_values
+  custom_postgres_values_yaml               = var.custom_postgres_values_yaml
+  custom_input_map                          = var.custom_postgres_input_map
+
+  depends_on = [
+    module.service_mesh
+  ]
+}
+
+module "swoop_api" {
+  source = "../../modules/swoop"
+
+  deploy_swoop_api                            = var.deploy_swoop_api
+  swoop_api_version                           = var.swoop_api_version
+  namespace_annotations                       = var.namespace_annotations
+  namespace                                   = var.swoop_namespace
+  swoop_api_additional_configuration_values   = var.swoop_api_additional_configuration_values
+  custom_swoop_api_values_yaml                = var.custom_swoop_api_values_yaml
+  custom_input_map                            = var.custom_swoop_api_input_map
+  minio_namespace                             = module.minio.namespace
+  custom_minio_settings                       = module.minio.minio_values
+  postgres_namespace                          = module.postgres.namespace
+  custom_postgres_settings                    = module.postgres.postgres_values
+
+  depends_on = [
+    module.service_mesh,
+    module.minio,
+    module.postgres,
+
+  ]
+}
+
+module "argo_workflows" {
+  source = "../../modules/argo"
+
+  deploy_argo_workflows       = var.deploy_argo_workflows
+  deploy_argo_events          = var.deploy_argo_events
+  kubernetes_config_file      = var.kubernetes_config_file
+  kubernetes_config_context   = var.kubernetes_config_context
+  minio_namespace             = module.minio.namespace
+  custom_minio_settings       = module.minio.minio_values
+  postgres_namespace          = module.postgres.namespace
+  custom_postgres_settings    = module.postgres.postgres_values
+
+  depends_on = [
+    module.service_mesh,
+    module.minio,
+    module.postgres,
+
   ]
 }
