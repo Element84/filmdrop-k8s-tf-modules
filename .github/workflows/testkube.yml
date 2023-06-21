@@ -31,12 +31,6 @@ jobs:
           echo "kubeconfig-file-location:" $KUBECONFIG
           echo "current-context:" $(kubectl config current-context)
 
-      - uses: hashicorp/setup-terraform@v2
-      - name: Terraform fmt
-        id: fmt
-        run: terraform fmt -check
-        continue-on-error: true
-
       - name: Terraform Init
         id: init
         run: terraform init
@@ -48,10 +42,25 @@ jobs:
       - name: Terraform Plan
         id: plan
         run: terraform plan -var-file="k3d.tfvars" -out out.tfplan
-        continue-on-error: true
 
       - name: Terraform apply
         id: apply
         if: github.event_name == 'pull_request'
         run: terraform apply -input=false out.tfplan
-        continue-on-error: true
+
+      - name: Create testkube test
+        id: create_test
+        uses: kubeshop/testkube-docker-action@v1
+        with:
+          command: create
+          resource: test
+          namespace: testkube
+          parameters: "--name curl-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curltest.json"
+
+      - name: Run testkube test
+        id: run_test
+        uses: kubeshop/testkube-docker-action@v1
+        with:
+          command: run
+          resource: test
+          parameters: "--watch curl-test"
