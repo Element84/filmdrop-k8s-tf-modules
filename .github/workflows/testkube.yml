@@ -30,7 +30,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y kubeadm
 
-      - uses: rinx/setup-k3d@v0.0.2
+      - uses: AbsaOSS/k3d-action@v2
+        name: "Create K3d Cluster"
+        with:
+          cluster-name: "test-cluster-1"
+          args: >-
+            -p "8083:80@agent:0:direct"
+            -p "8443:443@agent:0:direct"
+            -p "5053:53/udp@agent:0:direct"
+            --agents 1
+            --no-lb
+            --image docker.io/rancher/k3s:v1.27.3-rc1-k3s1
+            --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
 
       - name: Get Cluster Info
         run: |
