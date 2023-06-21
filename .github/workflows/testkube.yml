@@ -30,10 +30,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y kubelet kubeadm kubectl
           sudo apt-mark hold kubelet kubeadm kubectl
-          sudo echo '{ "exec-opts": ["native.cgroupdriver=systemd"] }' > /etc/docker/daemon.json
-          sudo systemctl daemon-reload
-          sudo systemctl restart docker
-          sudo systemctl restart kubelet
 
       - uses: rinx/setup-k3d@v0.0.2
 
