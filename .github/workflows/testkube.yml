@@ -21,11 +21,13 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - uses: AbsaOSS/k3d-action@v2
-        name: "Create Single Cluster"
-        with:
-          cluster-name: "test-cluster-1"
-          args: --agents 1
+      - name: Creating Kubernetes Cluster
+        run: |
+          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x ./kubectl
+          sudo mv ./kubectl /usr/local/bin/kubectl
+          curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
+          k3d cluster create testcluster --api-port 6443 --servers 1 --agents 1 --port "30500-31000:30500-31000@server:0"
 
       - name: Get Cluster Info
         run: |
