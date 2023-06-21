@@ -26,7 +26,7 @@ jobs:
       - name: Get Cluster Info
         run: |
           sudo apt-get update
-          sudo apt-get install -y kubelet kubeadm kubectl
+          sudo apt-get install -y kubelet kubeadm
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
