@@ -21,16 +21,63 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Creating Kubernetes Cluster
+      - name: Update Ubuntu
         run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x ./kubectl
-          sudo mv ./kubectl /usr/local/bin/kubectl
-          curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
-          k3d cluster create testcluster --api-port 6443 --servers 1 --agents 1 --port "30500-31000:30500-31000@server:0"
+          sudo apt update
+          sudo apt -y upgrade
 
-      - name: Get Cluster Info
+      - name: Add Kubernetes Repositories
         run: |
+          sudo apt-get install -y apt-transport-https ca-certificates curl
+          curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
+          echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" >> ~/kubernetes.list
+          sudo mv ~/kubernetes.list /etc/apt/sources.list.d
+          sudo apt update
+
+      - name: Install Kubernetes Tools
+        run: |
+          sudo apt-get install -y kubelet kubeadm kubectl kubernetes-cni
+          sudo apt-mark hold kubelet kubeadm kubectl
+
+      - name: Install Containerd
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+              ca-certificates \
+              curl \
+              gnupg \
+              lsb-release -y
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt remove containerd
+          sudo apt update
+          sudo apt install containerd.io -y
+          sudo rm /etc/containerd/config.toml
+          sudo systemctl restart containerd
+
+      - name: Disable swap
+        run: |
+          sudo sed -ri '/\sswap\s/s/^#?/#/' /etc/fstab
+          sudo swapoff -a
+
+      - name: Initialize Kubernetes Cluster
+        run: |
+          sudo systemctl enable kubelet
+          sudo kubeadm init --v=5 \
+          --upload-certs \
+          --control-plane-endpoint 127.0.0.1:6443 \
+          --pod-network-cidr=172.18.0.0/16 \
+          --ignore-preflight-errors=NumCPU
+
+      - name: Configure kubectl and get Cluster Info
+        run: |
+          sudo mkdir -p $HOME/.kube
+          sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+          sudo chown $(id -u):$(id -g) $HOME/.kube/config
+          kubeadm token create --print-join-command
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
