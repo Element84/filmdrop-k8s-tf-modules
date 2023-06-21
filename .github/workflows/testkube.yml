@@ -30,8 +30,6 @@ jobs:
           kubectl get nodes
           echo "kubeconfig-file-location:" $KUBECONFIG
           echo "current-context:" $(kubectl config current-context)
-          echo '"kubernetes_config_file = "$KUBECONFIG"' >> miniapi.tfvars
-          echo '"kubernetes_config_context = "$(kubectl config current-context)"' >> miniapi.tfvars
 
       - uses: hashicorp/setup-terraform@v2
       - name: Terraform fmt
@@ -49,7 +47,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -var-file="minapi.tfvars" -out out.tfplan
+        run: terraform plan -var-file="k3d.tfvars" -out out.tfplan
         continue-on-error: true
 
       - name: Terraform apply
