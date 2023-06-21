@@ -66,8 +66,7 @@ jobs:
       - name: Initializing Kubernetes Cluster
         run: |
           sudo systemctl enable kubelet
-          sudo kubeadm init --v=5 \
-          --upload-certs \
+          sudo kubeadm init --upload-certs \
           --control-plane-endpoint 127.0.0.1:6443 \
           --pod-network-cidr=172.18.0.0/16 \
           --ignore-preflight-errors=NumCPU
