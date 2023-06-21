@@ -51,7 +51,8 @@ jobs:
           sudo kubeadm init
           echo "kubeconfig-file-location:" $KUBECONFIG
           echo "current-context:" $(kubectl config current-context)
-          cp $KUBECONFIG ~/.kube/config
+          export KUBE_CONFIG_CONTEXT=$(kubectl config current-context)
+          echo "kubernetes_config_context=$KUBE_CONFIG_CONTEXT" >> k3d.tfvars
 
       - name: Terraform Init
         id: init
