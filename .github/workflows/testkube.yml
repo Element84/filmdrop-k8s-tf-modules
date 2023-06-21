@@ -28,6 +28,7 @@ jobs:
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
+          kubeadm init
           echo "kubeconfig-file-location:" $KUBECONFIG
           echo "current-context:" $(kubectl config current-context)
           cp $KUBECONFIG ~/.kube/config
