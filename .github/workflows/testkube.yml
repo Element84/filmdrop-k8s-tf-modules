@@ -21,18 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - uses: AbsaOSS/k3d-action@v2
-        name: "Create Single Cluster"
-        with:
-          cluster-name: "test-cluster-1"
-          args: >-
-            -p "8083:80@agent:0:direct"
-            -p "8443:443@agent:0:direct"
-            -p "5053:53/udp@agent:0:direct"
-            --agents 3
-            --no-lb
-            --image docker.io/rancher/k3s:v1.20.4-k3s1
-            --k3s-arg "--no-deploy=traefik,servicelb,metrics-server@server:*"
+      - uses: rinx/setup-k3d@v0.0.2
 
       - name: Get cluster info
         run: |
@@ -41,6 +30,7 @@ jobs:
           kubectl get nodes
           echo "kubeconfig-file-location:" $KUBECONFIG
           echo "current-context:" $(kubectl config current-context)
+          cp $KUBECONFIG > ~/.kube/config
 
       - name: Terraform Init
         id: init
