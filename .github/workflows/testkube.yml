@@ -22,14 +22,14 @@ jobs:
       - uses: actions/checkout@master
 
       - uses: AbsaOSS/k3d-action@v2
-        name: "Create Kubernetes Cluster with K3d"
+        name: Create Kubernetes Cluster with K3d
         with:
-          cluster-name: "testcluster"
+          cluster-name: testcluster
           args: >-
             --api-port 6443
             --servers 1
             --agents 1
-            --port "30500-31000:30500-31000@server:0
+            --port "30500-31000:30500-31000@server:0"
 
       - name: Configuring kube context and getting cluster info
         run: |
