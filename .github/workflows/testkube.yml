@@ -21,12 +21,12 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Update Ubuntu
+      - name: Updating Ubuntu
         run: |
           sudo apt update
           sudo apt -y upgrade
 
-      - name: Add Kubernetes Repositories
+      - name: Adding Kubernetes Repositories
         run: |
           sudo apt-get install -y apt-transport-https ca-certificates curl
           curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
@@ -34,12 +34,12 @@ jobs:
           sudo mv ~/kubernetes.list /etc/apt/sources.list.d
           sudo apt update
 
-      - name: Install Kubernetes Tools
+      - name: Installing Kubernetes Tools
         run: |
           sudo apt-get install -y kubelet kubeadm kubectl kubernetes-cni
           sudo apt-mark hold kubelet kubeadm kubectl
 
-      - name: Install Containerd
+      - name: Installing Containerd
         run: |
           sudo apt-get update
           sudo apt-get install \
@@ -58,12 +58,12 @@ jobs:
           sudo rm /etc/containerd/config.toml
           sudo systemctl restart containerd
 
-      - name: Disable swap
+      - name: Disabling swap
         run: |
           sudo sed -ri '/\sswap\s/s/^#?/#/' /etc/fstab
           sudo swapoff -a
 
-      - name: Initialize Kubernetes Cluster
+      - name: Initializing Kubernetes Cluster
         run: |
           sudo systemctl enable kubelet
           sudo kubeadm init --v=5 \
@@ -72,7 +72,7 @@ jobs:
           --pod-network-cidr=172.18.0.0/16 \
           --ignore-preflight-errors=NumCPU
 
-      - name: Configure kubectl and get Cluster Info
+      - name: Configuring kubectl and getting Cluster Info
         run: |
           sudo mkdir -p $HOME/.kube
           sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -81,6 +81,7 @@ jobs:
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
+          export KUBECONFIG=$HOME/.kube/config
           echo "kubeconfig-file-location:" $KUBECONFIG
           echo "current-context:" $(kubectl config current-context)
           export KUBE_CONFIG_CONTEXT=$(kubectl config current-context)
