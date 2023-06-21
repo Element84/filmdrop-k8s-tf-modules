@@ -49,6 +49,10 @@ jobs:
           kubectl get pods -n kube-system
           kubectl get nodes
           sudo kubeadm init
+          mkdir -p $HOME/.kube
+          sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+          sudo chown $(id -u):$(id -g) $HOME/.kube/config
+          export KUBECONFIG=$HOME/.kube/config
           echo "kubeconfig-file-location:" $KUBECONFIG
           echo "current-context:" $(kubectl config current-context)
           export KUBE_CONFIG_CONTEXT=$(kubectl config current-context)
