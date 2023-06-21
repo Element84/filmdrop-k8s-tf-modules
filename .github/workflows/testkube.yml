@@ -23,10 +23,18 @@ jobs:
 
       - uses: rinx/setup-k3d@v0.0.2
 
-      - name: Get Cluster Info
+      - name: Install Kubernetes Tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y kubelet kubeadm
+          sudo apt-get install -y apt-transport-https ca-certificates curl
+          curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
+          echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+          sudo apt-get update
+          sudo apt-get install -y kubelet kubeadm kubectl
+          sudo apt-mark hold kubelet kubeadm kubectl
+
+      - name: Get Cluster Info
+        run: |
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
