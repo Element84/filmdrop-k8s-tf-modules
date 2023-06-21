@@ -47,12 +47,8 @@ jobs:
         run: |
           k3d cluster create testcluster --api-port 6443 --servers 1 --agents 1 --port "30500-31000:30500-31000@server:0"
 
-      - name: Configuring kubectl and getting Cluster Info
+      - name: Configuring kubectl and getting cluster info
         run: |
-          ls $HOME/.kube/config
-          sudo mkdir -p $HOME/.kube
-          sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-          sudo chown $(id -u):$(id -g) $HOME/.kube/config
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
