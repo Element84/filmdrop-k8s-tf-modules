@@ -21,8 +21,6 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - uses: rinx/setup-k3d@v0.0.2
-
       - name: Install Kubernetes Tools
         run: |
           sudo apt-get update
@@ -32,10 +30,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y kubelet kubeadm kubectl
           sudo apt-mark hold kubelet kubeadm kubectl
-          echo '{ "exec-opts": ["native.cgroupdriver=systemd"] }' > /etc/docker/daemon.json
+          sudo echo '{ "exec-opts": ["native.cgroupdriver=systemd"] }' > /etc/docker/daemon.json
           sudo systemctl daemon-reload
           sudo systemctl restart docker
           sudo systemctl restart kubelet
+
+      - uses: rinx/setup-k3d@v0.0.2
 
       - name: Get Cluster Info
         run: |
