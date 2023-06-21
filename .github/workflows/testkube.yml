@@ -28,8 +28,9 @@ jobs:
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
-          cat ./.kube/config
+          echo "kubeconfig-file-location:" $KUBECONFIG
           echo "current-context:" $(kubectl config current-context)
+          export TF_VAR_kubernetes_config_file=$KUBECONFIG
           export TF_VAR_kubernetes_config_context=$(kubectl config current-context)
 
       - uses: hashicorp/setup-terraform@v2
