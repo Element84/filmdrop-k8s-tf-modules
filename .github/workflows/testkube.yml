@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  snyk:
+  testkube:
     permissions:
       contents: read # for actions/checkout to fetch code
       security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
@@ -28,7 +28,7 @@ jobs:
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
-          cat ~/.kube/config
+          cat ./.kube/config
           echo "current-context:" $(kubectl config current-context)
           export TF_VAR_kubernetes_config_context=$(kubectl config current-context)
 
