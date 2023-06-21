@@ -23,8 +23,10 @@ jobs:
 
       - uses: rinx/setup-k3d@v0.0.2
 
-      - name: Get cluster info
+      - name: Get Cluster Info
         run: |
+          sudo apt-get update
+          sudo apt-get install -y kubelet kubeadm kubectl
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
@@ -50,8 +52,8 @@ jobs:
         if: github.event_name == 'pull_request'
         run: terraform apply -input=false out.tfplan
 
-      - name: Create testkube test
-        id: create_test
+      - name: Create Testkube Tests
+        id: create_tests
         uses: kubeshop/testkube-docker-action@v1
         with:
           command: create
@@ -59,8 +61,8 @@ jobs:
           namespace: testkube
           parameters: "--name curl-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curltest.json"
 
-      - name: Run testkube test
-        id: run_test
+      - name: Run Testkube Tests
+        id: run_tests
         uses: kubeshop/testkube-docker-action@v1
         with:
           command: run
