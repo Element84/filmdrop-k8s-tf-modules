@@ -59,14 +59,6 @@ jobs:
         if: github.event_name == 'pull_request'
         run: terraform apply -input=false out.tfplan
 
-      - name: Install Testkube
-        run: |
-          wget -qO - https://repo.testkube.io/key.pub | sudo apt-key add -
-          echo "deb https://repo.testkube.io/linux linux main" | sudo tee -a /etc/apt/sources.list
-          sudo apt-get update
-          sudo apt-get install -y testkube
-          kubectl testkube install --no-confirm
-
       - name: Create testkube test
         id: create_test
         uses: kubeshop/testkube-docker-action@v1
