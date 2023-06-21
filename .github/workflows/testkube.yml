@@ -21,7 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - uses: rinx/setup-k3d@v0.0.2
+      - uses: AbsaOSS/k3d-action@v2
+        name: "Create Single Cluster"
+        with:
+          cluster-name: "test-cluster-1"
+          args: --agents 1
 
       - name: Get Cluster Info
         run: |
