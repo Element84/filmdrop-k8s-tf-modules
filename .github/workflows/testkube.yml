@@ -37,7 +37,6 @@ jobs:
           export KUBE_CONFIG_CONTEXT=$(kubectl config current-context)
           echo "kubernetes_config_file=\"$KUBECONFIG\"" >> min.tfvars
           echo "kubernetes_config_context=\"$KUBE_CONFIG_CONTEXT\"" >> min.tfvars
-          curl -v -k https://0.0.0.0:33965
 
       - name: Terraform Init
         id: init
