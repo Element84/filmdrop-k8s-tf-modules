@@ -39,6 +39,25 @@ jobs:
           sudo apt-get install -y kubelet kubeadm kubectl kubernetes-cni
           sudo apt-mark hold kubelet kubeadm kubectl
 
+      - name: Installing Containerd
+        run: |
+          sudo apt-get update
+          sudo apt-get install \
+              ca-certificates \
+              curl \
+              gnupg \
+              lsb-release -y
+          sudo mkdir -p /etc/apt/keyrings
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+          echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+          sudo apt remove containerd
+          sudo apt update
+          sudo apt install containerd.io -y
+          sudo rm /etc/containerd/config.toml
+          sudo systemctl restart containerd
+
       - name: Installing K3d
         run: |
           curl -s https://raw.githubusercontent.com/k3d-io/k3d/main/install.sh | bash
@@ -47,7 +66,7 @@ jobs:
         run: |
           k3d cluster create testcluster --api-port 6443 --servers 1 --agents 1 --port "30500-31000:30500-31000@server:0"
 
-      - name: Configuring kubectl and getting cluster info
+      - name: Configuring kube context and getting cluster info
         run: |
           kubectl cluster-info
           kubectl get pods -n kube-system
