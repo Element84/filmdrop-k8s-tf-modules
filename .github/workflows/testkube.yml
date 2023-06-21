@@ -28,16 +28,22 @@ jobs:
           curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
           echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
           sudo apt-get update
-          sudo apt-get install -y kubeadm
+          sudo apt-get install -y kubelet kubeadm kubectl kubernetes-cni
+          sudo apt-mark hold kubelet kubeadm kubectl
+          sudo swapoff -a
+          sudo sed -i '/ swap / s/^/#/' /etc/fstab
+          sudo tee -a /etc/docker/daemon.json << END
+          {
+              "exec-opts": ["native.cgroupdriver=systemd"]
+          }
+          END
+          sudo systemctl daemon-reload
+          sudo systemctl restart docker
+          sudo systemctl restart kubelet
 
-      - uses: AbsaOSS/k3d-action@v2
-        name: "Create K3d Cluster"
+      - uses: nolar/setup-k3d-k3s@v1
         with:
-          cluster-name: "test-cluster-1"
-          args: >-
-            --agents 1
-            --no-lb
-            --image docker.io/rancher/k3s:v1.27.3-rc1-k3s1
+          version: v1.27.3-rc1+k3s1
 
       - name: Get Cluster Info
         run: |
