@@ -21,43 +21,18 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - name: Install Kubernetes Tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y apt-transport-https ca-certificates curl
-          curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
-          echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-          sudo apt-get update
-          sudo apt-get install -y kubelet kubeadm kubectl kubernetes-cni
-          sudo apt-mark hold kubelet kubeadm kubectl
-          sudo swapoff -a
-          sudo sed -i '/ swap / s/^/#/' /etc/fstab
-          sudo tee -a /etc/docker/daemon.json << END
-          {
-              "exec-opts": ["native.cgroupdriver=systemd"]
-          }
-          END
-          sudo systemctl daemon-reload
-          sudo systemctl restart docker
-          sudo systemctl restart kubelet
-
-      - uses: nolar/setup-k3d-k3s@v1
+      - uses: rinx/setup-k3d@v0.0.2
 
       - name: Get Cluster Info
         run: |
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
-          sudo kubeadm init
-          mkdir -p $HOME/.kube
-          sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
-          sudo chown $(id -u):$(id -g) $HOME/.kube/config
-          export KUBECONFIG=$HOME/.kube/config
-          cat $HOME/.kube/config
           echo "kubeconfig-file-location:" $KUBECONFIG
           echo "current-context:" $(kubectl config current-context)
           export KUBE_CONFIG_CONTEXT=$(kubectl config current-context)
-          echo "kubernetes_config_context=\"$KUBE_CONFIG_CONTEXT\"" >> k3d.tfvars
+          echo "kubernetes_config_file=\"$KUBECONFIG\"" >> min.tfvars
+          echo "kubernetes_config_context=\"$KUBE_CONFIG_CONTEXT\"" >> min.tfvars
 
       - name: Terraform Init
         id: init
@@ -69,7 +44,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -var-file="k3d.tfvars" -out out.tfplan
+        run: terraform plan -var-file="min.tfvars" -out out.tfplan
 
       - name: Terraform Apply
         id: apply
