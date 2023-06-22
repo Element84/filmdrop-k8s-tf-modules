@@ -53,28 +53,7 @@ jobs:
         if: github.event_name == 'pull_request'
         run: terraform apply -input=false out.tfplan
 
-      - name: Installing Testkube
-        run: |
-          wget -qO - https://repo.testkube.io/key.pub | sudo apt-key add -
-          echo "deb https://repo.testkube.io/linux linux main" | sudo tee -a /etc/apt/sources.list
-          sudo apt-get update
-          sudo apt-get install -y testkube
-          kubectl testkube install --no-confirm
-          export POD_NAME=$(kubectl get pods --namespace default -l "app.kubernetes.io/name=testkube,app.kubernetes.io/instance=testkube" -o jsonpath="{.items[0].metadata.name}")
-          export CONTAINER_PORT=$(kubectl get pod --namespace default $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-          echo "Visit http://127.0.0.1:8088 to use your application"
-          kubectl --namespace default port-forward $POD_NAME 8088:$CONTAINER_PORT
-
       - name: Creating Testkube Tests
-        id: create_kubetest
-        uses: kubeshop/testkube-docker-action@v1
-        with:
-          command: create
-          resource: test
-          namespace: testkube
-          parameters: --name curl-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curltest.json
-
-      - name: Run Testkube Tests
         id: create_kubetest
         uses: kubeshop/testkube-docker-action@v1
         with:
