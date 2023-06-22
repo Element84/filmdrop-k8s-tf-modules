@@ -61,6 +61,42 @@ jobs:
           kubectl wait --for=condition=ready --timeout=30m pod -n io -l app=minio
           kubectl wait --for=condition=ready --timeout=30m pod -n swoop -l app=swoop-api
 
+      - name: Checkout swoop repo
+        uses: actions/checkout@master
+        with:
+          repository: Element84/swoop
+          path: swoop
+
+      - name: Setup MinIO
+        run: |
+          kubectl port-forward -n io svc/minio 9000:9000 &
+          wget https://dl.min.io/server/minio/release/linux-amd64/archive/minio_20230619195250.0.0_amd64.deb -O minio.deb
+          sudo dpkg -i minio.deb
+          export MINIO_ACCESS_KEY=`helm get values minio -n io -a -o json | jq -r .minio.service.accessKeyId | base64 --decode`
+          export MINIO_SECRET_KEY=`helm get values minio -n io -a -o json | jq -r .minio.service.secretAccessKey | base64 --decode`
+          mc alias set swoopminio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+          mc cp --recursive swoop/tests/fixtures/io/base_01/ swoopminio/swoop/execution/2595f2da-81a6-423c-84db-935e6791046e/
+
+      - name: Checkout swoop-db repo
+        uses: actions/checkout@master
+        with:
+          repository: Element84/swoop-db
+          path: swoop-db
+
+      - name: Setup Postgres
+        run: |
+          kubectl port-forward -n db svc/postgres 5432:5432 &
+          sudo apt update
+          sudo apt install postgresql postgresql-contrib
+          export PGHOST="127.0.0.1"
+          export PGUSER="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbUser | base64 --decode`"
+          export PGPASSWORD="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbPassword | base64 --decode`"
+          export PGPORT="`helm get values postgres -n db -a -o json | jq -r .postgres.service.port`"
+          export PGDATABASE="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbName`"
+          export PGAUTHMETHOD="trust"
+          psql -p $PGPORT -U $PGUSER $PGDATABASE  < swoop-db/src/swoop/db/migrations/00000_base_schema.up.sql
+          psql -p $PGPORT -U $PGUSER $PGDATABASE  < swoop-db/src/swoop/db/fixtures/base_01.sql
+
       - name: Installing Testkube
         run: |
           wget -qO - https://repo.testkube.io/key.pub | sudo apt-key add -
@@ -74,8 +110,12 @@ jobs:
 
       - name: Create Testkube Tests
         run: |
-          testkube create test --namespace testkube --name swoop-api-root-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-root-test.json --param apiHost=swoop-api.swoop:8000
+          testkube create test --namespace testkube --name swoop-api-root-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-root-test.json --variable apiHost=swoop-api.swoop:8000
+          testkube create test --namespace testkube --name swoop-api-jobs-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-jobs-test.json --variable apiHost=swoop-api.swoop:8000
+          testkube create test --namespace testkube --name swoop-api-payload-input-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-payload-input-test.json --variable apiHost=swoop-api.swoop:8000
 
       - name: Running Testkube Tests
         run: |
           testkube run test --watch swoop-api-root-test
+          testkube run test --watch swoop-api-jobs-test
+          testkube run test --watch swoop-api-payload-input-test
