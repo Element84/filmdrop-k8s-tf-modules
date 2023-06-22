@@ -62,7 +62,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y testkube
           kubectl testkube install --no-confirm
-          kubectl wait --for=condition=ready pod -n testkube -l app.kubernetes.io/instance=testkube
+          kubectl wait --for=condition=ready --timeout=30m pod -n testkube -l app.kubernetes.io/instance=testkube
           kubectl port-forward -n testkube svc/testkube-api-server 8088:8088 &
           testkube config api-uri http://127.0.0.1:8088/v1
 
