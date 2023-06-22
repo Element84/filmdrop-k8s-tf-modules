@@ -63,7 +63,7 @@ jobs:
           parameters: --name curl-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curltest.json
 
       - name: Run Testkube Tests
-        id: create_kubetest
+        id: run_kubetest
         uses: kubeshop/testkube-docker-action@v1
         with:
           command: run
