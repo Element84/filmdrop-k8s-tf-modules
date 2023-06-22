@@ -21,20 +21,11 @@ jobs:
     steps:
       - uses: actions/checkout@master
 
-      - uses: AbsaOSS/k3d-action@v2
-        name: Create Kubernetes Cluster with K3d
-        with:
-          cluster-name: testcluster
-          args: >-
-            --api-port 6443
-            --servers 1
-            --agents 1
-            --port "30500-31000:30500-31000@server:0"
+      - name: Create k8s Kind Cluster
+        uses: helm/kind-action@v1.7.0
 
       - name: Configuring kube context and getting cluster info
         run: |
-          k3d kubeconfig merge testcluster --kubeconfig-switch-context
-          export KUBECONFIG=$HOME/.k3d/kubeconfig-testcluster.yaml
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
