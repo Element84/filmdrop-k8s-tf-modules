@@ -34,8 +34,7 @@ jobs:
       - name: Configuring kube context and getting cluster info
         run: |
           k3d kubeconfig merge testcluster --kubeconfig-switch-context
-          ls $HOME/.k3d/testcluster.yaml
-          export KUBECONFIG=$HOME/.k3d/testcluster.yaml
+          export KUBECONFIG=$HOME/.k3d/kubeconfig-testcluster.yaml
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
