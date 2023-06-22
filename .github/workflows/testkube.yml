@@ -64,19 +64,16 @@ jobs:
         if: github.event_name == 'pull_request'
         run: terraform apply -input=false out.tfplan
 
-      - name: Create Testkube Tests
-        id: create_tests
-        uses: kubeshop/testkube-docker-action@v1
-        with:
-          command: create
-          resource: test
-          namespace: testkube
-          parameters: "--name curl-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curltest.json"
+      - name: Installing Testkube
+        run: |
+          wget -qO - https://repo.testkube.io/key.pub | sudo apt-key add -
+          echo "deb https://repo.testkube.io/linux linux main" | sudo tee -a /etc/apt/sources.list
+          sudo apt-get update
+          sudo apt-get install -y testkube
+          kubectl testkube install
 
-      - name: Run Testkube Tests
-        id: run_tests
-        uses: kubeshop/testkube-docker-action@v1
-        with:
-          command: run
-          resource: test
-          parameters: "--watch curl-test"
+      - name: Creating Testkube Tests
+        run: testkube create test --namespace testkube --name curl-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curltest.json
+
+      - name: Running Testkube Tests
+        run: testkube run test --watch curl-test
