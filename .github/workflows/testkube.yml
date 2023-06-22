@@ -34,10 +34,7 @@ jobs:
       - name: Configuring kube context and getting cluster info
         run: |
           k3d kubeconfig merge testcluster --kubeconfig-switch-context
-          sudo mkdir -p $HOME/.kube
-          cp $HOME/.k3d/kubeconfig-testcluster.yaml $HOME/.kube/config
-          sudo chown $(id -u):$(id -g) $HOME/.kube/config
-          export KUBECONFIG=$HOME/.kube/config
+          export KUBECONFIG=$HOME/.k3d/kubeconfig-testcluster.yaml
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
@@ -65,12 +62,7 @@ jobs:
         run: terraform apply -input=false out.tfplan
 
       - name: Installing Testkube
-        run: |
-          wget -qO - https://repo.testkube.io/key.pub | sudo apt-key add -
-          echo "deb https://repo.testkube.io/linux linux main" | sudo tee -a /etc/apt/sources.list
-          sudo apt-get update
-          sudo apt-get install -y testkube
-          kubectl testkube install --no-confirm
+        run: kubectl testkube install --no-confirm
 
       - name: Creating Testkube Tests
         run: testkube create test --namespace testkube --name curl-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curltest.json
