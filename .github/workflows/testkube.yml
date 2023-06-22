@@ -26,6 +26,7 @@ jobs:
 
       - name: Configuring kube context and getting cluster info
         run: |
+          export KUBECONFIG=${HOME}/.kube/config
           kubectl cluster-info
           kubectl get pods -n kube-system
           kubectl get nodes
