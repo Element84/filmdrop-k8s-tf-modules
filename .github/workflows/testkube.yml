@@ -55,6 +55,12 @@ jobs:
         if: github.event_name == 'pull_request'
         run: terraform apply -input=false out.tfplan
 
+      - name: Waiting for SWOOP pods
+        run: |
+          kubectl wait --for=condition=ready --timeout=30m pod -n db -l app=postgres
+          kubectl wait --for=condition=ready --timeout=30m pod -n io -l app=minio
+          kubectl wait --for=condition=ready --timeout=30m pod -n swoop -l app=swoop-api
+
       - name: Installing Testkube
         run: |
           wget -qO - https://repo.testkube.io/key.pub | sudo apt-key add -
@@ -68,8 +74,8 @@ jobs:
 
       - name: Create Testkube Tests
         run: |
-          testkube create test --namespace testkube --name curl-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curltest.json
+          testkube create test --namespace testkube --name swoop-api-root-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-root-test.json --param apiHost=swoop-api.swoop:8000
 
       - name: Running Testkube Tests
         run: |
-          testkube run test --watch curl-test
+          testkube run test --watch swoop-api-root-test
