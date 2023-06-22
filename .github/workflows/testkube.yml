@@ -116,9 +116,11 @@ jobs:
           testkube create test --namespace testkube --name swoop-api-root-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-root-test.json --variable apiHost=swoop-api.swoop:8000
           testkube create test --namespace testkube --name swoop-api-jobs-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-jobs-test.json --variable apiHost=swoop-api.swoop:8000
           testkube create test --namespace testkube --name swoop-api-payload-input-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curl/swoop-api-payload-input-test.json --variable apiHost=swoop-api.swoop:8000
+          testkube create test --namespace testkube --name swoop-api-simple-k6-load-test --type k6/script --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/k6/swoop-api-simple-k6-load-test.js --variable API_HOST=swoop-api.swoop:8000
 
       - name: Running Testkube Tests
         run: |
           testkube run test --watch swoop-api-root-test
           testkube run test --watch swoop-api-jobs-test
           testkube run test --watch swoop-api-payload-input-test
+          testkube run test --watch swoop-api-simple-k6-load-test
