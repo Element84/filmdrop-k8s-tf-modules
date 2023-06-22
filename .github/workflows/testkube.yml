@@ -66,7 +66,29 @@ jobs:
           kubectl --namespace default port-forward $POD_NAME 8088:$CONTAINER_PORT
 
       - name: Creating Testkube Tests
-        run: testkube create test --namespace testkube --name curl-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curltest.json
+        id: create_kubetest
+        uses: kubeshop/testkube-docker-action@v1
+        with:
+          command: create
+          resource: test
+          namespace: testkube
+          parameters: --name curl-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curltest.json
 
-      - name: Running Testkube Tests
-        run: testkube run test --watch curl-test
+      - name: Run Testkube Tests
+        id: create_kubetest
+        uses: kubeshop/testkube-docker-action@v1
+        with:
+          command: create
+          resource: test
+          namespace: testkube
+          parameters: --name curl-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop.git --git-branch hm/testkube --git-path tests/testkube/curltest.json
+
+      - name: Run Testkube Tests
+        id: create_kubetest
+        uses: kubeshop/testkube-docker-action@v1
+        with:
+          command: run
+          resource: test
+          namespace: testkube
+          parameters: --watch curl-test
+
