@@ -82,7 +82,6 @@ jobs:
 
       - name: Apply migrations and load swoop-db fixtures
         run: |
-          kubectl port-forward -n db svc/postgres 5432:5432 &
           kubectl exec -it --namespace=db $(kubectl get pods -o=name --namespace=db | grep postgres) -- /bin/sh -c "swoop-db up"
           kubectl exec -it --namespace=db $(kubectl get pods -o=name --namespace=db | grep postgres) -- /bin/sh -c "swoop-db load-fixture base_01"
 
