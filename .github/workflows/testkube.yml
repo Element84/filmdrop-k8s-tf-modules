@@ -52,7 +52,6 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        if: github.event_name == 'pull_request'
         run: terraform apply -input=false out.tfplan
 
       - name: Waiting for SWOOP pods
