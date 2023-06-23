@@ -63,101 +63,11 @@ $ curl http://localhost:8000/
 
 To test the API endpoints that make use of data in the postgres database, you will need to load data into the postgres state database or use [swoop-db](https://github.com/Element84/swoop-db) to initialize the schema and load test migrations.
 
-If you want database sample data to test the API, first clone the [https://github.com/Element84/swoop-db](https://github.com/Element84/swoop-db) repository locally, source the environment variables to your terminal, and then run the migrations and import the fixtures like the following:
-
-After clonning the swoop repo, export the following postgres environment variables:
+If you want database sample data to test the API, run the following swoop-db commands on the postgres pods to apply the migrations and load the fixtures:
 ```
-export PGHOST="127.0.0.1"
-export PGUSER="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbUser | base64 --decode`"
-export PGPASSWORD="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbPassword | base64 --decode`"
-export PGPORT="`helm get values postgres -n db -a -o json | jq -r .postgres.service.port`"
-export PGDATABASE="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbName`"
-export PGAUTHMETHOD="trust"
-
+kubectl exec -it --namespace=db $(kubectl get pods -o=name --namespace=db | grep postgres) -- /bin/sh -c "swoop-db up"
+kubectl exec -it --namespace=db $(kubectl get pods -o=name --namespace=db | grep postgres) -- /bin/sh -c "swoop-db load-fixture base_01"
 ```
-
-Then run the following command from the top level of the your local clone of the [swoop-db](https://github.com/Element84/swoop-db) repository in your local terminal to initialize the schema:
-
-```
-[swoop-db]$ psql -p $PGPORT -U $PGUSER $PGDATABASE  < src/swoop/db/migrations/00000_base_schema.up.sql        (main)
-
-CREATE SCHEMA
-CREATE SCHEMA
-CREATE EXTENSION
-CREATE TABLE
-INSERT 0 12
-CREATE TABLE
-CREATE INDEX
-CREATE TABLE
-CREATE INDEX
-CREATE INDEX
-CREATE INDEX
-CREATE INDEX
-CREATE TABLE
-ALTER TABLE
- create_parent
----------------
- t
-(1 row)
-
-CREATE TABLE
-CREATE INDEX
-CREATE INDEX
-CREATE INDEX
-CREATE INDEX
-CREATE TABLE
-ALTER TABLE
- create_parent
----------------
- t
-(1 row)
-
-CREATE TABLE
-CREATE INDEX
-CREATE INDEX
-CREATE TABLE
-ALTER TABLE
- create_parent
----------------
- t
-(1 row)
-
-CREATE TABLE
-CREATE TABLE
-CREATE INDEX
-CREATE FUNCTION
-CREATE TRIGGER
-CREATE FUNCTION
-CREATE TRIGGER
-CREATE FUNCTION
-CREATE TRIGGER
-CREATE FUNCTION
-CREATE FUNCTION
-CREATE TRIGGER
-CREATE FUNCTION
-CREATE FUNCTION
-CREATE FUNCTION
-```
-
-Next run the following command from the top level of the your local clone of the [swoop-db](https://github.com/Element84/swoop-db) repository in your local terminal to initialize the migrations:
-````
-[swoop-db]$ psql -p $PGPORT -U $PGUSER $PGDATABASE  < src/swoop/db/fixtures/base_01.sql        (main)
-
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-INSERT 0 1
-
-````
-
 
 After loading the database, you should be able to see the jobs in the swoop api jobs endpoint [http://localhost:8000/jobs/](http://localhost:8000/jobs/):
 ```
