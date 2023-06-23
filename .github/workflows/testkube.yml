@@ -1,0 +1,112 @@
+# This workflow sets up Testkube Kubernetes Tests
+
+name: Testkube Kubernetes Tests
+
+on:
+  push:
+    branches: ["main" ]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  testkube:
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - name: Create k3d Cluster
+        uses: nolar/setup-k3d-k3s@v1
+        with:
+          k3d-args: --no-lb
+
+      - name: Configuring kube context and getting cluster info
+        run: |
+          export KUBECONFIG=${HOME}/.kube/config
+          kubectl cluster-info
+          kubectl get pods -n kube-system
+          kubectl get nodes
+          echo "kubeconfig-file-location:" $KUBECONFIG
+          echo "current-context:" $(kubectl config current-context)
+          export KUBE_CONFIG_CONTEXT=$(kubectl config current-context)
+          echo "kubernetes_config_file=\"$KUBECONFIG\"" >> min.tfvars
+          echo "kubernetes_config_context=\"$KUBE_CONFIG_CONTEXT\"" >> min.tfvars
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan -var-file="min.tfvars" -out out.tfplan
+
+      - name: Terraform Apply
+        id: apply
+        if: github.event_name == 'pull_request'
+        run: terraform apply -input=false out.tfplan
+
+      - name: Waiting for SWOOP pods
+        run: |
+          kubectl wait --for=condition=ready --timeout=30m pod -n db -l app=postgres
+          kubectl wait --for=condition=ready --timeout=30m pod -n io -l app=minio
+          kubectl wait --for=condition=ready --timeout=30m pod -n swoop -l app=swoop-api
+
+      - name: Checkout swoop repo
+        uses: actions/checkout@master
+        with:
+          repository: Element84/swoop
+          path: swoop
+
+      - name: Setup MinIO
+        run: |
+          kubectl port-forward -n io svc/minio 9000:9000 &
+          curl https://dl.min.io/client/mc/release/linux-amd64/mc \
+            --create-dirs \
+            -o $HOME/minio-binaries/mc
+          chmod +x $HOME/minio-binaries/mc
+          export PATH=$PATH:$HOME/minio-binaries/
+          export MINIO_ACCESS_KEY=`helm get values minio -n io -a -o json | jq -r .minio.service.accessKeyId | base64 --decode`
+          export MINIO_SECRET_KEY=`helm get values minio -n io -a -o json | jq -r .minio.service.secretAccessKey | base64 --decode`
+          mc alias set swoopminio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+          mc cp --recursive swoop/tests/fixtures/io/base_01/ swoopminio/swoop/execution/2595f2da-81a6-423c-84db-935e6791046e/
+
+      - name: Apply migrations and load swoop-db fixtures
+        run: |
+          kubectl exec -it --namespace=db $(kubectl get pods -o=name --namespace=db | grep postgres) -- /bin/sh -c "swoop-db up"
+          kubectl exec -it --namespace=db $(kubectl get pods -o=name --namespace=db | grep postgres) -- /bin/sh -c "swoop-db load-fixture base_01"
+
+      - name: Installing Testkube
+        run: |
+          wget -qO - https://repo.testkube.io/key.pub | sudo apt-key add -
+          echo "deb https://repo.testkube.io/linux linux main" | sudo tee -a /etc/apt/sources.list
+          sudo apt-get update
+          sudo apt-get install -y testkube
+          kubectl testkube install --no-confirm
+          kubectl wait --for=condition=ready --timeout=30m pod -n testkube -l app.kubernetes.io/instance=testkube
+          kubectl port-forward -n testkube svc/testkube-api-server 8088:8088 &
+          testkube config api-uri http://127.0.0.1:8088/v1
+
+      - name: Create Testkube Tests
+        continue-on-error: true
+        run: |
+          testkube create test --namespace testkube --name swoop-api-root-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop-testkube.git --git-branch main --git-path tests/curl/swoop-api-root-test.json --variable apiHost=swoop-api.swoop:8000
+          testkube create test --namespace testkube --name swoop-api-jobs-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop-testkube.git --git-branch main --git-path tests/curl/swoop-api-jobs-test.json --variable apiHost=swoop-api.swoop:8000
+          testkube create test --namespace testkube --name swoop-api-payload-input-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop-testkube.git --git-branch main --git-path tests/curl/swoop-api-payload-input-test.json --variable apiHost=swoop-api.swoop:8000
+          testkube create test --namespace testkube --name swoop-api-simple-k6-load-test --type k6/script --test-content-type git-file --git-uri https://github.com/Element84/swoop-testkube.git --git-branch main --git-path tests/k6/swoop-api-simple-k6-load-test.js --variable API_HOST=swoop-api.swoop:8000
+
+      - name: Running Testkube Tests
+        run: |
+          testkube run test --watch swoop-api-root-test
+          testkube run test --watch swoop-api-jobs-test
+          testkube run test --watch swoop-api-payload-input-test
+          testkube run test --watch swoop-api-simple-k6-load-test
