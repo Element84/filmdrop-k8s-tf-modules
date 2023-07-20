@@ -35,6 +35,8 @@ jobs:
           echo "kubeconfig-file-location:" $KUBECONFIG
           echo "current-context:" $(kubectl config current-context)
           export KUBE_CONFIG_CONTEXT=$(kubectl config current-context)
+          sed -i.bak 's/^kubernetes_config_file.*/# kubernetes_config_file = xxx/g' minimal.tfvars
+          sed -i.bak 's/^kubernetes_config_context.*/# kubernetes_config_context = xxx/g' minimal.tfvars
           echo "kubernetes_config_file=\"$KUBECONFIG\"" >> minimal.tfvars
           echo "kubernetes_config_context=\"$KUBE_CONFIG_CONTEXT\"" >> minimal.tfvars
 
