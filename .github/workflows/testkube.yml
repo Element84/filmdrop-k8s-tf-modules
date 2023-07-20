@@ -35,8 +35,8 @@ jobs:
           echo "kubeconfig-file-location:" $KUBECONFIG
           echo "current-context:" $(kubectl config current-context)
           export KUBE_CONFIG_CONTEXT=$(kubectl config current-context)
-          echo "kubernetes_config_file=\"$KUBECONFIG\"" >> min.tfvars
-          echo "kubernetes_config_context=\"$KUBE_CONFIG_CONTEXT\"" >> min.tfvars
+          echo "kubernetes_config_file=\"$KUBECONFIG\"" >> minimal.tfvars
+          echo "kubernetes_config_context=\"$KUBE_CONFIG_CONTEXT\"" >> minimal.tfvars
 
       - name: Terraform Init
         id: init
@@ -48,7 +48,7 @@ jobs:
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -var-file="min.tfvars" -out out.tfplan
+        run: terraform plan -var-file="minimal.tfvars" -out out.tfplan
 
       - name: Terraform Apply
         id: apply
@@ -68,7 +68,6 @@ jobs:
 
       - name: Setup MinIO
         run: |
-          kubectl port-forward -n io svc/minio 9000:9000 &
           curl https://dl.min.io/client/mc/release/linux-amd64/mc \
             --create-dirs \
             -o $HOME/minio-binaries/mc
