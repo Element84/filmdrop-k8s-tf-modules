@@ -18,7 +18,7 @@ variable extra_values {
 variable ingress_nginx_version {
   type = string
   description = "Version of Ingress NGINX Helm Chart"
-  default = "4.5.2"
+  default = "4.7.1"
 }
 
 variable namespace {
