@@ -33,6 +33,11 @@ resource "kubernetes_job_v1" "db-initialization" {
           }
 
           env {
+            name  = "DATABASE_TO_CREATE"
+            value = "initdb"
+          }
+
+          env {
             name = "OWNER_ROLE_USER"
             value_from {
               secret_key_ref {
