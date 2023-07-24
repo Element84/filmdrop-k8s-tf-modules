@@ -39,8 +39,8 @@ resource "kubernetes_secret" "db_postgres_secret_owner_role" {
   }
 
   binary_data = {
-    username = "dXNlcl9vd25lcg=="
-    password = "cGFzc19vd25lcg=="
+    username = var.owner_username
+    password = var.owner_password
   }
 
   depends_on = [
@@ -56,8 +56,8 @@ resource "kubernetes_secret" "db_postgres_secret_api_role" {
   }
 
   binary_data = {
-    username = "dXNlcl9hcGk="
-    password = "cGFzc19hcGk="
+    username = var.api_username
+    password = var.api_password
   }
 
   depends_on = [
@@ -73,8 +73,8 @@ resource "kubernetes_secret" "db_postgres_secret_caboose_role" {
   }
 
   binary_data = {
-    username = "dXNlcl9jYWJvb3Nl"
-    password = "cGFzc19jYWJvb3Nl"
+    username = var.caboose_username
+    password = var.caboose_password
   }
 
   depends_on = [
@@ -90,8 +90,8 @@ resource "kubernetes_secret" "db_postgres_secret_conductor_role" {
   }
 
   binary_data = {
-    username = "dXNlcl9jb25kdWN0b3I="
-    password = "cGFzc19jb25kdWN0b3I="
+    username = var.conductor_username
+    password = var.conductor_password
   }
 
   depends_on = [
