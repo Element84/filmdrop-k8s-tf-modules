@@ -43,6 +43,18 @@ variable "custom_input_map" {
   }
 }
 
+variable "postgres_default_username" {
+  description = "Default username for Postgres"
+  type        = string
+  default     = "cG9zdGdyZXM="
+}
+
+variable "postgres_default_password" {
+  description = "Default password for Postgres"
+  type        = string
+  default     = "cGFzc3dvcmQ="
+}
+
 variable "owner_username" {
   description = "Username for Owner role"
   type        = string

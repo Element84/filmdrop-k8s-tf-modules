@@ -32,6 +32,23 @@ module "dbinit" {
 
 }
 
+resource "kubernetes_secret" "db_postgres_default_un_pw" {
+  metadata {
+    name      = "postgres-default-un-pw"
+    namespace = var.namespace
+  }
+
+  binary_data = {
+    username = var.postgres_default_username
+    password = var.postgres_default_password
+  }
+
+  depends_on = [
+    helm_release.postgres
+  ]
+
+}
+
 resource "kubernetes_secret" "db_postgres_secret_owner_role" {
   metadata {
     name      = "postgres-secret-owner-role"

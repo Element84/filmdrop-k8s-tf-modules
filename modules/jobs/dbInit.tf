@@ -11,6 +11,27 @@ resource "kubernetes_job_v1" "db-initialization" {
           name    = "swoop-db"
           image   = "quay.io/element84/swoop-db"
           command = ["python", "opt/swoop/db/scripts/db-initialization.py"]
+
+          env {
+            name = "POSTGRES_DEFAULT_USERNAME"
+            value_from {
+              secret_key_ref {
+                name = "postgres-default-un-pw"
+                key  = "username"
+              }
+            }
+          }
+
+          env {
+            name = "POSTGRES_DEFAULT_PASSWORD"
+            value_from {
+              secret_key_ref {
+                name = "postgres-default-un-pw"
+                key  = "password"
+              }
+            }
+          }
+
           env {
             name = "OWNER_ROLE_USER"
             value_from {
