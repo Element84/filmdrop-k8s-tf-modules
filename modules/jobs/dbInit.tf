@@ -10,7 +10,7 @@ resource "kubernetes_job_v1" "db-initialization" {
         container {
           name    = "swoop-db"
           image   = "quay.io/element84/swoop-db"
-          command = ["python", "home/db-initialization.py"]
+          command = ["python", "opt/swoop/db/scripts/db-initialization.py"]
           env {
             name = "OWNER_ROLE_USER"
             value_from {
