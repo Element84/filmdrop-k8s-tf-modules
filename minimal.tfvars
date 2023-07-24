@@ -17,17 +17,11 @@ grafana_prometheus_extra_values = {}
 
 namespace_annotations = {}
 
-nginx_extra_values = {
-  "controller.ingressClassResource.default"       = "true"
-  "tcp.8000"                                      = "swoop/swoop-api:8000"
-  "tcp.9000"                                      = "io/minio:9000"
-  "tcp.9001"                                      = "io/minio:9001"
-  "tcp.5432"                                      = "db/postgres:5432"
-}
+nginx_extra_values = {}
 
 #### Component flags: Deploy only Ingress NGINX with SWOOP API, Postgres and MinIO for GitHub Actions and other minimal testing
 deploy_linkerd            = false
-deploy_ingress_nginx      = true
+deploy_ingress_nginx      = false
 deploy_grafana_prometheus = false
 deploy_loki               = false
 deploy_promtail           = false

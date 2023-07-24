@@ -70,6 +70,7 @@ jobs:
 
       - name: Setup MinIO
         run: |
+          kubectl port-forward -n io svc/minio 9000:9000 &
           curl https://dl.min.io/client/mc/release/linux-amd64/mc \
             --create-dirs \
             -o $HOME/minio-binaries/mc
