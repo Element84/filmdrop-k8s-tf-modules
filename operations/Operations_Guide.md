@@ -86,6 +86,57 @@ nginx ingress controller, thus the ingress-nginx controller pods won't be able t
 </p>
 <br>
 
+### Local terraform variables (tfvars)
+You will need to update [local.tfvars](../../local.tfvars) or create your own .tfvars to customize your deployment. There are several ways you can do so, first, you can enable or disable your service by switching the ```deploy_<service_name>``` flag.
+
+For example, for enabling swoop-api and it's dependent services you will need to enable at least the following from your tfvars:
+```
+deploy_swoop_api          = true
+deploy_postgres           = true
+deploy_minio              = true
+```
+
+### Enabling Ingress Nginx load balancer through local variables
+
+The ingress nginx module will deploy a load balancer and expose your services in your local machine without the need of port-forwarding.
+
+<p align="center">
+  <img src="./images/local_development_environment.png" alt="Local Development Environment" width="754">
+</p>
+<br>
+
+
+If you would like to automatically expose your service ports in your local environment, you can enable an ingress-nginx that has been provided for this purpose. First for enabling the ingress-nginx module, make sure to update [local.tfvars](../../local.tfvars) or your own .tfvars with the following:
+```
+deploy_ingress_nginx      = true
+```
+
+If you do decide to use the ingress-nginx load balancer to expose your application, you can control which local port would you want to forward the service port via the nginx_extra_values variable in the [local.tfvars](../../local.tfvars) or your own .tfvars:
+```
+nginx_extra_values = {
+  "tcp.<LOCAL_MACHINE_PORT>" = "<NAMESPACE>/<SERVICE_NAME>:<SERVICE_PORT>"
+}
+```
+
+For example, swoop-api, minio and postgres, the default nginx_extra_values configuration would look like:
+```
+nginx_extra_values = {
+  "controller.ingressClassResource.default" = "true"
+  "tcp.8000"                                = "swoop/swoop-api:8000"
+  "tcp.9000"                                = "io/minio:9000"
+  "tcp.9001"                                = "io/minio:9001"
+  "tcp.5432"                                = "db/postgres:5432"
+}
+```
+
+After deploying the ingress-nginx module, you do not need to do anything else to expose your service ports! You should be able to reach out your services via your localhost without the need of port-forwarding. For example:
+```
+swoop-api:800 -> localhost:8000
+minio:9000 -> localhost:9000
+minio:9001 -> localhost:9001
+postgres:5432 -> localhost:5432
+```
+
 ### Recommended VM Settings
 
 When testing locally it's advised to use a virtual machine with at least 4 CPUs and 6 GB of memory (RAM). Also, make sure that your MacOS is updated to the latest version (i.e. perform all software updates related to the OS). This can resolve some issues with deployment that arise due to the VM that runs the Kubernetes cluster running out of memory as the Terraform modules are deployed.
