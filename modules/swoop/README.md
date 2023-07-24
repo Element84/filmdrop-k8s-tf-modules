@@ -138,7 +138,7 @@ Open MinIO dashboard by opening your browser on [http://localhost:9001/](http://
 
 ### Test API with MinIO by running:
 ```
-$ curl http://localhost:8000/jobs/2595f2da-81a6-423c-84db-935e6791046e/payload
+$ curl http://localhost:8000/jobs/2595f2da-81a6-423c-84db-935e6791046e/inputs
 
 {"process_id":"2595f2da-81a6-423c-84db-935e6791046e","payload":"test_input"}%
 ```

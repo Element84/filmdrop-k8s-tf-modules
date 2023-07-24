@@ -2,7 +2,7 @@ module "ingress_namespace" {
   source = "../namespace"
 
   namespace_annotations = var.namespace_annotations
-  create_namespace      = var.create_namespace
+  create_namespace      = var.deploy_ingress_nginx == true ? var.create_namespace : false
   namespace             = var.namespace
 }
 
