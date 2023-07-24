@@ -50,8 +50,8 @@ nginx_extra_values = {
   "tcp.2746"                                      = "argo-workflows/argo-workflows-server:2746"
 }
 
-#### Component flags: Deploy everything with the exception of TiTiler, stac-fastapi, and Argo Events
-deploy_linkerd            = true
+#### Component flags: Deploy everything with the exception of Linkerd, TiTiler, stac-fastapi, and Argo Events
+deploy_linkerd            = false
 deploy_ingress_nginx      = true
 deploy_grafana_prometheus = true
 deploy_loki               = true
