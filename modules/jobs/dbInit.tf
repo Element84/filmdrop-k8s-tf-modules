@@ -28,6 +28,11 @@ resource "kubernetes_job_v1" "db-initialization" {
           }
 
           env {
+            name  = "PGPORT"
+            value = "5432"
+          }
+
+          env {
             name = "API_ROLE_USER"
             value_from {
               secret_key_ref {
