@@ -12,31 +12,72 @@ This module defines the resources required for the SWOOP: STAC Workflow Open Orc
 
 ***For recommended VM settings and other kubernetes guidance, please check the [Operations Guide](../../operations/Operations_Guide.md)***
 
-1. First, initialize terraform:
+***The commands below require you to be on top level directory of the filmdrop-k8s-tf-modules project.***
+
+1. First, update [local.tfvars](../../local.tfvars) or create your own .tfvars:
+* For enabling swoop-api and it's dependent services you will need to enable at least the following from your tfvars:
+```
+deploy_swoop_api          = true
+deploy_postgres           = true
+deploy_minio              = true
+```
+* If you would like to automatically expose the swoop-api, minio and postgres ports in your local environment, you can enable an ingress-nginx that has been provided for this purpose. First for enabling the ingress-nginx module, make sure to update [local.tfvars](../../local.tfvars) or your own .tfvars with the following:
+```
+deploy_ingress_nginx      = true
+```
+* Lastly, if you do decide to use the ingress-nginx load balancer to expose your application, you can control which local port would you want to forward the service port via the nginx_extra_values variable in the [local.tfvars](../../local.tfvars) or your own .tfvars:
+```
+nginx_extra_values = {
+  "tcp.<LOCAL_MACHINE_PORT>" = "<NAMESPACE>/<SERVICE_NAME>:<SERVICE_PORT>"
+}
+```
+* For swoop-api, minio and postgres, the default nginx_extra_values configuration would look like:
+```
+nginx_extra_values = {
+  "tcp.8000"  = "swoop/swoop-api:8000"
+  "tcp.9000"  = "io/minio:9000"
+  "tcp.9001"  = "io/minio:9001"
+  "tcp.5432"  = "db/postgres:5432"
+}
+```
+
+2. Next, initialize terraform:
 
 ```bash
 terraform init
 ```
 
-2. Validate that the terraform resources are valid. If your terraform is valid the validate command will respond with _"Success! The configuration is valid."_
+3. Validate that the terraform resources are valid. If your terraform is valid the validate command will respond with _"Success! The configuration is valid."_
 
 ```bash
 terraform validate
 ```
 
-3. Run a terraform plan. The terraform plan will give you a summary of all the changes terraform will perform prior to deploying any change.
+4. Run a terraform plan. The terraform plan will give you a summary of all the changes terraform will perform prior to deploying any change. You will a need 
 
 ```bash
 terraform plan -var-file=local.tfvars
 ```
 
-4. Deploy the changes by applying the terraform plan. You will be asked to confirm the changes and must respond with _"yes"_.
+5. Deploy the changes by applying the terraform plan. You will be asked to confirm the changes and must respond with _"yes"_.
 
 ```bash
 terraform apply -var-file=local.tfvars
 ```
 
-## Running SWOOP API
+## Connecting to SWOOP API
+
+### Connecting with Ingress Nginx
+
+If you decided to enable the ingress-nginx module, then you do not need to do anything else to expose your service ports! You should be able to reach out your services via your localhost without the need of port-forwarding. For example:
+```
+swoop-api:800 -> localhost:8000
+minio:9000 -> localhost:9000
+minio:9001 -> localhost:9001
+postgres:5432 -> localhost:5432
+```
+
+### Connecting without Ingress Nginx
 Once the chart has been deployed, you should see at least 3 deployments: postgres, minio and swoop-api.
 <br></br>
 <p align="center">
@@ -45,17 +86,27 @@ Once the chart has been deployed, you should see at least 3 deployments: postgre
 <br></br>
 
 In order to start using the services used by this helm chart, you will need to port-forward `postgres` onto localhost port `5432`, port-forward `minio` onto localhost ports `9000` & `9001` and port-forward `swoop-api` onto localhost port `8000`.
+
+Via Rancher Desktop:
 <br></br>
 <p align="center">
   <img src="./images/swoop-port-forwarding.png" alt="Port forwarding SWOOP" width="1776">
 </p>
 <br></br>
 
+or via terminal:
+```
+kubectl port-forward -n swoop svc/swoop-api 8000:8000 &
+kubectl port-forward -n db svc/postgres 5432:5432 &
+kubectl port-forward -n io svc/minio 9000:9000 &
+kubectl port-forward -n io svc/minio 9001:9001 &
+```
+
 You will see now, that if you reach the swoop api [http://localhost:8000/](http://localhost:8000/), you should see a sample response:
 ```
 $ curl http://localhost:8000/
 
-{"title":"Example processing server","description":"Example server implementing the OGC API - Processes 1.0 Standard","links":[{"href":"http://localhost:8000/conformance","rel":"http://www.opengis.net/def/rel/ogc/1.0/conformance","type":"application/json","hreflang":null,"title":null}]}%
+{"title":"Example processing server","description":"Example server implementing the OGC API - Processes 1.0 Standard","links":[{"href":"http://localhost:8000/conformance","rel":"http://www.opengis.net/def/rel/ogc/1.0/conformance","type":"application/json"}]}%
 ```
 <br></br>
 
@@ -73,7 +124,7 @@ After loading the database, you should be able to see the jobs in the swoop api 
 ```
 $ curl http://localhost:8000/jobs/
 
-{"jobs":[{"processID":"action_2","type":"process","jobID":"81842304-0aa9-4609-89f0-1c86819b0752","status":"accepted","message":null,"created":null,"started":null,"finished":null,"updated":"2023-04-28T15:49:00+00:00","progress":null,"links":null,"parentID":"2595f2da-81a6-423c-84db-935e6791046e"},{"processID":"action_1","type":"process","jobID":"2595f2da-81a6-423c-84db-935e6791046e","status":"successful","message":null,"created":null,"started":null,"finished":null,"updated":"2023-04-28T15:49:03+00:00","progress":null,"links":null,"parentID":"cf8ff7f0-ce5d-4de6-8026-4e551787385f"}],"links":[{"href":"http://www.example.com","rel":null,"type":null,"hreflang":null,"title":null}]}%
+{"jobs":[{"processID":"action_1","type":"process","jobID":"0187c88d-a9e0-788c-adcb-c0b951f8be91","status":"successful","created":"2023-04-28T15:49:00+00:00","started":"2023-04-28T15:49:02+00:00","finished":"2023-04-28T15:49:03+00:00","updated":"2023-04-28T15:49:03+00:00","links":[{"href":"http://localhost:8000/","rel":"root","type":"application/json"},{"href":"http://localhost:8000/jobs/0187c88d-a9e0-788c-adcb-c0b951f8be91","rel":"self","type":"application/json"},{"href":"http://localhost:8000/jobs/0187c88d-a9e0-788c-adcb-c0b951f8be91/results","rel":"results","type":"application/json"},{"href":"http://localhost:8000/jobs/0187c88d-a9e0-788c-adcb-c0b951f8be91/inputs","rel":"inputs","type":"application/json"},{"href":"http://localhost:8000/processes/action_1","rel":"process","type":"application/json"},{"href":"http://localhost:8000/payloadCacheEntries/ade69fe7-1d7d-572e-9f36-7242cc2aca77","rel":"cache","type":"application/json"}]},{"processID":"action_2","type":"process","jobID":"0187c88d-a9e0-757e-aa36-2fbb6c834cb5","status":"accepted","created":"2023-04-28T15:49:00+00:00","started":null,"finished":null,"updated":"2023-04-28T15:49:00+00:00","links":[{"href":"http://localhost:8000/","rel":"root","type":"application/json"},{"href":"http://localhost:8000/jobs/0187c88d-a9e0-757e-aa36-2fbb6c834cb5","rel":"self","type":"application/json"},{"href":"http://localhost:8000/jobs/0187c88d-a9e0-757e-aa36-2fbb6c834cb5/results","rel":"results","type":"application/json"},{"href":"http://localhost:8000/jobs/0187c88d-a9e0-757e-aa36-2fbb6c834cb5/inputs","rel":"inputs","type":"application/json"},{"href":"http://localhost:8000/processes/action_2","rel":"process","type":"application/json"},{"href":"http://localhost:8000/payloadCacheEntries/ade69fe7-1d7d-572e-9f36-7242cc2aca77","rel":"cache","type":"application/json"}]}],"links":[{"href":"http://localhost:8000/","rel":"root","type":"application/json"},{"href":"http://localhost:8000/jobs/","rel":"self","type":"application/json"}]}%
 ```
 
 ## API tests with Object Storage
@@ -138,7 +189,7 @@ Open MinIO dashboard by opening your browser on [http://localhost:9001/](http://
 
 ### Test API with MinIO by running:
 ```
-$ curl http://localhost:8000/jobs/2595f2da-81a6-423c-84db-935e6791046e/payload
+$ curl http://localhost:8000/jobs/2595f2da-81a6-423c-84db-935e6791046e/inputs
 
 {"process_id":"2595f2da-81a6-423c-84db-935e6791046e","payload":"test_input"}%
 ```
@@ -152,4 +203,4 @@ $ curl http://localhost:8000/jobs/2595f2da-81a6-423c-84db-935e6791046e/results
 
 ## Uninstall swoop-api
 
-To uninstall the release, do `terraform destroy`.
+To uninstall the release, do `terraform destroy -var-file=local.tfvars`.

@@ -2,13 +2,10 @@ resource "helm_release" "ingress_nginx" {
   name              = "ingress-nginx"
   repository        = "https://kubernetes.github.io/ingress-nginx"
   chart             = "ingress-nginx"
-  version           = "4.5.2"
-  namespace         = "ingress-nginx"
-  create_namespace  = true
-  wait              = true
+  version           = var.ingress_nginx_version
+  namespace         = var.namespace
+  create_namespace  = false
   atomic            = true
-
-  values = [file("${path.module}/values.yaml")]
 
   dynamic "set" {
     for_each = var.extra_values
@@ -19,15 +16,10 @@ resource "helm_release" "ingress_nginx" {
     }
   }
 
-  set {
-    name  = "controller.service.nodePorts.http"
-    value = var.nginx_http_port
-  }
-
-  set {
-    name  = "controller.service.nodePorts.https"
-    value = var.nginx_https_port
-  }
+  values = concat(
+    [var.custom_ingress_nginx_values_yaml == "" ? file("${path.module}/values.yaml") : file(var.custom_ingress_nginx_values_yaml)],
+    length(var.ingress_nginx_additional_configuration_values) == 0 ? [] : var.ingress_nginx_additional_configuration_values
+  )
 }
 
 resource "null_resource" "wait_for_ingress_nginx_ready" {
@@ -38,7 +30,7 @@ resource "null_resource" "wait_for_ingress_nginx_ready" {
   provisioner "local-exec" {
     command = <<EOF
       printf "\nWaiting for the nginx ingress controller...\n"
-      kubectl --kubeconfig ${var.kubernetes_config_file} 
+      kubectl --kubeconfig ${var.kubernetes_config_file} \
         --context '${var.kubernetes_config_context}' wait \
         --namespace ${helm_release.ingress_nginx.namespace} \
         --for=condition=ready pod \

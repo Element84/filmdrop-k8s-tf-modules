@@ -45,33 +45,6 @@ module "stac" {
   ]
 }
 
-module "ingress_proxy" {
-  source = "../../modules/ingress"
-
-  deploy_ingress_nginx      = var.deploy_ingress_nginx
-  kubernetes_config_file    = var.kubernetes_config_file
-  kubernetes_config_context = var.kubernetes_config_context
-  nginx_http_port           = var.nginx_http_port
-  nginx_https_port          = var.nginx_https_port
-  nginx_extra_values        = var.nginx_extra_values
-
-  depends_on = [
-    module.service_mesh
-  ]
-}
-
-module "hello_world" {
-  source = "../../modules/apps"
-
-  deploy_hello_world    = var.deploy_hello_world
-  namespace_annotations = var.namespace_annotations
-
-  depends_on = [
-    module.service_mesh,
-    module.ingress_proxy
-  ]
-}
-
 module "minio" {
   source = "../../modules/io"
 
@@ -144,5 +117,26 @@ module "argo_workflows" {
     module.minio,
     module.postgres,
 
+  ]
+}
+
+module "ingress_proxy" {
+  source = "../../modules/ingress"
+
+  namespace                                     = var.ingress_nginx_namespace
+  deploy_ingress_nginx                          = var.deploy_ingress_nginx
+  kubernetes_config_file                        = var.kubernetes_config_file
+  kubernetes_config_context                     = var.kubernetes_config_context
+  nginx_extra_values                            = var.nginx_extra_values
+  ingress_nginx_version                         = var.ingress_nginx_version
+  custom_ingress_nginx_values_yaml              = var.custom_ingress_nginx_values_yaml
+  ingress_nginx_additional_configuration_values = var.ingress_nginx_additional_configuration_values
+
+  depends_on = [
+    module.service_mesh,
+    module.swoop_api,
+    module.minio,
+    module.postgres,
+    module.argo_workflows,
   ]
 }

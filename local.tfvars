@@ -41,12 +41,18 @@ namespace_annotations = {
 nginx_extra_values = {
   "controller.podAnnotations.linkerd\\.io/inject" = "enabled"
   "controller.ingressClassResource.default"       = "true"
+  "tcp.8000"                                      = "swoop/swoop-api:8000"
+  "tcp.9000"                                      = "io/minio:9000"
+  "tcp.9001"                                      = "io/minio:9001"
+  "tcp.5432"                                      = "db/postgres:5432"
+  "tcp.9090"                                      = "monitoring/kube-prometheus-stack-prometheus:9090"
+  "tcp.3009"                                      = "monitoring/kube-prometheus-stack-grafana:3009"
+  "tcp.2746"                                      = "argo-workflows/argo-workflows-server:2746"
 }
 
-#### Component flags: Deploy everything with the exception of TiTiler, stac-fastapi, Nginx, Hello World App and Argo Events
-deploy_linkerd            = true
-deploy_ingress_nginx      = false
-deploy_hello_world        = false
+#### Component flags: Deploy everything with the exception of Linkerd, TiTiler, stac-fastapi, and Argo Events
+deploy_linkerd            = false
+deploy_ingress_nginx      = true
 deploy_grafana_prometheus = true
 deploy_loki               = true
 deploy_promtail           = true
