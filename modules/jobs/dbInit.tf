@@ -13,48 +13,20 @@ resource "kubernetes_job_v1" "db-initialization" {
           command = ["python", "opt/swoop/db/scripts/db-initialization.py"]
 
           env {
-            name = "POSTGRES_DEFAULT_USERNAME"
-            value_from {
-              secret_key_ref {
-                name = "postgres-default-un-pw"
-                key  = "username"
-              }
-            }
+            name  = "PGHOST"
+            value = "postgres"
           }
 
           env {
-            name = "POSTGRES_DEFAULT_PASSWORD"
-            value_from {
-              secret_key_ref {
-                name = "postgres-default-un-pw"
-                key  = "password"
-              }
-            }
+            name  = "PGUSER"
+            value = "postgres"
           }
 
           env {
-            name  = "DATABASE_TO_CREATE"
-            value = "initdb"
+            name  = "PGDATABASE"
+            value = "swoop"
           }
 
-          env {
-            name = "OWNER_ROLE_USER"
-            value_from {
-              secret_key_ref {
-                name = "postgres-secret-owner-role"
-                key  = "username"
-              }
-            }
-          }
-          env {
-            name = "OWNER_ROLE_PASS"
-            value_from {
-              secret_key_ref {
-                name = "postgres-secret-owner-role"
-                key  = "password"
-              }
-            }
-          }
           env {
             name = "API_ROLE_USER"
             value_from {
@@ -105,6 +77,25 @@ resource "kubernetes_job_v1" "db-initialization" {
             value_from {
               secret_key_ref {
                 name = "postgres-secret-conductor-role"
+                key  = "password"
+              }
+            }
+          }
+
+          env {
+            name = "MIGRATION_ROLE_USER"
+            value_from {
+              secret_key_ref {
+                name = "postgres-secret-migration-role"
+                key  = "username"
+              }
+            }
+          }
+          env {
+            name = "MIGRATION_ROLE_PASS"
+            value_from {
+              secret_key_ref {
+                name = "postgres-secret-migration-role"
                 key  = "password"
               }
             }

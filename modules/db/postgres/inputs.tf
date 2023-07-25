@@ -43,28 +43,16 @@ variable "custom_input_map" {
   }
 }
 
-variable "postgres_default_username" {
-  description = "Default username for Postgres"
+variable "migration_username" {
+  description = "Username for Migration role"
   type        = string
-  default     = "cG9zdGdyZXM="
+  default     = "dXNlcl9taWdyYXRpb24="
 }
 
-variable "postgres_default_password" {
-  description = "Default password for Postgres"
+variable "migration_password" {
+  description = "Password for Migration role"
   type        = string
-  default     = "cGFzc3dvcmQ="
-}
-
-variable "owner_username" {
-  description = "Username for Owner role"
-  type        = string
-  default     = "dXNlcl9vd25lcg=="
-}
-
-variable "owner_password" {
-  description = "Password for Owner role"
-  type        = string
-  default     = "cGFzc19vd25lcg=="
+  default     = "cGFzc19taWdyYXRpb24="
 }
 
 variable "api_username" {
