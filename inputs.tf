@@ -119,9 +119,9 @@ variable deploy_swoop_api {
   default     = true
 }
 
-variable swoop_api_version {
+variable swoop_bundle_version {
   type = string
-  description = "Version of SWOOP API Helm Chart"
+  description = "Version of SWOOP Bundle Helm Chart"
   default = "0.1.0"
 }
 

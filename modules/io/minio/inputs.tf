@@ -6,7 +6,7 @@ variable namespace_annotations {
 
 variable minio_version {
   type = string
-  description = "Version of SWOOP API Helm Chart"
+  description = "Version of SWOOP Bundle Helm Chart"
   default = "0.1.0"
 }
 

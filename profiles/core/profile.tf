@@ -77,11 +77,11 @@ module "postgres" {
   ]
 }
 
-module "swoop_api" {
+module "swoop_bundle" {
   source = "../../modules/swoop"
 
   deploy_swoop_api                            = var.deploy_swoop_api
-  swoop_api_version                           = var.swoop_api_version
+  swoop_bundle_version                        = var.swoop_bundle_version
   namespace_annotations                       = var.namespace_annotations
   namespace                                   = var.swoop_namespace
   swoop_api_additional_configuration_values   = var.swoop_api_additional_configuration_values
@@ -96,7 +96,6 @@ module "swoop_api" {
     module.service_mesh,
     module.minio,
     module.postgres,
-
   ]
 }
 
@@ -134,7 +133,7 @@ module "ingress_proxy" {
 
   depends_on = [
     module.service_mesh,
-    module.swoop_api,
+    module.swoop_bundle,
     module.minio,
     module.postgres,
     module.argo_workflows,

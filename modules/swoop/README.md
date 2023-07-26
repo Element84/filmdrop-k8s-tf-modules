@@ -116,8 +116,8 @@ To test the API endpoints that make use of data in the postgres database, you wi
 
 If you want database sample data to test the API, run the following swoop-db commands on the postgres pods to apply the migrations and load the fixtures:
 ```
-kubectl exec -it --namespace=db $(kubectl get pods -o=name --namespace=db | grep postgres) -- /bin/sh -c "swoop-db up"
-kubectl exec -it --namespace=db $(kubectl get pods -o=name --namespace=db | grep postgres) -- /bin/sh -c "swoop-db load-fixture base_01"
+kubectl exec -it --namespace=db svc/postgres  -- /bin/sh -c "swoop-db up"
+kubectl exec -it --namespace=db svc/postgres  -- /bin/sh -c "swoop-db load-fixture base_01"
 ```
 
 After loading the database, you should be able to see the jobs in the swoop api jobs endpoint [http://localhost:8000/jobs/](http://localhost:8000/jobs/):

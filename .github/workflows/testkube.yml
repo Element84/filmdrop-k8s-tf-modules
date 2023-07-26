@@ -83,8 +83,8 @@ jobs:
 
       - name: Apply migrations and load swoop-db fixtures
         run: |
-          kubectl exec -it --namespace=db $(kubectl get pods -o=name --namespace=db | grep postgres) -- /bin/sh -c "swoop-db up"
-          kubectl exec -it --namespace=db $(kubectl get pods -o=name --namespace=db | grep postgres) -- /bin/sh -c "swoop-db load-fixture base_01"
+          kubectl exec -it --namespace=db svc/postgres  -- /bin/sh -c "swoop-db up"
+          kubectl exec -it --namespace=db svc/postgres  -- /bin/sh -c "swoop-db load-fixture base_01"
 
       - name: Installing Testkube
         run: |
@@ -100,10 +100,10 @@ jobs:
       - name: Create Testkube Tests
         continue-on-error: true
         run: |
-          testkube create test --namespace testkube --name swoop-api-root-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop-testkube.git --git-branch main --git-path tests/curl/swoop-api-root-test.json --variable apiHost=swoop-api.swoop:8000
-          testkube create test --namespace testkube --name swoop-api-jobs-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop-testkube.git --git-branch main --git-path tests/curl/swoop-api-jobs-test.json --variable apiHost=swoop-api.swoop:8000
-          testkube create test --namespace testkube --name swoop-api-payload-input-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop-testkube.git --git-branch main --git-path tests/curl/swoop-api-payload-input-test.json --variable apiHost=swoop-api.swoop:8000
-          testkube create test --namespace testkube --name swoop-api-simple-k6-load-test --type k6/script --test-content-type git-file --git-uri https://github.com/Element84/swoop-testkube.git --git-branch main --git-path tests/k6/swoop-api-simple-k6-load-test.js --variable API_HOST=swoop-api.swoop:8000
+          testkube create test --namespace testkube --name swoop-api-root-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop-testkube.git --git-branch main --git-path tests/terraform/curl/swoop-api-root-test.json --variable apiHost=swoop-api.swoop:8000
+          testkube create test --namespace testkube --name swoop-api-jobs-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop-testkube.git --git-branch main --git-path tests/terraform/curl/swoop-api-jobs-test.json --variable apiHost=swoop-api.swoop:8000
+          testkube create test --namespace testkube --name swoop-api-payload-input-test --type curl/test --test-content-type git-file --git-uri https://github.com/Element84/swoop-testkube.git --git-branch main --git-path tests/terraform/curl/swoop-api-payload-input-test.json --variable apiHost=swoop-api.swoop:8000
+          testkube create test --namespace testkube --name swoop-api-simple-k6-load-test --type k6/script --test-content-type git-file --git-uri https://github.com/Element84/swoop-testkube.git --git-branch main --git-path tests/terraform/k6/swoop-api-simple-k6-load-test.js --variable API_HOST=swoop-api.swoop:8000
 
       - name: Running Testkube Tests
         run: |
