@@ -6,12 +6,12 @@ module "swoop_namespace" {
   namespace             = var.namespace
 }
 
-module "swoop_api" {
+module "swoop_bundle" {
   count   = var.deploy_swoop_api == true ? 1 : 0
-  source  = "./swoop-api"
+  source  = "./swoop-bundle"
 
   namespace                                 = var.namespace
-  swoop_api_version                         = var.swoop_api_version
+  swoop_bundle_version                      = var.swoop_bundle_version
   custom_swoop_api_values_yaml              = var.custom_swoop_api_values_yaml
   swoop_api_additional_configuration_values = var.swoop_api_additional_configuration_values
   custom_input_map                          = var.custom_input_map

@@ -22,7 +22,7 @@ module "local_environment" {
   deploy_titiler                                = var.deploy_titiler
   deploy_stacfastapi                            = var.deploy_stacfastapi
   deploy_swoop_api                              = var.deploy_swoop_api
-  swoop_api_version                             = var.swoop_api_version
+  swoop_bundle_version                          = var.swoop_bundle_version
   ingress_nginx_additional_configuration_values = var.ingress_nginx_additional_configuration_values
   custom_ingress_nginx_values_yaml              = var.custom_ingress_nginx_values_yaml
   ingress_nginx_version                         = var.ingress_nginx_version
