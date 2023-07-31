@@ -2,12 +2,12 @@ module "swoop_namespace" {
   source = "../namespace"
 
   namespace_annotations = var.namespace_annotations
-  create_namespace      = var.deploy_swoop_api == true ? var.create_namespace : false
+  create_namespace      = var.deploy_swoop_api == true || var.deploy_swoop_caboose == true || var.deploy_argo_workflows == true ? var.create_namespace : false
   namespace             = var.namespace
 }
 
 module "swoop_bundle" {
-  count   = var.deploy_swoop_api == true ? 1 : 0
+  count   = var.deploy_swoop_api == true || var.deploy_swoop_caboose == true || var.deploy_argo_workflows == true ? 1 : 0
   source  = "./swoop-bundle"
 
   namespace                                 = var.namespace
@@ -19,6 +19,9 @@ module "swoop_bundle" {
   custom_postgres_settings                  = var.custom_postgres_settings
   minio_namespace                           = var.minio_namespace
   postgres_namespace                        = var.postgres_namespace
+  deploy_swoop_api                          = var.deploy_swoop_api
+  deploy_swoop_caboose                      = var.deploy_swoop_caboose
+  deploy_argo_workflows                     = var.deploy_argo_workflows
 
   depends_on = [ module.swoop_namespace ]
 }

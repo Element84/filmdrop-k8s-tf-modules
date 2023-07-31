@@ -90,12 +90,6 @@ variable deploy_argo_workflows {
   description = "Deploy Argo Workflows"
 }
 
-variable deploy_argo_events { 
-  type        = bool
-  default     = false
-  description = "Deploy Argo Events"
-}
-
 variable namespace_annotations {
   type        = map(string)
   description = "MAP of custom defined namespace annotations"
@@ -115,6 +109,12 @@ variable deploy_stacfastapi {
 
 variable deploy_swoop_api {
   description = "Whether or not to include the SWOOP API module resources"
+  type        = bool
+  default     = true
+}
+
+variable deploy_swoop_caboose {
+  description = "Whether or not to include the SWOOP Caboose module resources"
   type        = bool
   default     = true
 }
