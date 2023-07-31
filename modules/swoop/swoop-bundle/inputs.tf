@@ -54,20 +54,35 @@ variable custom_postgres_settings {
 
 variable custom_input_map {
   type        = map
-  description = "Input values for SWOOP API Helm Chart"
+  description = "Input values for SWOOP Bundle Helm Chart"
   default     = {
-    "swoop-api.swoopApi.image.repository"                = "quay.io/element84/swoop"
-    "swoop-api.swoopApi.image.tag"                       = "latest"
-    "swoop-api.swoopApi.container.port"                  = 8000
-    "swoop-api.swoopApi.service.type"                    = "ClusterIP"
-    "swoop-api.swoopApi.service.port"                    = 8000
-    "swoop-api.swoopApi.service.targetPort"              = 8000
-    "swoop-api.swoopApi.service.swoopExecutionDir"       = "s3://swoop/execution"
-    "swoop-api.swoopApi.service.swoopS3Endpoint"         = "http://minio.io:9000"
-    "swoop-api.swoopApi.service.swoopWorkflowConfigFile" = "workflow-config.yml"
-    "swoop-api.swoopApi.service.name"                    = "swoop-api"
-    "swoop-api.swoopApi.deployment.name"                 = "swoop-api"
-    "swoop-api.swoopApi.replicaCount"                    = 1
+    "swoop-api.swoopApi.image.repository"                     = "quay.io/element84/swoop"
+    "swoop-api.swoopApi.image.tag"                            = "latest"
+    "swoop-api.swoopApi.container.port"                       = 8000
+    "swoop-api.swoopApi.service.type"                         = "ClusterIP"
+    "swoop-api.swoopApi.service.port"                         = 8000
+    "swoop-api.swoopApi.service.targetPort"                   = 8000
+    "swoop-api.swoopApi.service.swoopExecutionDir"            = "s3://swoop/execution"
+    "swoop-api.swoopApi.service.swoopS3Endpoint"              = "http://minio.io:9000"
+    "swoop-api.swoopApi.service.swoopWorkflowConfigFile"      = "workflow-config.yml"
+    "swoop-api.swoopApi.service.name"                         = "swoop-api"
+    "swoop-api.swoopApi.deployment.name"                      = "swoop-api"
+    "swoop-api.swoopApi.replicaCount"                         = 1
+    "swoop-caboose.swoopCaboose.image.repository"             = "quay.io/element84/swoop-go"
+    "swoop-caboose.swoopCaboose.image.tag"                    = "latest"
+    "swoop-caboose.swoopCaboose.container.port"               = 8000
+    "swoop-caboose.swoopCaboose.service.type"                 = "ClusterIP"
+    "swoop-caboose.swoopCaboose.service.port"                 = 8000
+    "swoop-caboose.swoopCaboose.service.targetPort"           = 8000
+    "swoop-caboose.swoopCaboose.service.swoopS3Endpoint"      = "http://minio.io:9000"
+    "swoop-caboose.swoopCaboose.service.swoopConfigFile"      = "/opt/swoop-go/fixtures/swoop-config.yml"
+    "swoop-caboose.swoopCaboose.service.name"                 = "swoop-caboose"
+    "swoop-caboose.swoopCaboose.deployment.name"              = "swoop-caboose"
+    "swoop-caboose.swoopCaboose.replicaCount"                 = 1
+    "swoop-caboose.swoopCaboose.argoWorkflows.objectCounts"   = 5
+    "swoop-caboose.swoopCaboose.argoWorkflows.crds.install"   = true
+    "swoop-caboose.swoopCaboose.argoWorkflows.serviceAccount" = "argo"
+    "swoop-caboose.swoopCaboose.serviceAccount"               = "argo"
   }
 }
 
@@ -75,4 +90,16 @@ variable deploy_swoop_api {
   description = "Whether or not to include the SWOOP API module resources"
   type        = bool
   default     = true
+}
+
+variable deploy_swoop_caboose {
+  description = "Whether or not to include the SWOOP Caboose module resources"
+  type        = bool
+  default     = true
+}
+
+variable deploy_argo_workflows {
+  type        = bool
+  default     = true
+  description = "Deploy Argo Workflows"
 }

@@ -18,6 +18,8 @@ This module defines the resources required for the SWOOP: STAC Workflow Open Orc
 * For enabling swoop-api and it's dependent services you will need to enable at least the following from your tfvars:
 ```
 deploy_swoop_api          = true
+deploy_swoop_caboose      = true
+deploy_argo_workflows     = true
 deploy_postgres           = true
 deploy_minio              = true
 ```
@@ -200,6 +202,62 @@ $ curl http://localhost:8000/jobs/2595f2da-81a6-423c-84db-935e6791046e/results
 {"process_id":"2595f2da-81a6-423c-84db-935e6791046e","payload":"test_output"}%
 ```
 <br></br>
+
+## Validating SWOOP Caboose installation
+Check the logs of the swoop-caboose pod and check your workers have started via:
+```
+$ kubectl logs -n swoop svc/swoop-caboose
+
+time="2023-07-31T21:26:13Z" level=info msg="index config" indexWorkflowSemaphoreKeys=true
+2023/07/31 21:26:13 starting worker 0
+2023/07/31 21:26:13 starting worker 1
+2023/07/31 21:26:13 starting worker 2
+```
+<br></br>
+
+## Running an Argo workflow
+
+<p align="center">
+  <img src="./images/argo_arch_diagram.png" alt="Argo Workflows" width="1587">
+</p>
+<br>
+
+Argo Workflows will also get deployed onto the cluster as a part of this deployment.
+
+Once the local environment is up and running, you can run the provided sample workflow in the file 'argo-workflow-sample.yaml' by going to the command line (Terminal) window and executing the below command:
+
+```
+argo submit -n swoop --watch <FULL PATH TO THE SAMPLE WORKFLOW YAML FILE>
+```
+
+So, if for example, the workflow YAML file is located at ```./examples/argo/argo-workflow-sample.yaml```, then the command would be:
+```
+argo submit -n swoop --watch ./examples/argo/argo-workflow-sample.yaml
+```
+
+Alternatively, you can go into the directory containing this file and simply pass the name of the file (along with its extension) to the above command.
+
+You will see the workflow running in the command line and if everything goes well, it should successfully execute.
+
+You can see the status of any currently running or previously run workflow by port-forwarding the Argo Server UI to a port on your machine. You can do this easily using Rancher Desktop (via the Port Forwarding section of the console) if that is the K8s tool that you are using. By default, the Argo Server UI runs on port 2746 inside the cluster. You can also do this using `kubectl`.
+
+For example, to port-forward the Argo Server UI onto a local port 2746 on your machine:
+
+```
+kubectl -n swoop port-forward svc/swoop-bundle-argo-workflows-server 2746:2746
+```
+
+
+When the Argo Server UI opens up, you might have to click on the 'x' next to the namespace if there is already a value in the namespace field.
+
+Note: The workflows you run should have `serviceAccountName: argo` within their `spec` declaration in the YAML file in order for the workflow to have the proper permissions to run. Also, in order to see the logs in MinIO, you should have the `archiveLogs: true` within the `spec` declaration as well. For example:
+
+```
+spec:
+  serviceAccountName: argo # set this so the proper permissions are assigned
+  archiveLogs: true # enables logs for this workflow
+```
+<br>
 
 ## Uninstall swoop-api
 

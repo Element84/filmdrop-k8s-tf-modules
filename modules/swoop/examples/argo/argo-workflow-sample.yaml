@@ -3,7 +3,7 @@ kind: Workflow
 metadata:
   generateName: archive-location-
 spec:
-  serviceAccountName: argo-workflow # set this so the proper permissions are assigned
+  serviceAccountName: argo # set this so the proper permissions are assigned
   archiveLogs: true # enables logs for this workflow
   entrypoint: whalesay
   templates:

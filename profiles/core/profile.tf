@@ -77,16 +77,18 @@ module "postgres" {
   ]
 }
 
-module "swoop_bundle" {
+module "swoop" {
   source = "../../modules/swoop"
 
   deploy_swoop_api                            = var.deploy_swoop_api
+  deploy_swoop_caboose                        = var.deploy_swoop_caboose
+  deploy_argo_workflows                       = var.deploy_argo_workflows
   swoop_bundle_version                        = var.swoop_bundle_version
   namespace_annotations                       = var.namespace_annotations
   namespace                                   = var.swoop_namespace
   swoop_api_additional_configuration_values   = var.swoop_api_additional_configuration_values
   custom_swoop_api_values_yaml                = var.custom_swoop_api_values_yaml
-  custom_input_map                            = var.custom_swoop_api_input_map
+  custom_input_map                            = var.custom_swoop_input_map
   minio_namespace                             = module.minio.namespace
   custom_minio_settings                       = module.minio.minio_values
   postgres_namespace                          = module.postgres.namespace
@@ -96,26 +98,6 @@ module "swoop_bundle" {
     module.service_mesh,
     module.minio,
     module.postgres,
-  ]
-}
-
-module "argo_workflows" {
-  source = "../../modules/argo"
-
-  deploy_argo_workflows       = var.deploy_argo_workflows
-  deploy_argo_events          = var.deploy_argo_events
-  kubernetes_config_file      = var.kubernetes_config_file
-  kubernetes_config_context   = var.kubernetes_config_context
-  minio_namespace             = module.minio.namespace
-  custom_minio_settings       = module.minio.minio_values
-  postgres_namespace          = module.postgres.namespace
-  custom_postgres_settings    = module.postgres.postgres_values
-
-  depends_on = [
-    module.service_mesh,
-    module.minio,
-    module.postgres,
-
   ]
 }
 
@@ -133,9 +115,8 @@ module "ingress_proxy" {
 
   depends_on = [
     module.service_mesh,
-    module.swoop_bundle,
+    module.swoop,
     module.minio,
     module.postgres,
-    module.argo_workflows,
   ]
 }

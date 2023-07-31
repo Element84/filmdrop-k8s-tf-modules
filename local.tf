@@ -13,7 +13,6 @@ module "local_environment" {
   grafana_additional_data_sources               = var.grafana_additional_data_sources
   promtail_extra_values                         = var.promtail_extra_values
   deploy_argo_workflows                         = var.deploy_argo_workflows
-  deploy_argo_events                            = var.deploy_argo_events
   kubernetes_config_file                        = var.kubernetes_config_file
   kubernetes_config_context                     = var.kubernetes_config_context
   deploy_ingress_nginx                          = var.deploy_ingress_nginx
@@ -22,6 +21,7 @@ module "local_environment" {
   deploy_titiler                                = var.deploy_titiler
   deploy_stacfastapi                            = var.deploy_stacfastapi
   deploy_swoop_api                              = var.deploy_swoop_api
+  deploy_swoop_caboose                          = var.deploy_swoop_caboose
   swoop_bundle_version                          = var.swoop_bundle_version
   ingress_nginx_additional_configuration_values = var.ingress_nginx_additional_configuration_values
   custom_ingress_nginx_values_yaml              = var.custom_ingress_nginx_values_yaml
