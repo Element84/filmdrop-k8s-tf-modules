@@ -19,6 +19,26 @@ resource "helm_release" "swoop_bundle" {
   }
 
   set {
+    name  = "postgres.service.targetPort"
+    value = "${var.custom_postgres_settings["postgres"]["service"]["targetPort"]}.${var.postgres_namespace}"
+  }
+
+  set {
+    name  = "postgres.service.name"
+    value = "${var.custom_postgres_settings["postgres"]["service"]["name"]}.${var.postgres_namespace}"
+  }
+
+  set {
+    name  = "postgres.service.dbName"
+    value = var.custom_postgres_settings["postgres"]["service"]["dbName"]
+  }
+
+  set {
+    name  = "postgres.service.migrationRole"
+    value = var.custom_postgres_settings["postgres"]["service"]["dbUser"]
+  }
+
+  set {
     name  = "swoop-api.enabled"
     value = var.deploy_swoop_api
   }
