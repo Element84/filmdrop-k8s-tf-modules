@@ -25,7 +25,7 @@ resource "helm_release" "postgres" {
 module "dbinit" {
 
   source = "../../jobs"
-  depends_on = [kubernetes_secret.db_postgres_secret_migration_role,
+  depends_on = [kubernetes_secret.db_postgres_secret_owner_role,
     kubernetes_secret.db_postgres_secret_api_role,
     kubernetes_secret.db_postgres_secret_caboose_role,
   kubernetes_secret.db_postgres_secret_conductor_role]
@@ -33,15 +33,15 @@ module "dbinit" {
 }
 
 
-resource "kubernetes_secret" "db_postgres_secret_migration_role" {
+resource "kubernetes_secret" "db_postgres_secret_owner_role" {
   metadata {
-    name      = "postgres-secret-migration-role"
+    name      = "postgres-secret-owner-role"
     namespace = var.namespace
   }
 
   binary_data = {
-    username = var.migration_username
-    password = var.migration_password
+    username = var.owner_username
+    password = var.owner_password
   }
 
   depends_on = [

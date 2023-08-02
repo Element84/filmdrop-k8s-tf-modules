@@ -43,22 +43,22 @@ variable "custom_input_map" {
   }
 }
 
-variable "migration_username" {
-  description = "Username for Migration role"
+variable "owner_username" {
+  description = "Username for Owner role"
   type        = string
-  default     = "dXNlcl9taWdyYXRpb24="
+  default     = "c3dvb3A="
 }
 
-variable "migration_password" {
-  description = "Password for Migration role"
+variable "owner_password" {
+  description = "Password for Owner role"
   type        = string
-  default     = "cGFzc19taWdyYXRpb24="
+  default     = "cGFzc19vd25lcg=="
 }
 
 variable "api_username" {
   description = "Username for API role"
   type        = string
-  default     = "dXNlcl9hcGk="
+  default     = "c3dvb3BfYXBp"
 }
 
 variable "api_password" {
@@ -70,7 +70,7 @@ variable "api_password" {
 variable "caboose_username" {
   description = "Username for Caboose role"
   type        = string
-  default     = "dXNlcl9jYWJvb3Nl"
+  default     = "c3dvb3BfY2Fib29zZQ=="
 }
 
 variable "caboose_password" {
@@ -82,7 +82,7 @@ variable "caboose_password" {
 variable "conductor_username" {
   description = "Username for Conductor role"
   type        = string
-  default     = "dXNlcl9jb25kdWN0b3I="
+  default     = "c3dvb3BfY29uZHVjdG9y"
 }
 
 variable "conductor_password" {

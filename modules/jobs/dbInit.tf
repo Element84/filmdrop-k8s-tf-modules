@@ -88,19 +88,19 @@ resource "kubernetes_job_v1" "db-initialization" {
           }
 
           env {
-            name = "MIGRATION_ROLE_USER"
+            name = "OWNER_ROLE_USER"
             value_from {
               secret_key_ref {
-                name = "postgres-secret-migration-role"
+                name = "postgres-secret-owner-role"
                 key  = "username"
               }
             }
           }
           env {
-            name = "MIGRATION_ROLE_PASS"
+            name = "OWNER_ROLE_PASS"
             value_from {
               secret_key_ref {
-                name = "postgres-secret-migration-role"
+                name = "postgres-secret-owner-role"
                 key  = "password"
               }
             }
