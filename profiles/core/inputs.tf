@@ -243,7 +243,7 @@ variable custom_swoop_input_map {
     "swoop-caboose.swoopCaboose.serviceAccount"               = "argo"
     "dbMigration.imagePullPolicy"                             = "Always"
     "dbMigration.jobName"                                     = "migration-job"
-    "dbMigration.version"                                     = "v0"
+    "dbMigration.version"                                     = "8"
     "dbMigration.serviceAccount"                              = "swoop-bundle"
     "dbMigration.replicaCount"                                = 1
   }
