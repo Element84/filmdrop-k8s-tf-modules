@@ -222,7 +222,6 @@ variable custom_swoop_input_map {
     "swoop-api.swoopApi.replicaCount"                         = 1
     "swoop-caboose.swoopCaboose.image.repository"             = "quay.io/element84/swoop-go"
     "swoop-caboose.swoopCaboose.image.tag"                    = "latest"
-    "swoop-caboose.swoopCaboose.serviceAccount"               = "argo"
     "swoop-caboose.swoopCaboose.container.port"               = 8000
     "swoop-caboose.swoopCaboose.service.type"                 = "ClusterIP"
     "swoop-caboose.swoopCaboose.service.port"                 = 8000

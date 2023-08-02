@@ -101,7 +101,6 @@ variable custom_input_map {
     "swoop-api.swoopApi.replicaCount"                         = 1
     "swoop-caboose.swoopCaboose.image.repository"             = "quay.io/element84/swoop-go"
     "swoop-caboose.swoopCaboose.image.tag"                    = "latest"
-    "swoop-caboose.swoopCaboose.serviceAccount"               = "argo"
     "swoop-caboose.swoopCaboose.container.port"               = 8000
     "swoop-caboose.swoopCaboose.service.type"                 = "ClusterIP"
     "swoop-caboose.swoopCaboose.service.port"                 = 8000
@@ -115,7 +114,6 @@ variable custom_input_map {
     "swoop-caboose.swoopCaboose.argoWorkflows.crds.install"   = true
     "swoop-caboose.swoopCaboose.argoWorkflows.serviceAccount" = "argo"
     "swoop-caboose.swoopCaboose.serviceAccount"               = "argo"
-    "dbMigration.enabled"                                     = true
     "dbMigration.imagePullPolicy"                             = "Always"
     "dbMigration.jobName"                                     = "migration-job"
     "dbMigration.version"                                     = "v0"
