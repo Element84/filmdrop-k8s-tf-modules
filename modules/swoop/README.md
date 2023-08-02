@@ -22,6 +22,7 @@ deploy_swoop_caboose      = true
 deploy_db_migration       = true
 deploy_argo_workflows     = true
 deploy_postgres           = true
+deploy_db_init            = true
 deploy_minio              = true
 ```
 * If you would like to automatically expose the swoop-api, minio and postgres ports in your local environment, you can enable an ingress-nginx that has been provided for this purpose. First for enabling the ingress-nginx module, make sure to update [local.tfvars](../../local.tfvars) or your own .tfvars with the following:

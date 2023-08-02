@@ -32,4 +32,5 @@ deploy_swoop_api          = true
 deploy_swoop_caboose      = false
 deploy_db_migration       = false
 deploy_postgres           = true
+deploy_db_init            = true
 deploy_minio              = true

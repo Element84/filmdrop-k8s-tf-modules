@@ -43,16 +43,16 @@ variable "custom_input_map" {
   }
 }
 
-variable "migration_username" {
-  description = "Username for Migration role"
+variable "owner_username" {
+  description = "Username for migration owner role"
   type        = string
-  default     = "dXNlcl9taWdyYXRpb24="
+  default     = "dXNlcl9vd25lcg=="
 }
 
-variable "migration_password" {
-  description = "Password for Migration role"
+variable "owner_password" {
+  description = "Password for migration owner role"
   type        = string
-  default     = "cGFzc19taWdyYXRpb24="
+  default     = "cGFzc19vd25lcg=="
 }
 
 variable "api_username" {
@@ -89,4 +89,10 @@ variable "conductor_password" {
   description = "Password for Conductor role"
   type        = string
   default     = "cGFzc19jb25kdWN0b3I="
+}
+
+variable deploy_db_init {
+  description = "Whether or not to deploy the Postgres initialization script"
+  type        = bool
+  default     = true
 }

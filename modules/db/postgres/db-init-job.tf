@@ -1,7 +1,8 @@
 resource "kubernetes_job_v1" "db-initialization" {
+  count = var.deploy_db_init == true ? 1 : 0
   metadata {
     name      = "db-initialization"
-    namespace = "db"
+    namespace = var.namespace
   }
   spec {
     template {
@@ -9,27 +10,27 @@ resource "kubernetes_job_v1" "db-initialization" {
       spec {
         container {
           name    = "swoop-db"
-          image   = "quay.io/element84/swoop-db"
+          image   = "${var.custom_input_map["postgres.image.repository"]}:${var.custom_input_map["postgres.image.tag"]}"
           command = ["python", "/opt/swoop/db/scripts/db-initialization.py"]
 
           env {
             name  = "PGHOST"
-            value = "postgres"
+            value = var.custom_input_map["postgres.service.name"]
           }
 
           env {
             name  = "PGUSER"
-            value = "postgres"
+            value = base64decode(var.custom_input_map["postgres.service.dbUser"])
           }
 
           env {
             name  = "PGDATABASE"
-            value = "swoop"
+            value = var.custom_input_map["postgres.service.dbName"]
           }
 
           env {
             name  = "PGPORT"
-            value = "5432"
+            value = var.custom_input_map["postgres.service.port"]
           }
 
           env {
@@ -88,19 +89,19 @@ resource "kubernetes_job_v1" "db-initialization" {
           }
 
           env {
-            name = "MIGRATION_ROLE_USER"
+            name = "OWNER_ROLE_USER"
             value_from {
               secret_key_ref {
-                name = "postgres-secret-migration-role"
+                name = "postgres-secret-owner-role"
                 key  = "username"
               }
             }
           }
           env {
-            name = "MIGRATION_ROLE_PASS"
+            name = "OWNER_ROLE_PASS"
             value_from {
               secret_key_ref {
-                name = "postgres-secret-migration-role"
+                name = "postgres-secret-owner-role"
                 key  = "password"
               }
             }
@@ -117,4 +118,11 @@ resource "kubernetes_job_v1" "db-initialization" {
     create = "2m"
     update = "2m"
   }
+
+  depends_on = [
+    kubernetes_secret.db_postgres_secret_owner_role,
+    kubernetes_secret.db_postgres_secret_api_role,
+    kubernetes_secret.db_postgres_secret_caboose_role,
+    kubernetes_secret.db_postgres_secret_conductor_role
+  ]
 }

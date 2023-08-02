@@ -65,6 +65,7 @@ module "postgres" {
   source = "../../modules/db"
 
   deploy_postgres                           = var.deploy_postgres
+  deploy_db_init                            = var.deploy_db_init
   postgres_version                          = var.postgres_version
   namespace_annotations                     = var.namespace_annotations
   namespace                                 = var.postgres_namespace

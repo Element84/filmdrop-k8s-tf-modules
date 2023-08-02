@@ -16,6 +16,7 @@ module "postgres" {
   postgres_additional_configuration_values = var.postgres_additional_configuration_values
   custom_postgres_values_yaml              = var.custom_postgres_values_yaml
   custom_input_map                         = var.custom_input_map
+  deploy_db_init                           = var.deploy_db_init
 
   depends_on = [module.db_namespace]
 }

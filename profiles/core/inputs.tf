@@ -149,6 +149,12 @@ variable deploy_postgres {
   default     = true
 }
 
+variable deploy_db_init {
+  description = "Whether or not to deploy the Postgres initialization script"
+  type        = bool
+  default     = true
+}
+
 variable deploy_minio {
   description = "Whether or not to include the MinIO module resources"
   type        = bool
