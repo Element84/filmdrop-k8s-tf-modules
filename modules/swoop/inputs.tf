@@ -119,5 +119,8 @@ variable custom_input_map {
     "dbMigration.version"                                     = "8"
     "dbMigration.serviceAccount"                              = "swoop-bundle"
     "dbMigration.replicaCount"                                = 1
+    "dbMigration.timeout"                                     = "-1s"
+    "dbMigration.no_wait"                                     = false
+    "dbMigration.action"                                      = "migrate"
   }
 }
