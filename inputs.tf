@@ -119,6 +119,12 @@ variable deploy_swoop_caboose {
   default     = true
 }
 
+variable deploy_db_migration {
+  description = "Whether or not to include the DB Migration capability for SWOOP resources"
+  type        = bool
+  default     = true
+}
+
 variable swoop_bundle_version {
   type = string
   description = "Version of SWOOP Bundle Helm Chart"

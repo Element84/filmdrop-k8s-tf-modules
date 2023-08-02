@@ -119,6 +119,12 @@ variable deploy_swoop_caboose {
   default     = true
 }
 
+variable deploy_db_migration {
+  description = "Whether or not to include the DB Migration capability for SWOOP resources"
+  type        = bool
+  default     = true
+}
+
 variable create_swoop_namespace {
   description = "Whether or not to include to create the SWOOP Namespace"
   type        = bool
@@ -203,6 +209,7 @@ variable custom_swoop_input_map {
   default     = {
     "swoop-api.swoopApi.image.repository"                     = "quay.io/element84/swoop"
     "swoop-api.swoopApi.image.tag"                            = "latest"
+    "swoop-api.swoopApi.serviceAccount"                       = "swoop-api"
     "swoop-api.swoopApi.container.port"                       = 8000
     "swoop-api.swoopApi.service.type"                         = "ClusterIP"
     "swoop-api.swoopApi.service.port"                         = 8000
@@ -215,6 +222,7 @@ variable custom_swoop_input_map {
     "swoop-api.swoopApi.replicaCount"                         = 1
     "swoop-caboose.swoopCaboose.image.repository"             = "quay.io/element84/swoop-go"
     "swoop-caboose.swoopCaboose.image.tag"                    = "latest"
+    "swoop-caboose.swoopCaboose.serviceAccount"               = "argo"
     "swoop-caboose.swoopCaboose.container.port"               = 8000
     "swoop-caboose.swoopCaboose.service.type"                 = "ClusterIP"
     "swoop-caboose.swoopCaboose.service.port"                 = 8000
@@ -228,6 +236,11 @@ variable custom_swoop_input_map {
     "swoop-caboose.swoopCaboose.argoWorkflows.crds.install"   = true
     "swoop-caboose.swoopCaboose.argoWorkflows.serviceAccount" = "argo"
     "swoop-caboose.swoopCaboose.serviceAccount"               = "argo"
+    "dbMigration.imagePullPolicy"                             = "Always"
+    "dbMigration.jobName"                                     = "migration-job"
+    "dbMigration.version"                                     = "v0"
+    "dbMigration.serviceAccount"                              = "swoop-bundle"
+    "dbMigration.replicaCount"                                = 1
   }
 }
 

@@ -19,6 +19,7 @@ This module defines the resources required for the SWOOP: STAC Workflow Open Orc
 ```
 deploy_swoop_api          = true
 deploy_swoop_caboose      = true
+deploy_db_migration       = true
 deploy_argo_workflows     = true
 deploy_postgres           = true
 deploy_minio              = true

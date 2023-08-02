@@ -22,15 +22,15 @@ resource "helm_release" "postgres" {
   )
 }
 
-module "dbinit" {
+# module "dbinit" {
 
-  source = "../../jobs"
-  depends_on = [kubernetes_secret.db_postgres_secret_migration_role,
-    kubernetes_secret.db_postgres_secret_api_role,
-    kubernetes_secret.db_postgres_secret_caboose_role,
-  kubernetes_secret.db_postgres_secret_conductor_role]
+#   source = "../../jobs"
+#   depends_on = [kubernetes_secret.db_postgres_secret_migration_role,
+#     kubernetes_secret.db_postgres_secret_api_role,
+#     kubernetes_secret.db_postgres_secret_caboose_role,
+#   kubernetes_secret.db_postgres_secret_conductor_role]
 
-}
+# }
 
 
 resource "kubernetes_secret" "db_postgres_secret_migration_role" {

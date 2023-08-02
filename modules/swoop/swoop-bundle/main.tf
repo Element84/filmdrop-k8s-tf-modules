@@ -7,9 +7,25 @@ resource "helm_release" "swoop_bundle" {
   atomic = true
   create_namespace = false
 
+
+  set {
+    name  = "dbMigration.namespace"
+    value = var.namespace
+  }
+
+  set {
+    name  = "dbMigration.enabled"
+    value = var.deploy_db_migration
+  }
+
   set {
     name  = "swoop-api.enabled"
     value = var.deploy_swoop_api
+  }
+
+  set {
+    name  = "swoop-api.swoopApi.namespace"
+    value = var.namespace
   }
 
   set {
@@ -50,6 +66,26 @@ resource "helm_release" "swoop_bundle" {
   set {
     name  = "swoop-api.postgres.service.schemaVersionTable"
     value = var.custom_postgres_settings["postgres"]["deployment"]["schemaVersionTable"]
+  }
+
+  set {
+    name  = "swoop-api.postgres.migration.enabled"
+    value = var.deploy_db_migration
+  }
+
+  set {
+    name  = "swoop-api.postgres.migration.imagePullPolicy"
+    value = var.custom_input_map["dbMigration.imagePullPolicy"]
+  }
+
+  set {
+    name  = "swoop-api.postgres.migration.jobName"
+    value = var.custom_input_map["dbMigration.jobName"]
+  }
+
+  set {
+    name  = "swoop-api.postgres.migration.version"
+    value = var.custom_input_map["dbMigration.version"]
   }
 
   set {
@@ -135,6 +171,26 @@ resource "helm_release" "swoop_bundle" {
   set {
     name  = "swoop-caboose.postgres.service.schemaVersionTable"
     value = var.custom_postgres_settings["postgres"]["deployment"]["schemaVersionTable"]
+  }
+
+  set {
+    name  = "swoop-caboose.postgres.migration.enabled"
+    value = var.deploy_db_migration
+  }
+
+  set {
+    name  = "swoop-caboose.postgres.migration.imagePullPolicy"
+    value = var.custom_input_map["dbMigration.imagePullPolicy"]
+  }
+
+  set {
+    name  = "swoop-caboose.postgres.migration.jobName"
+    value = var.custom_input_map["dbMigration.jobName"]
+  }
+
+  set {
+    name  = "swoop-caboose.postgres.migration.version"
+    value = var.custom_input_map["dbMigration.version"]
   }
 
   set {

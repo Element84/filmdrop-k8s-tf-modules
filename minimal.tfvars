@@ -30,5 +30,6 @@ deploy_titiler            = false
 deploy_stacfastapi        = false
 deploy_swoop_api          = true
 deploy_swoop_caboose      = false
+deploy_db_migration       = false
 deploy_postgres           = true
 deploy_minio              = true

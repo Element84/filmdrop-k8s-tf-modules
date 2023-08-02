@@ -82,6 +82,7 @@ module "swoop" {
 
   deploy_swoop_api                            = var.deploy_swoop_api
   deploy_swoop_caboose                        = var.deploy_swoop_caboose
+  deploy_db_migration                         = var.deploy_db_migration
   deploy_argo_workflows                       = var.deploy_argo_workflows
   swoop_bundle_version                        = var.swoop_bundle_version
   namespace_annotations                       = var.namespace_annotations
