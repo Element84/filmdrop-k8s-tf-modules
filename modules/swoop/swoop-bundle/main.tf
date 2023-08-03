@@ -19,13 +19,18 @@ resource "helm_release" "swoop_bundle" {
   }
 
   set {
-    name  = "postgres.service.targetPort"
-    value = "${var.custom_postgres_settings["postgres"]["service"]["targetPort"]}.${var.postgres_namespace}"
+    name  = "postgres.service.port"
+    value = var.custom_postgres_settings["postgres"]["service"]["port"]
   }
 
   set {
     name  = "postgres.service.name"
-    value = "${var.custom_postgres_settings["postgres"]["service"]["name"]}.${var.postgres_namespace}"
+    value = var.custom_postgres_settings["postgres"]["service"]["name"]
+  }
+
+  set {
+    name  = "postgres.service.dbNamespace"
+    value = var.postgres_namespace
   }
 
   set {
@@ -35,7 +40,7 @@ resource "helm_release" "swoop_bundle" {
 
   set {
     name  = "postgres.service.migrationRole"
-    value = var.custom_postgres_settings["postgres"]["service"]["dbUser"]
+    value = "user_owner"
   }
 
   set {

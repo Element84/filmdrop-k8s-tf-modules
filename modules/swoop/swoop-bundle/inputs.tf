@@ -85,13 +85,15 @@ variable custom_input_map {
     "swoop-caboose.swoopCaboose.argoWorkflows.serviceAccount" = "argo"
     "swoop-caboose.swoopCaboose.serviceAccount"               = "argo"
     "dbMigration.imagePullPolicy"                             = "Always"
+    "dbMigration.image.repository"                            = "quay.io/element84/swoop-db"
+    "dbMigration.image.tag"                                   = "latest"
     "dbMigration.jobName"                                     = "migration-job"
-    "dbMigration.version"                                     = "8"
+    "dbMigration.version"                                     = 8
     "dbMigration.serviceAccount"                              = "swoop-bundle"
     "dbMigration.replicaCount"                                = 1
     "dbMigration.timeout"                                     = "-1s"
     "dbMigration.no_wait"                                     = false
-    "dbMigration.action"                                      = "migrate"
+    "dbMigration.rollback"                                    = false
   }
 }
 

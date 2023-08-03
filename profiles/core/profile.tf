@@ -67,6 +67,7 @@ module "postgres" {
   deploy_postgres                           = var.deploy_postgres
   deploy_db_init                            = var.deploy_db_init
   postgres_version                          = var.postgres_version
+  db_init_version                           = var.db_init_version
   namespace_annotations                     = var.namespace_annotations
   namespace                                 = var.postgres_namespace
   postgres_additional_configuration_values  = var.postgres_additional_configuration_values

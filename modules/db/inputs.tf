@@ -28,6 +28,12 @@ variable postgres_version {
   default = "0.1.0"
 }
 
+variable db_init_version {
+  type        = string
+  description = "Version of DB Init Helm Chart"
+  default     = "0.1.0"
+}
+
 variable namespace {
   description = "Name of namespace"
   type        = string
