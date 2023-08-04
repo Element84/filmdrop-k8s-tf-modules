@@ -100,7 +100,7 @@ resource "helm_release" "swoop_bundle" {
 
   set {
     name  = "swoop-api.postgres.service.schemaVersionTable"
-    value = var.custom_postgres_settings["postgres"]["deployment"]["schemaVersionTable"]
+    value = var.custom_postgres_settings["postgres"]["service"]["schemaVersionTable"]
   }
 
   set {
@@ -205,7 +205,7 @@ resource "helm_release" "swoop_bundle" {
 
   set {
     name  = "swoop-caboose.postgres.service.schemaVersionTable"
-    value = var.custom_postgres_settings["postgres"]["deployment"]["schemaVersionTable"]
+    value = var.custom_postgres_settings["postgres"]["service"]["schemaVersionTable"]
   }
 
   set {
