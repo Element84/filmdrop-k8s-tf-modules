@@ -50,7 +50,7 @@ resource "helm_release" "swoop_bundle" {
 
   set {
     name  = "postgres.service.migrationRole"
-    value = "user_owner"
+    value = "swoop"
   }
 
   set {
