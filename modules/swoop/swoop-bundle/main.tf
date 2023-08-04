@@ -19,6 +19,16 @@ resource "helm_release" "swoop_bundle" {
   }
 
   set {
+    name  = "dbMigration.swoopApiEnabled"
+    value = var.deploy_swoop_api
+  }
+
+  set {
+    name  = "dbMigration.swoopCabooseEnabled"
+    value = var.deploy_swoop_caboose
+  }
+
+  set {
     name  = "postgres.service.port"
     value = var.custom_postgres_settings["postgres"]["service"]["port"]
   }
