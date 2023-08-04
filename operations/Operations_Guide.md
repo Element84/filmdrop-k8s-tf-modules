@@ -93,6 +93,7 @@ For example, for enabling swoop-api and it's dependent services you will need to
 ```
 deploy_swoop_api          = true
 deploy_postgres           = true
+deploy_db_init            = true
 deploy_minio              = true
 ```
 

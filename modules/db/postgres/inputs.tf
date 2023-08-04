@@ -38,55 +38,7 @@ variable "custom_input_map" {
     "postgres.service.dbUser"                = "cG9zdGdyZXM="
     "postgres.service.dbPassword"            = "cGFzc3dvcmQ="
     "postgres.service.sslMode"               = "disable"
-    "postgres.deployment.schemaVersionTable" = "swoop.schema_version"
+    "postgres.service.schemaVersionTable"    = "swoop.schema_version"
     "postgres.replicaCount"                  = 1
   }
-}
-
-variable "migration_username" {
-  description = "Username for Migration role"
-  type        = string
-  default     = "dXNlcl9taWdyYXRpb24="
-}
-
-variable "migration_password" {
-  description = "Password for Migration role"
-  type        = string
-  default     = "cGFzc19taWdyYXRpb24="
-}
-
-variable "api_username" {
-  description = "Username for API role"
-  type        = string
-  default     = "dXNlcl9hcGk="
-}
-
-variable "api_password" {
-  description = "Password for API role"
-  type        = string
-  default     = "cGFzc19hcGk="
-}
-
-variable "caboose_username" {
-  description = "Username for Caboose role"
-  type        = string
-  default     = "dXNlcl9jYWJvb3Nl"
-}
-
-variable "caboose_password" {
-  description = "Password for Caboose role"
-  type        = string
-  default     = "cGFzc19jYWJvb3Nl"
-}
-
-variable "conductor_username" {
-  description = "Username for Conductor role"
-  type        = string
-  default     = "dXNlcl9jb25kdWN0b3I="
-}
-
-variable "conductor_password" {
-  description = "Password for Conductor role"
-  type        = string
-  default     = "cGFzc19jb25kdWN0b3I="
 }

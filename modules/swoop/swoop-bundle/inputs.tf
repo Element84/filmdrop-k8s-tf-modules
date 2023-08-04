@@ -58,6 +58,7 @@ variable custom_input_map {
   default     = {
     "swoop-api.swoopApi.image.repository"                     = "quay.io/element84/swoop"
     "swoop-api.swoopApi.image.tag"                            = "latest"
+    "swoop-api.swoopApi.serviceAccount"                       = "swoop-api"
     "swoop-api.swoopApi.container.port"                       = 8000
     "swoop-api.swoopApi.service.type"                         = "ClusterIP"
     "swoop-api.swoopApi.service.port"                         = 8000
@@ -83,6 +84,16 @@ variable custom_input_map {
     "swoop-caboose.swoopCaboose.argoWorkflows.crds.install"   = true
     "swoop-caboose.swoopCaboose.argoWorkflows.serviceAccount" = "argo"
     "swoop-caboose.swoopCaboose.serviceAccount"               = "argo"
+    "dbMigration.imagePullPolicy"                             = "Always"
+    "dbMigration.image.repository"                            = "quay.io/element84/swoop-db"
+    "dbMigration.image.tag"                                   = "latest"
+    "dbMigration.jobName"                                     = "migration-job"
+    "dbMigration.version"                                     = 8
+    "dbMigration.serviceAccount"                              = "swoop-bundle"
+    "dbMigration.replicaCount"                                = 1
+    "dbMigration.timeout"                                     = "-1s"
+    "dbMigration.no_wait"                                     = false
+    "dbMigration.rollback"                                    = false
   }
 }
 
@@ -94,6 +105,12 @@ variable deploy_swoop_api {
 
 variable deploy_swoop_caboose {
   description = "Whether or not to include the SWOOP Caboose module resources"
+  type        = bool
+  default     = true
+}
+
+variable deploy_db_migration {
+  description = "Whether or not to include the DB Migration capability for SWOOP resources"
   type        = bool
   default     = true
 }

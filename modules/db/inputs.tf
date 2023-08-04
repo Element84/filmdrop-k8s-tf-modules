@@ -16,10 +16,22 @@ variable deploy_postgres {
   default     = true
 }
 
+variable deploy_db_init {
+  description = "Whether or not to deploy the Postgres initialization script"
+  type        = bool
+  default     = true
+}
+
 variable postgres_version {
   type = string
   description = "Version of Postgres Helm Chart"
   default = "0.1.0"
+}
+
+variable db_init_version {
+  type        = string
+  description = "Version of DB Init Helm Chart"
+  default     = "0.1.0"
 }
 
 variable namespace {
@@ -56,7 +68,7 @@ variable custom_input_map {
     "postgres.service.dbUser"                 = "cG9zdGdyZXM="
     "postgres.service.dbPassword"             = "cGFzc3dvcmQ="
     "postgres.service.sslMode"                = "disable"
-    "postgres.deployment.schemaVersionTable"  = "swoop.schema_version"
+    "postgres.service.schemaVersionTable"     = "swoop.schema_version"
     "postgres.replicaCount"                   = 1
   }
 }

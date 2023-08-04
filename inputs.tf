@@ -119,6 +119,12 @@ variable deploy_swoop_caboose {
   default     = true
 }
 
+variable deploy_db_migration {
+  description = "Whether or not to include the DB Migration capability for SWOOP resources"
+  type        = bool
+  default     = true
+}
+
 variable swoop_bundle_version {
   type = string
   description = "Version of SWOOP Bundle Helm Chart"
@@ -127,6 +133,12 @@ variable swoop_bundle_version {
 
 variable deploy_postgres {
   description = "Whether or not to include the Postgres module resources"
+  type        = bool
+  default     = true
+}
+
+variable deploy_db_init {
+  description = "Whether or not to deploy the Postgres initialization script"
   type        = bool
   default     = true
 }
@@ -141,6 +153,12 @@ variable postgres_version {
   type = string
   description = "Version of Postgres Helm Chart"
   default = "0.1.0"
+}
+
+variable db_init_version {
+  type        = string
+  description = "Version of DB Init Helm Chart"
+  default     = "0.1.0"
 }
 
 variable minio_version {

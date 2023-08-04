@@ -20,6 +20,7 @@ This module defines the resources required to support a state database for SWOOP
 * For enabling postgres you will need to enable at least the following from your tfvars:
 ```
 deploy_postgres           = true
+deploy_db_init            = true
 ```
 * If you would like to automatically expose the swoop-api, minio and postgres ports in your local environment, you can enable an ingress-nginx that has been provided for this purpose. First for enabling the ingress-nginx module, make sure to update [local.tfvars](../../local.tfvars) or your own .tfvars with the following:
 ```

@@ -65,7 +65,9 @@ module "postgres" {
   source = "../../modules/db"
 
   deploy_postgres                           = var.deploy_postgres
+  deploy_db_init                            = var.deploy_db_init
   postgres_version                          = var.postgres_version
+  db_init_version                           = var.db_init_version
   namespace_annotations                     = var.namespace_annotations
   namespace                                 = var.postgres_namespace
   postgres_additional_configuration_values  = var.postgres_additional_configuration_values
@@ -82,6 +84,7 @@ module "swoop" {
 
   deploy_swoop_api                            = var.deploy_swoop_api
   deploy_swoop_caboose                        = var.deploy_swoop_caboose
+  deploy_db_migration                         = var.deploy_db_migration
   deploy_argo_workflows                       = var.deploy_argo_workflows
   swoop_bundle_version                        = var.swoop_bundle_version
   namespace_annotations                       = var.namespace_annotations
