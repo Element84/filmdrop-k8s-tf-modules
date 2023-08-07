@@ -26,20 +26,20 @@ variable "custom_input_map" {
   type        = map(any)
   description = "Input values for Postgres Helm Chart"
   default = {
-    "postgres.image.repository"              = "quay.io/element84/swoop-db"
-    "postgres.image.tag"                     = "latest"
-    "postgres.container.port"                = 5432
-    "postgres.service.type"                  = "ClusterIP"
-    "postgres.service.port"                  = 5432
-    "postgres.service.targetPort"            = 5432
-    "postgres.service.name"                  = "postgres"
-    "postgres.service.dbName"                = "swoop"
-    "postgres.service.authMethod"            = "trust"
-    "postgres.service.dbUser"                = "cG9zdGdyZXM="
-    "postgres.service.dbPassword"            = "cGFzc3dvcmQ="
-    "postgres.service.sslMode"               = "disable"
-    "postgres.service.schemaVersionTable"    = "swoop.schema_version"
-    "postgres.replicaCount"                  = 1
+    "postgres.image.repository"           = "quay.io/element84/swoop-db"
+    "postgres.image.tag"                  = "latest"
+    "postgres.container.port"             = 5432
+    "postgres.service.type"               = "ClusterIP"
+    "postgres.service.port"               = 5432
+    "postgres.service.targetPort"         = 5432
+    "postgres.service.name"               = "postgres"
+    "postgres.service.dbName"             = "swoop"
+    "postgres.service.authMethod"         = "trust"
+    "postgres.service.dbUser"             = "cG9zdGdyZXM="
+    "postgres.service.dbPassword"         = "cGFzc3dvcmQ="
+    "postgres.service.sslMode"            = "disable"
+    "postgres.service.schemaVersionTable" = "swoop.schema_version"
+    "postgres.replicaCount"               = 1
   }
 }
 
@@ -90,6 +90,19 @@ variable "conductor_password" {
   type        = string
   default     = "cGFzc19jb25kdWN0b3I="
 }
+
+variable "rw_username" {
+  description = "Username for swoop_readwrite role"
+  type        = string
+  default     = "c3dvb3BfcmVhZHdyaXRl"
+}
+
+variable "rw_password" {
+  description = "Password for swoop_readwrite role"
+  type        = string
+  default     = "cGFzc19yZWFkd3JpdGU="
+}
+
 
 variable "initialization_jobname" {
   description = "DB Initialization Job Name"

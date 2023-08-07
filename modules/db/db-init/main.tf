@@ -121,6 +121,26 @@ resource "helm_release" "db_init" {
     value = "password"
   }
 
+  set {
+    name  = "postgres.service.rwRoleUsernameSecret.name"
+    value = "postgres-secret-rw-role"
+  }
+
+  set {
+    name  = "postgres.service.rwRoleUsernameSecret.key"
+    value = "username"
+  }
+
+  set {
+    name  = "postgres.service.rwRolePasswordSecret.name"
+    value = "postgres-secret-rw-role"
+  }
+
+  set {
+    name  = "postgres.service.rwRolePasswordSecret.key"
+    value = "password"
+  }
+
   values = concat(
     [var.custom_postgres_values_yaml == "" ? file("${path.module}/values.yaml") : file(var.custom_postgres_values_yaml)],
     length(var.postgres_additional_configuration_values) == 0 ? [] : var.postgres_additional_configuration_values

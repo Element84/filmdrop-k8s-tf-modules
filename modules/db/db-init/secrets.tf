@@ -45,3 +45,15 @@ resource "kubernetes_secret" "db_postgres_secret_conductor_role" {
     password = var.conductor_password
   }
 }
+
+resource "kubernetes_secret" "db_postgres_secret_rw_role" {
+  metadata {
+    name      = "postgres-secret-rw-role"
+    namespace = var.namespace
+  }
+
+  binary_data = {
+    username = var.rw_username
+    password = var.rw_password
+  }
+}
