@@ -40,24 +40,46 @@ variable custom_minio_values_yaml {
   description = "Path to custom MinIO values.yaml"
 }
 
-variable custom_input_map {
+variable custom_minio_input_map {
   type        = map
   description = "Input values for MinIO Helm Chart"
   default = {
-    "minio.image.repository"          = "quay.io/minio/minio"
-    "minio.image.tag"                 = "latest"
-    "minio.container.port"            = 9000
-    "minio.container.servicePort"     = 9001
-    "minio.service.type"              = "ClusterIP"
-    "minio.service.port"              = 9000
-    "minio.service.targetPort"        = 9000
-    "minio.service.servicePort"       = 9001
-    "minio.service.serviceTargetPort" = 9001
-    "minio.service.name"              = "minio"
-    "minio.service.bucketName"        = "swoop"
-    "minio.service.accessKeyId"       = "bWluaW8="
-    "minio.service.secretAccessKey"   = "cGFzc3dvcmQ="
-    "minio.deployment.name"           = "minio"
-    "minio.replicaCount"              = 1
+    "container.port"            = 9000
+    "container.servicePort"     = 9001
+    "deployment.name"           = "minio"
+    "image.repository"          = "quay.io/minio/minio"
+    "image.tag"                 = "latest"
+    "replicaCount"              = 1
+    "service.type"              = "ClusterIP"
+    "service.port"              = 9000
+    "service.targetPort"        = 9000
+    "service.servicePort"       = 9001
+    "service.serviceTargetPort" = 9001
+    "service.name"              = "minio"
+    "service.bucketName"        = "swoop"
+    "service.accessKeyId"       = ""
+    "service.secretAccessKey"   = ""
+    "service.createSecret"      = false
   }
+}
+
+variable "minio_access_key" {
+  description = "Object Storage accessKeyId credential"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "minio_secret_access_key" {
+  description = "Object Storage secretAccessKey credential"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "minio_secret" {
+  description = "Object Storage Kubernetes Secret name for credentials"
+  type        = string
+  default     = "minio-secret-credentials"
+  sensitive   = true
 }

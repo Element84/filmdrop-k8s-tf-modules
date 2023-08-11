@@ -220,3 +220,245 @@ variable ingress_nginx_version {
   description = "Version of Ingress NGINX Helm Chart"
   default = "4.7.1"
 }
+
+variable custom_postgres_input_map {
+  type        = map
+  description = "Input values for Postgres Helm Chart"
+  default = {
+    "container.port"                      = 5432
+    "deployment.name"                     = "postgres"
+    "image.repository"                    = "quay.io/element84/swoop-db"
+    "image.tag"                           = "latest"
+    "migration.imagePullPolicy"           = "Always"
+    "migration.jobName"                   = "migration-job"
+    "migration.version"                   = 8
+    "migration.no_wait"                   = false
+    "migration.rollback"                  = false
+    "migration.image.repository"          = "quay.io/element84/swoop-db"
+    "migration.image.tag"                 = "latest"
+    "replicaCount"                        = 1
+    "service.type"                        = "ClusterIP"
+    "service.port"                        = 5432
+    "service.targetPort"                  = 5432
+    "service.name"                        = "postgres"
+    "service.dbName"                      = "swoop"
+    "service.authMethod"                  = "trust"
+    "service.createDBAdminSecret"         = false
+    "service.dbUser"                      = ""
+    "service.dbPassword"                  = ""
+    "service.createOwnerRoleSecret"       = false
+    "service.ownerRoleUsername"           = ""
+    "service.ownerRolePassword"           = ""
+    "service.createApiRoleSecret"         = false
+    "service.apiRoleUsername"             = ""
+    "service.apiRolePassword"             = ""
+    "service.createCabooseRoleSecret"     = false
+    "service.cabooseRoleUsername"         = ""
+    "service.cabooseRolePassword"         = ""
+    "service.createConductorRoleSecret"   = false
+    "service.conductorRoleUsername"       = ""
+    "service.conductorRolePassword"       = ""
+    "service.sslMode"                     = "disable"
+    "service.schemaVersionTable"          = "swoop.schema_version"
+    "storage.size"                        = "1Gi"
+    "storage.volumeBindingMode"           = "WaitForFirstConsumer"
+    "storage.provisioner"                 = "filmdrop.io/local-path-provisioner"
+    "storage.retainPersistentVolume"      = true
+    "storage.storageClassName"            = "postgres-retain"
+  }
+}
+
+variable "dbadmin_username" {
+  description = "DB Admin username"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "dbadmin_password" {
+  description = "Password for DB Admin"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "dbadmin_secret" {
+  description = "Kubernetes Secret name of DB Admin credentials"
+  type        = string
+  default     = "postgres-secret-admin-role"
+  sensitive   = true
+}
+
+variable "owner_username" {
+  description = "Username for Owner role"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "owner_password" {
+  description = "Password for Owner role"
+  type        = string
+  default     = ""
+}
+
+variable "owner_secret" {
+  description = "Kubernetes Secret name of Owner credentials"
+  type        = string
+  default     = "postgres-secret-owner-role"
+  sensitive   = true
+}
+
+variable "api_username" {
+  description = "Username for API role"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "api_password" {
+  description = "Password for API role"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "api_secret" {
+  description = "Kubernetes Secret name of API credentials"
+  type        = string
+  default     = "postgres-secret-api-role"
+  sensitive   = true
+}
+
+variable "caboose_username" {
+  description = "Username for Caboose role"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "caboose_password" {
+  description = "Password for Caboose role"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "caboose_secret" {
+  description = "Kubernetes Secret name of Caboose credentials"
+  type        = string
+  default     = "postgres-secret-caboose-role"
+  sensitive   = true
+}
+
+variable "conductor_username" {
+  description = "Username for Conductor role"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "conductor_password" {
+  description = "Password for Conductor role"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "conductor_secret" {
+  description = "Kubernetes Secret name of Conductor credentials"
+  type        = string
+  default     = "postgres-secret-conductor-role"
+  sensitive   = true
+}
+
+variable custom_minio_input_map {
+  type        = map
+  description = "Input values for MinIO Helm Chart"
+  default = {
+    "container.port"            = 9000
+    "container.servicePort"     = 9001
+    "deployment.name"           = "minio"
+    "image.repository"          = "quay.io/minio/minio"
+    "image.tag"                 = "latest"
+    "replicaCount"              = 1
+    "service.type"              = "ClusterIP"
+    "service.port"              = 9000
+    "service.targetPort"        = 9000
+    "service.servicePort"       = 9001
+    "service.serviceTargetPort" = 9001
+    "service.name"              = "minio"
+    "service.bucketName"        = "swoop"
+    "service.accessKeyId"       = ""
+    "service.secretAccessKey"   = ""
+    "service.createSecret"      = false
+  }
+}
+
+variable "minio_access_key" {
+  description = "Object Storage accessKeyId credential"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "minio_secret_access_key" {
+  description = "Object Storage secretAccessKey credential"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "minio_secret" {
+  description = "Object Storage Kubernetes Secret name for credentials"
+  type        = string
+  default     = "minio-secret-credentials"
+  sensitive   = true
+}
+
+variable custom_swoop_input_map {
+  type        = map
+  description = "Input values for SWOOP Bundle Helm Chart"
+  default     = {
+    "swoop.api.executionDir"        = "s3://swoop/execution"
+    "swoop.api.configFile"          = "workflow-config.yml"
+    "swoop.api.serviceAccount"      = "swoop-api"
+    "swoop.caboose.configFile"      = "/opt/swoop-go/fixtures/swoop-config.yml"
+    "swoop.caboose.serviceAccount"  = "argo"
+    "swoop.argo.crdsInstall"        = true
+    "swoop.argo.objectCounts"       = 5
+    "swoop.bundle.serviceAccount"   = "swoop-bundle"
+  }
+}
+
+variable custom_swoop_api_service_input_map {
+  type        = map
+  description = "Input values for SWOOP API Helm Chart"
+  default     = {
+    "container.port"      = 8000
+    "deployment.name"     = "swoop-api"
+    "image.repository"    = "quay.io/element84/swoop"
+    "image.tag"           = "latest"
+    "service.type"        = "ClusterIP"
+    "service.port"        = 8000
+    "service.targetPort"  = 8000
+    "service.name"        = "swoop-api"
+    "replicaCount"        = 1
+  }
+}
+
+variable custom_swoop_caboose_service_input_map {
+  type        = map
+  description = "Input values for SWOOP Caboose Helm Chart"
+  default     = {
+    "container.port"      = 8000
+    "deployment.name"     = "swoop-caboose"
+    "image.repository"    = "quay.io/element84/swoop-go"
+    "image.tag"           = "latest"
+    "service.type"        = "ClusterIP"
+    "service.port"        = 8000
+    "service.targetPort"  = 8000
+    "service.name"        = "swoop-caboose"
+    "replicaCount"        = 1
+  }
+}

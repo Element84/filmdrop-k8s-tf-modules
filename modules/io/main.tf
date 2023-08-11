@@ -6,6 +6,18 @@ module "io_namespace" {
   namespace             = var.namespace
 }
 
+module "io_secrets" {
+  source  = "./secrets"
+
+  namespace               = var.namespace
+  minio_access_key        = var.minio_access_key
+  minio_secret_access_key = var.minio_secret_access_key
+  minio_secret            = var.minio_secret
+
+  depends_on = [
+    module.io_namespace,
+  ]
+}
 
 module "minio" {
   source  = "./minio"
@@ -15,7 +27,11 @@ module "minio" {
   minio_version                             = var.minio_version
   minio_additional_configuration_values     = var.minio_additional_configuration_values
   custom_minio_values_yaml                  = var.custom_minio_values_yaml
-  custom_input_map                          = var.custom_input_map
+  custom_minio_input_map                    = var.custom_minio_input_map
+  minio_secret                              = var.minio_secret
 
-  depends_on = [module.io_namespace]
+  depends_on = [
+    module.io_namespace,
+    module.io_secrets,
+  ]
 }
