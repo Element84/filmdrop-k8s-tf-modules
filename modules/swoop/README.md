@@ -370,31 +370,31 @@ This will deploy, in order, the postgres database, the database initialization j
 After deploying, you will see a `db` namespace and a `swoop` namespace.
 
 <p align="center">
-  <img src="./images/Namespaces.png" alt="Namespaces deployed by db init/migrations" width="250">
+  <img src="./images/Namespaces.png" alt="Namespaces deployed by db init/migrations" width="500">
 </p>
 <br>
 
 The `db` namespace will contain the database initialization pod and the `swoop` namespace will contain the migration job pod.
 
 <p align="center">
-  <img src="./images/Pods_db_namespace.png" alt="Pods in the db namespace" width="754">
+  <img src="./images/Pods_db_namespace.png" alt="Pods in the db namespace" width="500">
 </p>
 <br>
 
 <p align="center">
-  <img src="./images/Pods_swoop_namespace.png" alt="Pods in the db namespace" width="754">
+  <img src="./images/Pods_swoop_namespace.png" alt="Pods in the db namespace" width="500">
 </p>
 <br>
 
 The logs from each of these pods should show messages coming from their respective scripts. For example:
 
 <p align="center">
-  <img src="./images/Logs_db_initialization_pod.png" alt="Logs for db initialization pod" width="250">
+  <img src="./images/Logs_db_initialization_pod.png" alt="Logs for db initialization pod" width="500">
 </p>
 <br>
 
 <p align="center">
-  <img src="./images/Logs_migration_pod.png" alt="Logs for db migration pod" width="250">
+  <img src="./images/Logs_migration_pod.png" alt="Logs for db migration pod" width="500">
 </p>
 <br>
 
