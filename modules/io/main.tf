@@ -8,6 +8,7 @@ module "io_namespace" {
 
 module "io_secrets" {
   source  = "./secrets"
+  count   = var.deploy_minio == true ? 1 : 0
 
   namespace               = var.namespace
   minio_access_key        = var.minio_access_key

@@ -8,6 +8,7 @@ module "swoop_namespace" {
 
 module "swoop_secrets" {
   source  = "./secrets"
+  count   = var.deploy_swoop_api == true || var.deploy_swoop_caboose == true || var.deploy_argo_workflows == true || var.deploy_db_migration == true ? 1 : 0
 
   namespace               = var.namespace
   minio_namespace         = var.minio_namespace

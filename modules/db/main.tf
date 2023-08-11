@@ -7,7 +7,8 @@ module "db_namespace" {
 }
 
 module "db_secrets" {
-  source = "./secrets"
+  source  = "./secrets"
+  count   = var.deploy_postgres == true || var.deploy_db_init == true ? 1 : 0
 
   namespace           = var.namespace
   dbadmin_username    = var.dbadmin_username
