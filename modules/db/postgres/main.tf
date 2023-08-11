@@ -6,14 +6,35 @@ resource "helm_release" "postgres" {
   version          = var.postgres_version
   atomic           = true
   create_namespace = false
+  wait             = true
 
   dynamic "set" {
-    for_each = var.custom_input_map
+    for_each = var.custom_postgres_input_map
 
     content {
       name  = set.key
       value = set.value
     }
+  }
+
+  set {
+    name  = "service.dbHost"
+    value = "${var.custom_postgres_input_map["service.name"]}.${var.namespace}"
+  }
+
+  set {
+    name  = "service.userNameSecret.name"
+    value = var.dbadmin_secret
+  }
+
+  set {
+    name  = "service.passwordSecret.name"
+    value = var.dbadmin_secret
+  }
+
+  set {
+    name  = "migration.enabled"
+    value = var.deploy_db_migration
   }
 
   values = concat(
