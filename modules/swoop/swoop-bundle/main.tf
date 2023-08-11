@@ -107,13 +107,18 @@ resource "helm_release" "swoop_bundle" {
   }
 
   set {
-    name  = "swoop.caboose.enabled"
+    name  = "global.swoop.caboose.enabled"
     value = var.deploy_swoop_caboose
   }
 
   set {
-    name  = "swoop.argo.enabled"
+    name  = "global.swoop.argo.enabled"
     value = var.deploy_argo_workflows
+  }
+
+  set {
+    name  = "swoop-db-migration.enabled"
+    value = var.deploy_db_migration
   }
 
   dynamic "set" {
@@ -123,6 +128,11 @@ resource "helm_release" "swoop_bundle" {
       name  = "swoop-api.${set.key}"
       value = set.value
     }
+  }
+
+  set {
+    name  = "swoop-api.enabled"
+    value = var.deploy_swoop_api
   }
 
   dynamic "set" {
@@ -135,6 +145,11 @@ resource "helm_release" "swoop_bundle" {
   }
 
   set {
+    name  = "swoop-caboose.enabled"
+    value = var.deploy_swoop_caboose || var.deploy_argo_workflows
+  }
+
+  set {
     name  = "swoop-caboose.argoWorkflows.enabled"
     value = var.deploy_argo_workflows
   }
@@ -142,6 +157,11 @@ resource "helm_release" "swoop_bundle" {
   set {
     name  = "swoop-caboose.argo-workflows.controller.workflowNamespaces[0]"
     value = var.namespace
+  }
+
+  set {
+    name  = "swoop-caboose.argo-workflows.enabled"
+    value = var.deploy_argo_workflows
   }
 
   values = concat(
