@@ -370,7 +370,7 @@ This will deploy, in order, the postgres database, the database initialization j
 After deploying, you will see a `db` namespace and a `swoop` namespace.
 
 <p align="center">
-  <img src="./images/Namespaces.png" alt="Namespaces deployed by db init/migrations" width="500">
+  <img src="./images/Namespaces.png" alt="Namespaces deployed by db init/migrations" width="300">
 </p>
 <br>
 
