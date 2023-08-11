@@ -1,9 +1,11 @@
 # FilmDrop Kubernetes Terraform Infrastructure Modules
 
-This repository contains the packaging of FilmDrop terraform modules with Kubernetes.
+This repository contains the packaging of FilmDrop Terraform modules with Kubernetes.
 
 This FilmDrop repository manages the supporting infrastructure required to deploy the [STAC Workflow Open Orchestration Platform (SWOOP)](https://github.com/Element84/swoop).
+
 ## Pre-requisites
+
 For local or AWS environment pre-requisites, head to the [Operations Manual](./operations/Operations_Guide.md).
 
 ## Components
@@ -46,7 +48,9 @@ You can configure whether or not STAC-FastAPI is included in deployment by setti
 To view and extend profiles, head [here](./profiles/README.md).
 
 <br><br>
+
 # `flop` CLI
+
 ## What is `flop`?
 
 `flop` is a utility for creating and interacting with FilmDrop-on-K8s test environments. The name is a portmanteau of FiLmdrOP.
@@ -76,13 +80,13 @@ Other useful tools:
 
 ## Using `flop`
 
-### Run `flop` to list all of the available features:
+### Run `flop` to list all of the available features
 
 ```shell
 ./flop
 ```
 
-### A typical example of a `flop` workflow:
+### A typical example of a `flop` workflow
 
 ```shell
 CLUSTER="$(flop create)"  # stdout contains cluster name
@@ -96,11 +100,12 @@ flop test "${CLUSTER}"
 flop destroy "${CLUSTER}"
 ```
 
-### If things go sideways, you can delete the entire state:
+### If things go sideways, you can delete the entire state
 
 ```shell
 flop destroy --all
 ```
+
 <br>
 
 ## `flop` tests
@@ -112,4 +117,3 @@ directory.
 
 Please extend the existing test scripts or add new ones, as necessary.
 <br><br>
-
