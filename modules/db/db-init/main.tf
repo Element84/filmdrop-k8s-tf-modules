@@ -6,130 +6,95 @@ resource "helm_release" "db_init" {
   version          = var.db_init_version
   atomic           = true
   create_namespace = false
+  wait             = true
 
   dynamic "set" {
-    for_each = var.custom_input_map
+    for_each = var.custom_postgres_input_map
 
     content {
-      name  = set.key
+      name  = "postgres.${set.key}"
       value = set.value
     }
   }
 
   set {
-    name  = "jobName"
-    value = var.initialization_jobname
+    name  = "postgres.service.dbHost"
+    value = "${var.custom_postgres_input_map["service.name"]}.${var.namespace}"
   }
 
   set {
-    name  = "version"
-    value = var.initialization_version
+    name  = "postgres.migration.enabled"
+    value = var.deploy_db_migration
   }
 
   set {
-    name  = "namespace"
-    value = var.namespace
+    name  = "service.serviceAccount"
+    value = "swoop-db-init"
+  }
+
+
+  set {
+    name  = "service.serviceAccount"
+    value = "swoop-db-init"
   }
 
   set {
-    name  = "serviceAccount"
-    value = var.initialization_serviceaccount
+    name  = "service.name"
+    value = "db-initialization"
   }
 
   set {
-    name  = "imagePullPolicy"
-    value = var.initialization_imagepullpolicy
+    name  = "postgres.service.dbAdminUsernameSecret.name"
+    value = var.dbadmin_secret 
+  }
+
+  set {
+    name  = "postgres.service.dbAdminPasswordSecret.name"
+    value = var.dbadmin_secret 
   }
 
   set {
     name  = "postgres.service.ownerRoleUsernameSecret.name"
-    value = "postgres-secret-owner-role"
-  }
-
-  set {
-    name  = "postgres.service.ownerRoleUsernameSecret.key"
-    value = "username"
+    value = var.owner_secret
   }
 
   set {
     name  = "postgres.service.ownerRolePasswordSecret.name"
-    value = "postgres-secret-owner-role"
-  }
-
-  set {
-    name  = "postgres.service.ownerRolePasswordSecret.key"
-    value = "password"
+    value = var.owner_secret
   }
 
   set {
     name  = "postgres.service.apiRoleUsernameSecret.name"
-    value = "postgres-secret-api-role"
-  }
-
-  set {
-    name  = "postgres.service.apiRoleUsernameSecret.key"
-    value = "username"
+    value = var.api_secret
   }
 
   set {
     name  = "postgres.service.apiRolePasswordSecret.name"
-    value = "postgres-secret-api-role"
-  }
-
-  set {
-    name  = "postgres.service.apiRolePasswordSecret.key"
-    value = "password"
+    value = var.api_secret
   }
 
   set {
     name  = "postgres.service.cabooseRoleUsernameSecret.name"
-    value = "postgres-secret-caboose-role"
-  }
-
-  set {
-    name  = "postgres.service.cabooseRoleUsernameSecret.key"
-    value = "username"
+    value = var.caboose_secret
   }
 
   set {
     name  = "postgres.service.cabooseRolePasswordSecret.name"
-    value = "postgres-secret-caboose-role"
-  }
-
-  set {
-    name  = "postgres.service.cabooseRolePasswordSecret.key"
-    value = "password"
+    value = var.caboose_secret
   }
 
   set {
     name  = "postgres.service.conductorRoleUsernameSecret.name"
-    value = "postgres-secret-conductor-role"
-  }
-
-  set {
-    name  = "postgres.service.conductorRoleUsernameSecret.key"
-    value = "username"
+    value = var.conductor_secret
   }
 
   set {
     name  = "postgres.service.conductorRolePasswordSecret.name"
-    value = "postgres-secret-conductor-role"
-  }
-
-  set {
-    name  = "postgres.service.conductorRolePasswordSecret.key"
-    value = "password"
+    value = var.conductor_secret
   }
 
   values = concat(
     [var.custom_postgres_values_yaml == "" ? file("${path.module}/values.yaml") : file(var.custom_postgres_values_yaml)],
     length(var.postgres_additional_configuration_values) == 0 ? [] : var.postgres_additional_configuration_values
   )
-
-  depends_on = [
-    kubernetes_secret.db_postgres_secret_owner_role,
-    kubernetes_secret.db_postgres_secret_api_role,
-    kubernetes_secret.db_postgres_secret_caboose_role,
-    kubernetes_secret.db_postgres_secret_conductor_role
-  ]
 }

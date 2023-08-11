@@ -40,60 +40,28 @@ variable postgres_namespace {
   default     = "db"
 }
 
-variable custom_minio_settings {
+variable custom_minio_input_map {
   type        = map
   description = "Input values for MinIO"
-  default     = {}
 }
 
-variable custom_postgres_settings {
+variable custom_postgres_input_map {
   type        = map
   description = "Input values for Postgres"
-  default     = {}
 }
 
-variable custom_input_map {
+variable custom_swoop_input_map {
   type        = map
   description = "Input values for SWOOP Bundle Helm Chart"
   default     = {
-    "swoop-api.swoopApi.image.repository"                     = "quay.io/element84/swoop"
-    "swoop-api.swoopApi.image.tag"                            = "latest"
-    "swoop-api.swoopApi.serviceAccount"                       = "swoop-api"
-    "swoop-api.swoopApi.container.port"                       = 8000
-    "swoop-api.swoopApi.service.type"                         = "ClusterIP"
-    "swoop-api.swoopApi.service.port"                         = 8000
-    "swoop-api.swoopApi.service.targetPort"                   = 8000
-    "swoop-api.swoopApi.service.swoopExecutionDir"            = "s3://swoop/execution"
-    "swoop-api.swoopApi.service.swoopS3Endpoint"              = "http://minio.io:9000"
-    "swoop-api.swoopApi.service.swoopWorkflowConfigFile"      = "workflow-config.yml"
-    "swoop-api.swoopApi.service.name"                         = "swoop-api"
-    "swoop-api.swoopApi.deployment.name"                      = "swoop-api"
-    "swoop-api.swoopApi.replicaCount"                         = 1
-    "swoop-caboose.swoopCaboose.image.repository"             = "quay.io/element84/swoop-go"
-    "swoop-caboose.swoopCaboose.image.tag"                    = "latest"
-    "swoop-caboose.swoopCaboose.container.port"               = 8000
-    "swoop-caboose.swoopCaboose.service.type"                 = "ClusterIP"
-    "swoop-caboose.swoopCaboose.service.port"                 = 8000
-    "swoop-caboose.swoopCaboose.service.targetPort"           = 8000
-    "swoop-caboose.swoopCaboose.service.swoopS3Endpoint"      = "http://minio.io:9000"
-    "swoop-caboose.swoopCaboose.service.swoopConfigFile"      = "/opt/swoop-go/fixtures/swoop-config.yml"
-    "swoop-caboose.swoopCaboose.service.name"                 = "swoop-caboose"
-    "swoop-caboose.swoopCaboose.deployment.name"              = "swoop-caboose"
-    "swoop-caboose.swoopCaboose.replicaCount"                 = 1
-    "swoop-caboose.swoopCaboose.argoWorkflows.objectCounts"   = 5
-    "swoop-caboose.swoopCaboose.argoWorkflows.crds.install"   = true
-    "swoop-caboose.swoopCaboose.argoWorkflows.serviceAccount" = "argo"
-    "swoop-caboose.swoopCaboose.serviceAccount"               = "argo"
-    "dbMigration.imagePullPolicy"                             = "Always"
-    "dbMigration.image.repository"                            = "quay.io/element84/swoop-db"
-    "dbMigration.image.tag"                                   = "latest"
-    "dbMigration.jobName"                                     = "migration-job"
-    "dbMigration.version"                                     = 8
-    "dbMigration.serviceAccount"                              = "swoop-bundle"
-    "dbMigration.replicaCount"                                = 1
-    "dbMigration.timeout"                                     = "-1s"
-    "dbMigration.no_wait"                                     = false
-    "dbMigration.rollback"                                    = false
+    "swoop.api.executionDir"        = "s3://swoop/execution"
+    "swoop.api.configFile"          = "workflow-config.yml"
+    "swoop.api.serviceAccount"      = "swoop-api"
+    "swoop.caboose.configFile"      = "/opt/swoop-go/fixtures/swoop-config.yml"
+    "swoop.caboose.serviceAccount"  = "argo"
+    "swoop.argo.crdsInstall"        = true
+    "swoop.argo.objectCounts"       = 5
+    "swoop.bundle.serviceAccount"   = "swoop-bundle"
   }
 }
 
@@ -119,4 +87,66 @@ variable deploy_argo_workflows {
   type        = bool
   default     = true
   description = "Deploy Argo Workflows"
+}
+
+variable "owner_secret" {
+  description = "Kubernetes Secret name of Owner credentials"
+  type        = string
+  sensitive   = true
+}
+
+variable "api_secret" {
+  description = "Kubernetes Secret name of API credentials"
+  type        = string
+  sensitive   = true
+}
+
+variable "caboose_secret" {
+  description = "Kubernetes Secret name of Caboose credentials"
+  type        = string
+  sensitive   = true
+}
+
+variable "conductor_secret" {
+  description = "Kubernetes Secret name of Conductor credentials"
+  type        = string
+  sensitive   = true
+}
+
+variable "minio_secret" {
+  description = "Object Storage Kubernetes Secret name for credentials"
+  type        = string
+  sensitive   = true
+}
+
+variable custom_swoop_api_service_input_map {
+  type        = map
+  description = "Input values for SWOOP API Helm Chart"
+  default     = {
+    "container.port"      = 8000
+    "deployment.name"     = "swoop-api"
+    "image.repository"    = "quay.io/element84/swoop"
+    "image.tag"           = "latest"
+    "service.type"        = "ClusterIP"
+    "service.port"        = 8000
+    "service.targetPort"  = 8000
+    "service.name"        = "swoop-api"
+    "replicaCount"        = 1
+  }
+}
+
+variable custom_swoop_caboose_service_input_map {
+  type        = map
+  description = "Input values for SWOOP Caboose Helm Chart"
+  default     = {
+    "container.port"      = 8000
+    "deployment.name"     = "swoop-caboose"
+    "image.repository"    = "quay.io/element84/swoop-go"
+    "image.tag"           = "latest"
+    "service.type"        = "ClusterIP"
+    "service.port"        = 8000
+    "service.targetPort"  = 8000
+    "service.name"        = "swoop-caboose"
+    "replicaCount"        = 1
+  }
 }

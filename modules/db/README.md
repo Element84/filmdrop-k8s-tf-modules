@@ -99,10 +99,10 @@ For a comprehensive set of steps initialize and use the postgres database, pleas
 To test the connection to the postgres database, export the following postgres environment variables:
 ```
 export PGHOST="127.0.0.1"
-export PGUSER="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbUser | base64 --decode`"
-export PGPASSWORD="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbPassword | base64 --decode`"
-export PGPORT="`helm get values postgres -n db -a -o json | jq -r .postgres.service.port`"
-export PGDATABASE="`helm get values postgres -n db -a -o json | jq -r .postgres.service.dbName`"
+export PGUSER="`kubectl get secret -n db postgres-secret-admin-role -o jsonpath='{.data.username}' | base64 -D`"
+export PGPASSWORD="`kubectl get secret -n db postgres-secret-admin-role -o jsonpath='{.data.password}' | base64 -D`"
+export PGPORT="`helm get values postgres -n db -a -o json | jq -r .service.port`"
+export PGDATABASE="`helm get values postgres -n db -a -o json | jq -r .service.dbName`"
 export PGAUTHMETHOD="trust"
 
 ```
@@ -117,6 +117,34 @@ WARNING: psql major version 14, server major version 15.
 Type "help" for help.
 
 swoop=#
+```
+
+## Retrieving SWOOP credentials
+Credentials can be retrieved by looking at the secrets created in the `db` namespace:
+```
+kubectl get secrets -n db
+NAME                                  TYPE                 DATA   AGE
+postgres-secret-caboose-role          Opaque               2      12m
+postgres-secret-owner-role            Opaque               2      12m
+postgres-secret-conductor-role        Opaque               2      12m
+postgres-secret-admin-role            Opaque               2      12m
+postgres-secret-api-role              Opaque               2      12m
+sh.helm.release.v1.postgres.v1        helm.sh/release.v1   1      12m
+sh.helm.release.v1.swoop-db-init.v1   helm.sh/release.v1   1      11m
+```
+
+To see the individual credential value you can export them the following way
+```
+export PGADMINUSER=`kubectl get secret -n db postgres-secret-admin-role -o jsonpath='{.data.username}' | base64 -D`
+export PGADMINPASS=`kubectl get secret -n db postgres-secret-admin-role -o jsonpath='{.data.password}' | base64 -D`
+export PGOWNERUSER=`kubectl get secret -n db postgres-secret-owner-role -o jsonpath='{.data.username}' | base64 -D`
+export PGOWNERPASS=`kubectl get secret -n db postgres-secret-owner-role -o jsonpath='{.data.password}' | base64 -D`
+export PGAPIUSER=`kubectl get secret -n db postgres-secret-api-role -o jsonpath='{.data.username}' | base64 -D`
+export PGAPIPASS=`kubectl get secret -n db postgres-secret-api-role -o jsonpath='{.data.password}' | base64 -D`
+export PGCABOOSEUSER=`kubectl get secret -n db postgres-secret-caboose-role -o jsonpath='{.data.username}' | base64 -D`
+export PGCABOOSEPASS=`kubectl get secret -n db postgres-secret-caboose-role -o jsonpath='{.data.password}' | base64 -D`
+export PGCONDUCTORUSER=`kubectl get secret -n db postgres-secret-conductor-role -o jsonpath='{.data.username}' | base64 -D`
+export PGCONDUCTORPASS=`kubectl get secret -n db postgres-secret-conductor-role -o jsonpath='{.data.password}' | base64 -D`
 ```
 
 ## Uninstall postgres

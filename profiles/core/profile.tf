@@ -54,7 +54,10 @@ module "minio" {
   namespace                                 = var.minio_namespace
   minio_additional_configuration_values     = var.minio_additional_configuration_values
   custom_minio_values_yaml                  = var.custom_minio_values_yaml
-  custom_input_map                          = var.custom_minio_input_map
+  custom_minio_input_map                    = var.custom_minio_input_map
+  minio_access_key                          = var.minio_access_key
+  minio_secret_access_key                   = var.minio_secret_access_key
+  minio_secret                              = var.minio_secret
 
   depends_on = [
     module.service_mesh
@@ -72,7 +75,23 @@ module "postgres" {
   namespace                                 = var.postgres_namespace
   postgres_additional_configuration_values  = var.postgres_additional_configuration_values
   custom_postgres_values_yaml               = var.custom_postgres_values_yaml
-  custom_input_map                          = var.custom_postgres_input_map
+  custom_postgres_input_map                 = var.custom_postgres_input_map
+  dbadmin_username                          = var.dbadmin_username
+  dbadmin_password                          = var.dbadmin_password
+  dbadmin_secret                            = var.dbadmin_secret
+  owner_username                            = var.owner_username
+  owner_password                            = var.owner_password
+  owner_secret                              = var.owner_secret
+  api_username                              = var.api_username
+  api_password                              = var.api_password
+  api_secret                                = var.api_secret
+  caboose_username                          = var.caboose_username
+  caboose_password                          = var.caboose_password
+  caboose_secret                            = var.caboose_secret
+  conductor_username                        = var.conductor_username
+  conductor_password                        = var.conductor_password
+  conductor_secret                          = var.conductor_secret
+  deploy_db_migration                       = var.deploy_db_migration
 
   depends_on = [
     module.service_mesh
@@ -86,16 +105,26 @@ module "swoop" {
   deploy_swoop_caboose                        = var.deploy_swoop_caboose
   deploy_db_migration                         = var.deploy_db_migration
   deploy_argo_workflows                       = var.deploy_argo_workflows
+  deploy_minio                                = var.deploy_minio
+  deploy_postgres                             = var.deploy_postgres
+  deploy_db_init                              = var.deploy_db_init
   swoop_bundle_version                        = var.swoop_bundle_version
   namespace_annotations                       = var.namespace_annotations
   namespace                                   = var.swoop_namespace
   swoop_api_additional_configuration_values   = var.swoop_api_additional_configuration_values
   custom_swoop_api_values_yaml                = var.custom_swoop_api_values_yaml
-  custom_input_map                            = var.custom_swoop_input_map
+  custom_swoop_input_map                      = var.custom_swoop_input_map
   minio_namespace                             = module.minio.namespace
-  custom_minio_settings                       = module.minio.minio_values
+  custom_minio_input_map                      = var.custom_minio_input_map
   postgres_namespace                          = module.postgres.namespace
-  custom_postgres_settings                    = module.postgres.postgres_values
+  custom_postgres_input_map                   = var.custom_postgres_input_map
+  owner_secret                                = var.owner_secret
+  api_secret                                  = var.api_secret
+  caboose_secret                              = var.caboose_secret
+  conductor_secret                            = var.conductor_secret
+  minio_secret                                = var.minio_secret
+  custom_swoop_api_service_input_map          = var.custom_swoop_api_service_input_map
+  custom_swoop_caboose_service_input_map      = var.custom_swoop_caboose_service_input_map
 
   depends_on = [
     module.service_mesh,

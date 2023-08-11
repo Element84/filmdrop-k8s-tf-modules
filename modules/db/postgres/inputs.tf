@@ -22,23 +22,62 @@ variable "custom_postgres_values_yaml" {
   description = "Path to custom Postgres values.yaml"
 }
 
-variable "custom_input_map" {
-  type        = map(any)
+variable custom_postgres_input_map {
+  type        = map
   description = "Input values for Postgres Helm Chart"
   default = {
-    "postgres.image.repository"              = "quay.io/element84/swoop-db"
-    "postgres.image.tag"                     = "latest"
-    "postgres.container.port"                = 5432
-    "postgres.service.type"                  = "ClusterIP"
-    "postgres.service.port"                  = 5432
-    "postgres.service.targetPort"            = 5432
-    "postgres.service.name"                  = "postgres"
-    "postgres.service.dbName"                = "swoop"
-    "postgres.service.authMethod"            = "trust"
-    "postgres.service.dbUser"                = "cG9zdGdyZXM="
-    "postgres.service.dbPassword"            = "cGFzc3dvcmQ="
-    "postgres.service.sslMode"               = "disable"
-    "postgres.service.schemaVersionTable"    = "swoop.schema_version"
-    "postgres.replicaCount"                  = 1
+    "container.port"                      = 5432
+    "deployment.name"                     = "postgres"
+    "image.repository"                    = "quay.io/element84/swoop-db"
+    "image.tag"                           = "latest"
+    "migration.imagePullPolicy"           = "Always"
+    "migration.jobName"                   = "migration-job"
+    "migration.version"                   = 8
+    "migration.no_wait"                   = false
+    "migration.rollback"                  = false
+    "migration.image.repository"          = "quay.io/element84/swoop-db"
+    "migration.image.tag"                 = "latest"
+    "replicaCount"                        = 1
+    "service.type"                        = "ClusterIP"
+    "service.port"                        = 5432
+    "service.targetPort"                  = 5432
+    "service.name"                        = "postgres"
+    "service.dbName"                      = "swoop"
+    "service.authMethod"                  = "trust"
+    "service.createDBAdminSecret"         = false
+    "service.dbUser"                      = ""
+    "service.dbPassword"                  = ""
+    "service.createOwnerRoleSecret"       = false
+    "service.ownerRoleUsername"           = ""
+    "service.ownerRolePassword"           = ""
+    "service.createApiRoleSecret"         = false
+    "service.apiRoleUsername"             = ""
+    "service.apiRolePassword"             = ""
+    "service.createCabooseRoleSecret"     = false
+    "service.cabooseRoleUsername"         = ""
+    "service.cabooseRolePassword"         = ""
+    "service.createConductorRoleSecret"   = false
+    "service.conductorRoleUsername"       = ""
+    "service.conductorRolePassword"       = ""
+    "service.sslMode"                     = "disable"
+    "service.schemaVersionTable"          = "swoop.schema_version"
+    "storage.size"                        = "1Gi"
+    "storage.volumeBindingMode"           = "WaitForFirstConsumer"
+    "storage.provisioner"                 = "filmdrop.io/local-path-provisioner"
+    "storage.retainPersistentVolume"      = true
+    "storage.storageClassName"            = "postgres-retain"
   }
+}
+
+variable "dbadmin_secret" {
+  description = "Kubernetes Secret name of DB Admin credentials"
+  type        = string
+  default     = "postgres-secret-admin-role"
+  sensitive   = true
+}
+
+variable deploy_db_migration {
+  description = "Whether or not to include the DB Migration capability for SWOOP resources"
+  type        = bool
+  default     = true
 }
