@@ -6,17 +6,28 @@ module "swoop_namespace" {
   namespace             = var.namespace
 }
 
-module "swoop_secrets" {
-  source  = "./secrets"
-  count   = var.deploy_swoop_api == true || var.deploy_swoop_caboose == true || var.deploy_argo_workflows == true || var.deploy_db_migration == true ? 1 : 0
+module "postgres_secrets" {
+  source  = "./postgres_secrets"
+  count   = var.deploy_swoop_api == true || var.deploy_swoop_caboose == true || var.deploy_argo_workflows == true || var.deploy_db_migration == true ? (var.deploy_postgres == true || var.deploy_db_init == true ? 1 : 0) : 0
 
   namespace               = var.namespace
-  minio_namespace         = var.minio_namespace
   postgres_namespace      = var.postgres_namespace
   owner_secret            = var.owner_secret
   api_secret              = var.api_secret
   caboose_secret          = var.caboose_secret
   conductor_secret        = var.conductor_secret
+
+  depends_on = [
+    module.swoop_namespace,
+  ]
+}
+
+module "minio_secrets" {
+  source  = "./minio_secrets"
+  count   = var.deploy_swoop_api == true || var.deploy_swoop_caboose == true || var.deploy_argo_workflows == true || var.deploy_db_migration == true ? (var.deploy_minio == true ? 1 : 0) : 0
+
+  namespace               = var.namespace
+  minio_namespace         = var.minio_namespace
   minio_secret            = var.minio_secret
 
   depends_on = [
@@ -51,6 +62,7 @@ module "swoop_bundle" {
 
   depends_on = [
     module.swoop_namespace,
-    module.swoop_secrets,
+    module.postgres_secrets,
+    module.minio_secrets,
   ]
 }

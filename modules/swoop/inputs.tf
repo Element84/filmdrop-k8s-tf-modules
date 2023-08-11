@@ -156,3 +156,21 @@ variable custom_swoop_caboose_service_input_map {
     "replicaCount"        = 1
   }
 }
+
+variable deploy_postgres {
+  description = "Whether or not to include the Postgres module resources"
+  type        = bool
+  default     = true
+}
+
+variable deploy_db_init {
+  description = "Whether or not to deploy the Postgres initialization script"
+  type        = bool
+  default     = true
+}
+
+variable deploy_minio {
+  description = "Whether or not to include the MinIO module resources"
+  type        = bool
+  default     = true
+}

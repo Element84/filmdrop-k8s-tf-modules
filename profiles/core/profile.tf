@@ -105,6 +105,9 @@ module "swoop" {
   deploy_swoop_caboose                        = var.deploy_swoop_caboose
   deploy_db_migration                         = var.deploy_db_migration
   deploy_argo_workflows                       = var.deploy_argo_workflows
+  deploy_minio                                = var.deploy_minio
+  deploy_postgres                             = var.deploy_postgres
+  deploy_db_init                              = var.deploy_db_init
   swoop_bundle_version                        = var.swoop_bundle_version
   namespace_annotations                       = var.namespace_annotations
   namespace                                   = var.swoop_namespace
