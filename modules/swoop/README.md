@@ -370,7 +370,7 @@ This will deploy, in order, the postgres database, the database initialization j
 After deploying, you will see a `db` namespace and a `swoop` namespace.
 
 <p align="center">
-  <img src="./images/Namespaces.png" alt="Namespaces deployed by db init/migrations" width="754">
+  <img src="./images/Namespaces.png" alt="Namespaces deployed by db init/migrations" width="250">
 </p>
 <br>
 
@@ -381,15 +381,20 @@ The `db` namespace will contain the database initialization pod and the `swoop` 
 </p>
 <br>
 
+<p align="center">
+  <img src="./images/Pods_swoop_namespace.png" alt="Pods in the db namespace" width="754">
+</p>
+<br>
+
 The logs from each of these pods should show messages coming from their respective scripts. For example:
 
 <p align="center">
-  <img src="./images/Logs_db_initialization_pod.png" alt="Logs for db initialization pod" width="754">
+  <img src="./images/Logs_db_initialization_pod.png" alt="Logs for db initialization pod" width="250">
 </p>
 <br>
 
 <p align="center">
-  <img src="./images/Logs_migration_pod.png" alt="Logs for db migration pod" width="754">
+  <img src="./images/Logs_migration_pod.png" alt="Logs for db migration pod" width="250">
 </p>
 <br>
 
@@ -403,7 +408,7 @@ After deploying to K8s, you can port-forward the `postgres` service to a localho
 and connect to the database with pgAdmin using the `swoop` role:
 
 <p align="center">
-  <img src="./images/Connect_to_db.png" alt="Connect to database" width="754">
+  <img src="./images/Connect_to_db.png" alt="Connect to database" width="500">
 </p>
 <br>
 
@@ -412,7 +417,7 @@ You will see that there is a database named `swoop` containing all tables, and t
 If you open the `swoop.schema_version` table, you wil see a record in the table with the migration version number (8, in this example) and the time at which it was applied:
 
 <p align="center">
-  <img src="./images/Schema_version_table.png" alt="Swoop schema_version table" width="754">
+  <img src="./images/Schema_version_table.png" alt="Swoop schema_version table" width="500">
 </p>
 <br>
 
