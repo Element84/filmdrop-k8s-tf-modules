@@ -360,12 +360,12 @@ $ mc mb swoopminio/payloadtest
 Bucket created successfully `swoopminio/payloadtest`.
 ```
 ```
-mc anonymous set public swoopminio/payloadtest
+$ mc anonymous set public swoopminio/payloadtest
 
 Access permission for `swoopminio/payloadtest` is set to `public`
 ```
 ```
-[hector:...mdrop/copy-assets-stac-task]$ mc cp ./payload_workflow.json swoopminio/payloadtest/
+$ mc cp ./payload_workflow.json swoopminio/payloadtest/
 
 ...opy-assets-stac-task/payload_workflow.json: 4.58 KiB / 4.58 KiB ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 127.61 KiB/s 0s
 ```
