@@ -245,47 +245,171 @@ time="2023-07-31T21:26:13Z" level=info msg="index config" indexWorkflowSemaphore
 <br></br>
 
 ## Running an Argo workflow
+For full documentation for argo workflows, please visit the [Argo Workflows Official Documentation](https://argoproj.github.io/argo-workflows/).
 
+For a full list of customization values for the argo-workflows helm chart, visit [Argo Workflows ArtifactHub](https://artifacthub.io/packages/helm/argo/argo-workflows).
+
+### Pre-requisites to running Argo Workflows example
+You will need an AWS account, with an S3 bucket and an IAM user with read/write access to that bucket.
+
+1. Go to your account in AWS, and create an S3 bucket for your assets, for example:
+<br></br>
 <p align="center">
-  <img src="./images/argo_arch_diagram.png" alt="Argo Workflows" width="1587">
+  <img src="./images/argo_assets_bucket.png" alt="Argo Assets Bucket" width="1776">
 </p>
-<br>
+<br></br>
 
-Argo Workflows will also get deployed onto the cluster as a part of this deployment.
+2. Create an IAM user with a read/write policy to your bucket.
+<br></br>
+<p align="center">
+  <img src="./images/argo_iam_user.png" alt="Argo IAM User" width="1776">
+</p>
+<p align="center">
+  <img src="./images/argo_iam_user_permissions.png" alt="Argo IAM User Permissions" width="1776">
+</p>
+<br></br>
 
-Once the local environment is up and running, you can run the provided sample workflow in the file 'argo-workflow-sample.yaml' by going to the command line (Terminal) window and executing the below command:
+### Installation of Argo Workflows
+Argo Workflows have been included as part of the swoop-bundle, as a dependency of swoop-caboose. To deploy argo workflows follow these steps:
 
+***The commands below require you to be on top level directory of the filmdrop-k8s-tf-modules project.***
+
+1. First, update [local.tfvars](../../local.tfvars) or create your own .tfvars:
+
+- For enabling swoop-api and it's dependent services you will need to enable at least the following from your tfvars:
+
+```
+deploy_swoop_api          = true
+deploy_swoop_caboose      = true
+deploy_db_migration       = true
+deploy_argo_workflows     = true
+deploy_postgres           = true
+deploy_db_init            = true
+deploy_minio              = true
+```
+
+2. Next, initialize terraform:
+
+```bash
+terraform init
+```
+
+3. Validate that the terraform resources are valid. If your terraform is valid the validate command will respond with *"Success! The configuration is valid."*
+
+```bash
+terraform validate
+```
+
+4. Run a terraform plan. The terraform plan will give you a summary of all the changes terraform will perform prior to deploying any change. You will a need
+
+```bash
+terraform plan -var-file=local.tfvars
+```
+
+5. Deploy the changes by applying the terraform plan. You will be asked to confirm the changes and must respond with *"yes"*.
+
+```bash
+terraform apply -var-file=local.tfvars
+```
+
+### Running Argo Workflows Copy Assets Stac Task
+The [copy-assets-stac-task](https://github.com/Element84/copy-assets-stac-task) example will run an argo workflow which copies specified Assets from Source STAC Item(s), uploads them to S3 and updates Item assets hrefs to point to the new location.
+
+
+Now, prior to running the argo workflows example, first make sure to port-forward `minio` onto localhost ports `9000` & `9001`.
+
+Via Rancher Desktop:
+<br></br>
+<p align="center">
+  <img src="./images/swoop-port-forwarding.png" alt="Port forwarding SWOOP" width="1776">
+</p>
+<br></br>
+
+or via terminal:
+
+```
+kubectl port-forward -n io svc/minio 9000:9000 &
+kubectl port-forward -n io svc/minio 9001:9001 &
+```
+
+#### Install First the MinIO client by running
+
+```
+brew install minio/stable/mc
+```
+
+#### Then set the MinIO alias, find the ACCESS_KEY and SECRET_KEY by quering the Helm values
+
+```
+export MINIO_ACCESS_KEY=`kubectl get secrets -n io minio-secret-credentials --template={{.data.access_key_id}} | base64 --decode`
+export MINIO_SECRET_KEY=`kubectl get secrets -n io minio-secret-credentials --template={{.data.secret_access_key}} | base64 --decode`
+mc alias set swoopminio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
+```
+
+####  Run the [copy-assets-stac-task](https://github.com/Element84/copy-assets-stac-task) argo workflow example
+
+First clone the [copy-assets-stac-task](https://github.com/Element84/copy-assets-stac-task) repository.
+
+After cloning the [copy-assets-stac-task](https://github.com/Element84/copy-assets-stac-task) repository, first proceed to modify the `payload_workflow.json` and replace the `<REPLACE_WITH_ASSETS_S3_BUCKET_NAME>` with the bucket name created on the [Pre-requisites section](###prerequisites-to-running-argo-workflows-example).
+
+Create a public minio local bucket and copy the `payload_workflow.json` file after replacing the `<REPLACE_WITH_ASSETS_S3_BUCKET_NAME>` name. To do this via the minio client:
+
+```
+$ mc mb swoopminio/payloadtest
+
+Bucket created successfully `swoopminio/payloadtest`.
+```
+```
+mc anonymous set public swoopminio/payloadtest
+
+Access permission for `swoopminio/payloadtest` is set to `public`
+```
+```
+[hector:...mdrop/copy-assets-stac-task]$ mc cp ./payload_workflow.json swoopminio/payloadtest/
+
+...opy-assets-stac-task/payload_workflow.json: 4.58 KiB / 4.58 KiB ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 127.61 KiB/s 0s
+```
+
+Now modify the `secrets.yaml` and replace the `<REPLACE_WITH_BASE64_AWS_ACCESS_KEY>`, `<REPLACE_WITH_BASE64_AWS_SECRET_ACCESS_KEY>` and `<REPLACE_WITH_BASE64_AWS_REGION>` with the base64 encoded version of the AWS_ACCESS_KEY, AWS_SECRET_ACCESS_KEY and AWS_REGION of the iam user and bucket created on the [Pre-requisites section](###prerequisites-to-running-argo-workflows-example).
+
+Create the kubernetes secret by executing:
+```
+kubectl apply -n swoop -f ./secret.yaml
+```
+
+Then modify the `<REPLACE_WITH_MINIO_HOST>:<REPLACE_WITH_MINIO_PORT>` variables inside the `workflow_copyassets_no_template.yaml` and the `workflow_copyassets_with_template.yaml`. If you're running this example from a minio created by the terraform stack, you should be able to replace `<REPLACE_WITH_MINIO_HOST>:<REPLACE_WITH_MINIO_PORT>` with `minio.io:9000`.
+
+Finally, run and watch the argo workflow task via:
+```
+argo submit -n swoop --watch ./workflow_copyassets_no_template.yaml
+```
+
+You should be able to see your workflow pod succeed in the terminal:
+<br></br>
+<p align="center">
+  <img src="./images/argo_workflow_success.png" alt="Argo Workflow Success" width="1776">
+</p>
+<br></br>
+
+And you should be able to see your asset S3 bucket populated with a tumbnail image:
+```
+aws s3 ls s3://copy-assets-stac-task-bucket/data/naip/tx_m_2609719_se_14_060_20201217/
+
+2023-08-17 10:00:08       9776 thumbnail.jpg
+```
+<br></br>
+
+
+Notes:
+* When utilizing the argo workflow installation provided via the swoop-bundle, you should be able to run argo workflows in the following manner:
 ```
 argo submit -n swoop --watch <FULL PATH TO THE SAMPLE WORKFLOW YAML FILE>
 ```
+* The're is a service account created to support the required argo permissions `serviceAccountName: argo`
+* You should not expect the argo server, nor archive logs to be functional with the default argo installation. In order to enable those settings please see:
+  * [Argo Workflows Official Documentation](https://argoproj.github.io/argo-workflows/)
+  * [Argo Workflows ArtifactHub](https://artifacthub.io/packages/helm/argo/argo-workflows)
 
-So, if for example, the workflow YAML file is located at ```./examples/argo/argo-workflow-sample.yaml```, then the command would be:
-
-```
-argo submit -n swoop --watch ./examples/argo/argo-workflow-sample.yaml
-```
-
-Alternatively, you can go into the directory containing this file and simply pass the name of the file (along with its extension) to the above command.
-
-You will see the workflow running in the command line and if everything goes well, it should successfully execute.
-
-You can see the status of any currently running or previously run workflow by port-forwarding the Argo Server UI to a port on your machine. You can do this easily using Rancher Desktop (via the Port Forwarding section of the console) if that is the K8s tool that you are using. By default, the Argo Server UI runs on port 2746 inside the cluster. You can also do this using `kubectl`.
-
-For example, to port-forward the Argo Server UI onto a local port 2746 on your machine:
-
-```
-kubectl -n swoop port-forward svc/swoop-bundle-argo-workflows-server 2746:2746
-```
-
-When the Argo Server UI opens up, you might have to click on the 'x' next to the namespace if there is already a value in the namespace field.
-
-Note: The workflows you run should have `serviceAccountName: argo` within their `spec` declaration in the YAML file in order for the workflow to have the proper permissions to run. Also, in order to see the logs in MinIO, you should have the `archiveLogs: true` within the `spec` declaration as well. For example:
-
-```
-spec:
-  serviceAccountName: argo # set this so the proper permissions are assigned
-  archiveLogs: true # enables logs for this workflow
-```
 
 <br>
 
