@@ -321,7 +321,7 @@ Now, prior to running the argo workflows example, first make sure to port-forwar
 Via Rancher Desktop:
 <br></br>
 <p align="center">
-  <img src="./images/swoop-port-forwarding.png" alt="Port forwarding SWOOP" width="1776">
+  <img src="./images/minio-port-forwarding.png" alt="Port forwarding Minio" width="1776">
 </p>
 <br></br>
 
