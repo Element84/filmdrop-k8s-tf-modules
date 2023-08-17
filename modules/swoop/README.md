@@ -387,7 +387,7 @@ argo submit -n swoop --watch ./workflow_copyassets_no_template.yaml
 You should be able to see your workflow pod succeed in the terminal:
 <br></br>
 <p align="center">
-  <img src="./images/argo_workflow_success.png" alt="Argo Workflow Success" width="1776">
+  <img src="./images/argo_workflow_success.png" alt="Argo Workflow Success" width="776">
 </p>
 <br></br>
 
