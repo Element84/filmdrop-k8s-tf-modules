@@ -397,6 +397,18 @@ aws s3 ls s3://copy-assets-stac-task-bucket/data/naip/tx_m_2609719_se_14_060_202
 
 2023-08-17 10:00:08       9776 thumbnail.jpg
 ```
+
+Similarly, you should be able to run the `workflow_copyassets_with_template.yaml` workflow in the [copy-assets-stac-task](https://github.com/Element84/copy-assets-stac-task) repository by following these steps:
+
+1. Create first the workflow template by the following command:
+```
+kubectl apply -n swoop -f ./workflow-template.yaml
+```
+2. Submit the argo workflow by:
+```
+argo submit -n swoop --watch ./workflow_copyassets_with_template.yaml
+```
+
 <br></br>
 
 
