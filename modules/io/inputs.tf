@@ -52,6 +52,7 @@ variable custom_minio_input_map {
     "local-path-provisioner.enabled"                      = true
     "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-minio-path-provisioner"
     "local-path-provisioner.storageClass.name"            = "local-path-class-minio"
+    "local-path-provisioner.configmap.name"               = "local-path-config-minio"
     "replicaCount"                                        = 1
     "service.type"                                        = "ClusterIP"
     "service.port"                                        = 9000

@@ -12,6 +12,7 @@ variable custom_stac_fastapi_input_map {
     "local-path-provisioner.enabled"                      = true
     "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-pgstac-path-provisioner"
     "local-path-provisioner.storageClass.name"            = "local-path-class-pgstac"
+    "local-path-provisioner.configmap.name"               = "local-path-config-pgstac"
     "pgStac.container.port"                               = 5432
     "pgStac.deployment.name"                              = "pgstac"
     "pgStac.image.repository"                             = "ghcr.io/stac-utils/pgstac"

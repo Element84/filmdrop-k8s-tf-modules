@@ -242,6 +242,7 @@ variable custom_minio_input_map {
     "local-path-provisioner.enabled"                      = true
     "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-minio-path-provisioner"
     "local-path-provisioner.storageClass.name"            = "local-path-class-minio"
+    "local-path-provisioner.configmap.name"               = "local-path-config-minio"
     "replicaCount"                                        = 1
     "service.type"                                        = "ClusterIP"
     "service.port"                                        = 9000
@@ -270,8 +271,9 @@ variable custom_postgres_input_map {
     "image.repository"                                    = "quay.io/element84/swoop-db"
     "image.tag"                                           = "latest"
     "local-path-provisioner.enabled"                      = true
-    "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-path-provisioner"
+    "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-postgres-path-provisioner"
     "local-path-provisioner.storageClass.name"            = "local-path-class-postgres"
+    "local-path-provisioner.configmap.name"               = "local-path-config-postgres"
     "migration.imagePullPolicy"                           = "Always"
     "migration.jobName"                                   = "migration-job"
     "migration.version"                                   = 8
@@ -305,7 +307,7 @@ variable custom_postgres_input_map {
     "service.schemaVersionTable"                          = "swoop.schema_version"
     "storage.size"                                        = "256M"
     "storage.volumeBindingMode"                           = "WaitForFirstConsumer"
-    "storage.provisioner"                                 = "filmdrop.io/local-path-provisioner"
+    "storage.provisioner"                                 = "filmdrop.io/local-postgres-path-provisioner"
     "storage.retainPersistentVolume"                      = true
     "storage.storageClassName"                            = "postgres-retain"
   }
@@ -518,6 +520,7 @@ variable custom_stac_fastapi_input_map {
     "local-path-provisioner.enabled"                      = true
     "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-pgstac-path-provisioner"
     "local-path-provisioner.storageClass.name"            = "local-path-class-pgstac"
+    "local-path-provisioner.configmap.name"               = "local-path-config-pgstac"
     "pgStac.container.port"                               = 5432
     "pgStac.deployment.name"                              = "pgstac"
     "pgStac.image.repository"                             = "ghcr.io/stac-utils/pgstac"
