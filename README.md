@@ -2,8 +2,10 @@
 
 This repository contains the packaging of FilmDrop terraform modules with Kubernetes.
 
-This FilmDrop repository manages the supporting infrastructure required to deploy the [STAC Workflow Open Orchestration Platform (SWOOP)](https://github.com/Element84/swoop).
+This FilmDrop repository manages the supporting infrastructure required to deploy the [STAC Workflow Open Orchestration Platform (SWOOP)](https://github.com/Element84/swoop). The terraform modules utilize the [FilmDrop Kubernetes Helm Charts](https://github.com/Element84/filmdrop-k8s-helm-charts) to deploy the FilmDrop resources on Kubernetes clusters.
+
 ## Pre-requisites
+
 For local or AWS environment pre-requisites, head to the [Operations Manual](./operations/Operations_Guide.md).
 
 ## Components
@@ -11,21 +13,45 @@ For local or AWS environment pre-requisites, head to the [Operations Manual](./o
 ### Linkerd
 
 The local development environment includes Linkerd as a service mesh. More information is available [here](./modules/service_mesh/README.md).
-<br>
-
-### Workflow Operations
-
-The local development environment includes resources for running and managing workflows. More information is available [here](./modules/argo/README.md).
-<br>
+<br></br>
 
 ### Nginx ingress proxy
 
 An nginx ingress proxy has been added by default to the local development environment More information is available [here](./modules/ingress/README.md).
-<br>
+<br></br>
 
 ### Monitoring
 
 The local development environment includes resources for aggregating and visualizing logs and metrics. More information is available [here](./modules/monitoring/README.md).
+<br></br>
+
+### MinIO
+
+[MinIO](https://min.io/) is an S3 compatible object storage for the usage of the [SWOOP API](https://github.com/Element84/swoop), [SWOOP Caboose](https://github.com/Element84/swoop-go), and [SWOOP Conductor](https://github.com/Element84/swoop-go). More information is available [here](./modules/io/README.md).
+<br></br>
+
+### Postgres
+
+[PostgreSQL](https://www.postgresql.org/) is an open source object-relational database system for the usage of the [SWOOP API](https://github.com/Element84/swoop), [SWOOP Caboose](https://github.com/Element84/swoop-go), and [SWOOP Conductor](https://github.com/Element84/swoop-go). More information is available [here](./modules/db/README.md).
+<br></br>
+
+### STAC-FastAPI
+
+The local development environment includes a module for deploying STAC-FastAPI, which provides an API that exposes a STAC catalog that is persisted in a backend Postgres database with its component STAC Collections and Items. More information is available [here](./modules/stac-fastapi/README.md).
+
+You can configure whether or not STAC-FastAPI is included in deployment by setting the `deploy_stacfastapi` flag in the [inputs](./inputs.tf) file.
+<br></br>
+
+### SWOOP Bundle
+
+SWOOP Bundle will install the followin the following components into a kubernetes cluster:
+* [swoop-api](https://github.com/Element84/swoop)
+* [argo-workflows](https://github.com/argoproj/argo-workflows/)
+* [swoop-caboose](https://github.com/Element84/swoop-go)
+* [swoop-conductor](https://github.com/Element84/swoop-go)
+
+This helm chart is inteded to group all SWOOP components compatible with the same database schema version and it's related migration operations. More information is available [here](./modules/swoop/README.md).
+<br></br>
 
 ### Tiling
 
@@ -34,18 +60,13 @@ The local development environment includes resources for rendering and serving t
 **Currently Titiler does not distribute a docker image for an ARM architecture. If you're running an Apple silicon (M1, M2) or similar machine you should skip installation of the tiling namespace.**
 
 You can configure whether or not tiling resources are included in deployment by setting the `deploy_tiling` flag in the [inputs](./inputs.tf) file.
-
-### STAC-FastAPI
-
-The local development environment includes a module for deploying STAC-FastAPI, which provides an API that exposes a STAC catalog that is persisted in a backend Postgres database with its component STAC Collections and Items. More information is available [here](./modules/stac-fastapi/README.md).
-
-You can configure whether or not STAC-FastAPI is included in deployment by setting the `deploy_stacfastapi` flag in the [inputs](./inputs.tf) file.
+<br></br>
 
 ### Profiles
 
 To view and extend profiles, head [here](./profiles/README.md).
+<br></br>
 
-<br><br>
 # `flop` CLI
 ## What is `flop`?
 
