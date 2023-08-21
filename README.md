@@ -13,11 +13,15 @@ For local or AWS environment pre-requisites, head to the [Operations Manual](./o
 ### Linkerd
 
 The local development environment includes Linkerd as a service mesh. More information is available [here](./modules/service_mesh/README.md).
+
+You can configure whether or not Linkerd is included in deployment by setting the `deploy_linkerd` flag in the [inputs](./inputs.tf) file.
 <br></br>
 
 ### Nginx ingress proxy
 
 An nginx ingress proxy has been added by default to the local development environment More information is available [here](./modules/ingress/README.md).
+
+You can configure whether or not Ingress NGINX is included in deployment by setting the `deploy_ingress_nginx` flag in the [inputs](./inputs.tf) file.
 <br></br>
 
 ### Monitoring
@@ -38,12 +42,14 @@ More information is available [here](./modules/monitoring/README.md).
 
 The IO module includes [MinIO](https://min.io/), an S3 compatible object storage for the usage of the [SWOOP API](https://github.com/Element84/swoop), [SWOOP Caboose](https://github.com/Element84/swoop-go), and [SWOOP Conductor](https://github.com/Element84/swoop-go). More information is available [here](./modules/io/README.md).
 
-You can configure whether or not STAC-FastAPI is included in deployment by setting the `deploy_stacfastapi` flag in the [inputs](./inputs.tf) file.
+You can configure whether or not STAC-FastAPI is included in deployment by setting the `deploy_minio` flag in the [inputs](./inputs.tf) file.
 <br></br>
 
 ### DB
 
 The DB module includes [PostgreSQL](https://www.postgresql.org/), an open source object-relational database system for the usage of the [SWOOP API](https://github.com/Element84/swoop), [SWOOP Caboose](https://github.com/Element84/swoop-go), and [SWOOP Conductor](https://github.com/Element84/swoop-go). More information is available [here](./modules/db/README.md).
+
+You can configure whether or not Postgres is included in deployment by setting the `deploy_postgres` flag in the [inputs](./inputs.tf) file.
 
 The DB module also has a configurable swoop-db-init which will initialize [swoop-db](https://github.com/Element84/swoop-db) with the creation of a SWOOP database and Roles for each SWOOP Component. You can configure whether or not swoop-db-init is included in deployment by setting the `deploy_db_init` flag in the [inputs](./inputs.tf) file.
 <br></br>
