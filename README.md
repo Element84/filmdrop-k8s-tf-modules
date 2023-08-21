@@ -22,17 +22,30 @@ An nginx ingress proxy has been added by default to the local development enviro
 
 ### Monitoring
 
-The local development environment includes resources for aggregating and visualizing logs and metrics. More information is available [here](./modules/monitoring/README.md).
+The local development environment includes resources for aggregating and visualizing logs and metrics. This includes:
+
+- [Grafana](https://grafana.com/grafana/) for visualization and dashboards. You can configure whether or not grafana is included in deployment by setting the `deploy_grafana_prometheus` flag in the [inputs](./inputs.tf) file.
+- [Prometheus](https://grafana.com/oss/prometheus/) for metric monitoring. You can configure whether or not prometheus is included in deployment by setting the `deploy_grafana_prometheus` flag in the [inputs](./inputs.tf) file.
+- [Loki](https://grafana.com/oss/loki/) for log storage and disovery. You can configure whether or not loki is included in deployment by setting the `deploy_loki` flag in the [inputs](./inputs.tf) file.
+- [Promtail](https://grafana.com/docs/loki/latest/clients/promtail/) for log scraping. You can configure whether or not loki is included in deployment by setting the `deploy_promtail` flag in the [inputs](./inputs.tf) file.
+
+
+More information is available [here](./modules/monitoring/README.md).
+
 <br></br>
 
-### MinIO
+### IO
 
-[MinIO](https://min.io/) is an S3 compatible object storage for the usage of the [SWOOP API](https://github.com/Element84/swoop), [SWOOP Caboose](https://github.com/Element84/swoop-go), and [SWOOP Conductor](https://github.com/Element84/swoop-go). More information is available [here](./modules/io/README.md).
+The IO module includes [MinIO](https://min.io/), an S3 compatible object storage for the usage of the [SWOOP API](https://github.com/Element84/swoop), [SWOOP Caboose](https://github.com/Element84/swoop-go), and [SWOOP Conductor](https://github.com/Element84/swoop-go). More information is available [here](./modules/io/README.md).
+
+You can configure whether or not STAC-FastAPI is included in deployment by setting the `deploy_stacfastapi` flag in the [inputs](./inputs.tf) file.
 <br></br>
 
-### Postgres
+### DB
 
-[PostgreSQL](https://www.postgresql.org/) is an open source object-relational database system for the usage of the [SWOOP API](https://github.com/Element84/swoop), [SWOOP Caboose](https://github.com/Element84/swoop-go), and [SWOOP Conductor](https://github.com/Element84/swoop-go). More information is available [here](./modules/db/README.md).
+The DB module includes [PostgreSQL](https://www.postgresql.org/), an open source object-relational database system for the usage of the [SWOOP API](https://github.com/Element84/swoop), [SWOOP Caboose](https://github.com/Element84/swoop-go), and [SWOOP Conductor](https://github.com/Element84/swoop-go). More information is available [here](./modules/db/README.md).
+
+The DB module also has a configurable swoop-db-init which will initialize [swoop-db](https://github.com/Element84/swoop-db) with the creation of a SWOOP database and Roles for each SWOOP Component. You can configure whether or not swoop-db-init is included in deployment by setting the `deploy_db_init` flag in the [inputs](./inputs.tf) file.
 <br></br>
 
 ### STAC-FastAPI
@@ -42,15 +55,17 @@ The local development environment includes a module for deploying STAC-FastAPI, 
 You can configure whether or not STAC-FastAPI is included in deployment by setting the `deploy_stacfastapi` flag in the [inputs](./inputs.tf) file.
 <br></br>
 
-### SWOOP Bundle
+### SWOOP
 
-SWOOP Bundle will install the followin the following components into a kubernetes cluster:
-* [swoop-api](https://github.com/Element84/swoop)
-* [argo-workflows](https://github.com/argoproj/argo-workflows/)
-* [swoop-caboose](https://github.com/Element84/swoop-go)
-* [swoop-conductor](https://github.com/Element84/swoop-go)
+The swoop module contains the SWOOP Bundle which will install the followin the following components into a kubernetes cluster:
+* [swoop-api](https://github.com/Element84/swoop) - configure whether or not SWOOP-API is included in deployment by setting the `deploy_swoop_api` flag in the [inputs](./inputs.tf) file
+* [argo-workflows](https://github.com/argoproj/argo-workflows/) - configure whether or not SWOOP-API is included in deployment by setting the `deploy_argo_workflows` flag in the [inputs](./inputs.tf) file
+* [swoop-caboose](https://github.com/Element84/swoop-go) - configure whether or not SWOOP-API is included in deployment by setting the `deploy_swoop_caboose` flag in the [inputs](./inputs.tf) file
+* [swoop-conductor](https://github.com/Element84/swoop-go) - configure whether or not SWOOP-API is included in deployment by setting the `deploy_swoop_conductor` flag in the [inputs](./inputs.tf) file
 
-This helm chart is inteded to group all SWOOP components compatible with the same database schema version and it's related migration operations. More information is available [here](./modules/swoop/README.md).
+The SWOOP Bundle is inteded to group all SWOOP components compatible with the same database schema version and it's related migration operations. More information is available [here](./modules/swoop/README.md).
+
+The SWOOP Bundle also has a configurable swoop-db-migration which will migrate forward or backwards a schema version of the [swoop-db](https://github.com/Element84/swoop-db) in support of the SWOOP Components. You can configure whether or not swoop-db-migration is included in deployment by setting the `deploy_db_migration` flag in the [inputs](./inputs.tf) file.
 <br></br>
 
 ### Tiling
