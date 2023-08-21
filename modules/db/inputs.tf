@@ -61,6 +61,7 @@ variable custom_postgres_input_map {
     "image.repository"                                    = "quay.io/element84/swoop-db"
     "image.tag"                                           = "latest"
     "local-path-provisioner.enabled"                      = true
+    "local-path-provisioner.singleNamespace"              = false
     "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-postgres-path-provisioner"
     "local-path-provisioner.storageClass.name"            = "local-path-class-postgres"
     "local-path-provisioner.configmap.name"               = "local-path-config-postgres"

@@ -21,6 +21,7 @@ variable custom_stac_fastapi_input_map {
   description = "Input values for STAC-FastAPI Helm Chart"
   default = {
     "local-path-provisioner.enabled"                      = true
+    "local-path-provisioner.singleNamespace"              = false
     "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-pgstac-path-provisioner"
     "local-path-provisioner.storageClass.name"            = "local-path-class-pgstac"
     "local-path-provisioner.configmap.name"               = "local-path-config-pgstac"

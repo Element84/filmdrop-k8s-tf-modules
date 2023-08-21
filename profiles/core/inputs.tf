@@ -240,6 +240,7 @@ variable custom_minio_input_map {
     "image.repository"                                    = "quay.io/minio/minio"
     "image.tag"                                           = "latest"
     "local-path-provisioner.enabled"                      = true
+    "local-path-provisioner.singleNamespace"              = false
     "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-minio-path-provisioner"
     "local-path-provisioner.storageClass.name"            = "local-path-class-minio"
     "local-path-provisioner.configmap.name"               = "local-path-config-minio"
@@ -271,6 +272,7 @@ variable custom_postgres_input_map {
     "image.repository"                                    = "quay.io/element84/swoop-db"
     "image.tag"                                           = "latest"
     "local-path-provisioner.enabled"                      = true
+    "local-path-provisioner.singleNamespace"              = false
     "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-postgres-path-provisioner"
     "local-path-provisioner.storageClass.name"            = "local-path-class-postgres"
     "local-path-provisioner.configmap.name"               = "local-path-config-postgres"
@@ -518,6 +520,7 @@ variable custom_stac_fastapi_input_map {
   description = "Input values for STAC-FastAPI Helm Chart"
   default = {
     "local-path-provisioner.enabled"                      = true
+    "local-path-provisioner.singleNamespace"              = false
     "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-pgstac-path-provisioner"
     "local-path-provisioner.storageClass.name"            = "local-path-class-pgstac"
     "local-path-provisioner.configmap.name"               = "local-path-config-pgstac"
