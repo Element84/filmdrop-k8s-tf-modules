@@ -35,7 +35,6 @@ The local development environment includes resources for aggregating and visuali
 
 
 More information is available [here](./modules/monitoring/README.md).
-
 <br></br>
 
 ### IO
