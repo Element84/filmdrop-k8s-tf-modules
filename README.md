@@ -64,9 +64,9 @@ You can configure whether or not STAC-FastAPI is included in deployment by setti
 
 The swoop module contains the SWOOP Bundle which will install the followin the following components into a kubernetes cluster:
 * [swoop-api](https://github.com/Element84/swoop) - configure whether or not SWOOP-API is included in deployment by setting the `deploy_swoop_api` flag in the [inputs](./inputs.tf) file
-* [argo-workflows](https://github.com/argoproj/argo-workflows/) - configure whether or not SWOOP-API is included in deployment by setting the `deploy_argo_workflows` flag in the [inputs](./inputs.tf) file
-* [swoop-caboose](https://github.com/Element84/swoop-go) - configure whether or not SWOOP-API is included in deployment by setting the `deploy_swoop_caboose` flag in the [inputs](./inputs.tf) file
-* [swoop-conductor](https://github.com/Element84/swoop-go) - configure whether or not SWOOP-API is included in deployment by setting the `deploy_swoop_conductor` flag in the [inputs](./inputs.tf) file
+* [argo-workflows](https://github.com/argoproj/argo-workflows/) - configure whether or not Argo Workflows is included in deployment by setting the `deploy_argo_workflows` flag in the [inputs](./inputs.tf) file
+* [swoop-caboose](https://github.com/Element84/swoop-go) - configure whether or not SWOOP Caboose is included in deployment by setting the `deploy_swoop_caboose` flag in the [inputs](./inputs.tf) file
+* [swoop-conductor](https://github.com/Element84/swoop-go) - configure whether or not SWOOP Conductor is included in deployment by setting the `deploy_swoop_conductor` flag in the [inputs](./inputs.tf) file
 
 The SWOOP Bundle is inteded to group all SWOOP components compatible with the same database schema version and it's related migration operations. More information is available [here](./modules/swoop/README.md).
 
