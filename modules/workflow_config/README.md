@@ -4,6 +4,26 @@ This module installs resources that deploy the SWOOP configuration file and work
 
 ## Installation
 
+Update the `local.tfvars` file to:
+
+```
+deploy_linkerd            = false
+deploy_ingress_nginx      = false
+deploy_grafana_prometheus = false
+deploy_loki               = false
+deploy_promtail           = false
+deploy_argo_workflows     = true
+deploy_titiler            = false
+deploy_stacfastapi        = false
+deploy_swoop_api          = false
+deploy_swoop_caboose      = true
+deploy_db_migration       = true
+deploy_postgres           = true
+deploy_db_init            = true
+deploy_minio              = true
+deploy_workflow_config    = true
+```
+
 1. First, initialize Terraform:
 
 ```bash
@@ -25,13 +45,13 @@ terraform plan
 4. Deploy the changes by applying terraform plan. You will be asked to confirm the changes and must respond with _"yes"_.
 
 ```bash
-terraform apply
+terraform apply --var-file=local.tfvars
 ```
 
 Once the chart has been deployed, you can do:
 
-`kubectl get workflowtemplate` and
+`kubectl get workflowtemplate -n swoop` and
 
-`kubectl get configmap`
+`kubectl get configmap -n swoop`
 
 to see that the workflow templates and SWOOP configmap that were deployed.

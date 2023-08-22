@@ -167,4 +167,11 @@ module "workflow_config" {
   deploy_workflow_config = var.deploy_workflow_config
   namespace_annotations  = var.namespace_annotations
 
+  depends_on = [
+    module.service_mesh,
+    module.swoop,
+    module.minio,
+    module.postgres,
+  ]
+
 }

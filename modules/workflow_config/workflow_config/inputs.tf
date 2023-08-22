@@ -30,14 +30,3 @@ variable "aws_region" {
   default     = ""
   sensitive   = true
 }
-
-
-variable "custom_config_minio_helm_values" {
-  type        = map(any)
-  description = "Input values for Workflow-Config Helm Chart"
-  default = {
-    "minio.host"   = "minio.io"
-    "minio.port"   = 9000
-    "minio.bucket" = "payloadtest"
-  }
-}
