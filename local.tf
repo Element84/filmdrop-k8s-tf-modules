@@ -26,6 +26,7 @@ module "local_environment" {
   deploy_minio                                  = var.deploy_minio
   deploy_db_init                                = var.deploy_db_init
   deploy_postgres                               = var.deploy_postgres
+  deploy_workflow_config                        = var.deploy_workflow_config
   swoop_bundle_version                          = var.swoop_bundle_version
   ingress_nginx_additional_configuration_values = var.ingress_nginx_additional_configuration_values
   custom_ingress_nginx_values_yaml              = var.custom_ingress_nginx_values_yaml
