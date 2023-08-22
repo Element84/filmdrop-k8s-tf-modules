@@ -89,6 +89,19 @@ variable deploy_argo_workflows {
   description = "Deploy Argo Workflows"
 }
 
+variable deploy_argo_workflows_single_namespace {
+  type        = bool
+  default     = true
+  description = "Deploy Argo Workflows in a Single Namespace"
+}
+
+
+variable deploy_argo_workflows_server {
+  type        = bool
+  default     = false
+  description = "Deploy Argo Workflows Server"
+}
+
 variable "owner_secret" {
   description = "Kubernetes Secret name of Owner credentials"
   type        = string

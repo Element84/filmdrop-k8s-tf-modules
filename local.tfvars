@@ -47,7 +47,7 @@ nginx_extra_values = {
   "tcp.5432"                                      = "db/postgres:5432"
   "tcp.9090"                                      = "monitoring/kube-prometheus-stack-prometheus:9090"
   "tcp.3009"                                      = "monitoring/kube-prometheus-stack-grafana:3009"
-  "tcp.2746"                                      = "swoop/swoop-bundle-argo-workflows-server:2746"
+  "tcp.8080"                                      = "stac/stac-fastapi-pgstac:8080"
 }
 
 #### Component flags: Deploy everything with the exception of Linkerd, TiTiler, stac-fastapi, and Argo Events

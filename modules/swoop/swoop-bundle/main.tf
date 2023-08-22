@@ -164,6 +164,16 @@ resource "helm_release" "swoop_bundle" {
     value = var.deploy_argo_workflows
   }
 
+  set {
+    name  = "swoop-caboose.argo-workflows.singleNamespace"
+    value = var.deploy_argo_workflows_single_namespace
+  }
+
+  set {
+    name  = "swoop-caboose.argo-workflows.server.enabled"
+    value = var.deploy_argo_workflows_server
+  }
+
   values = concat(
     [var.custom_swoop_api_values_yaml == "" ? file("${path.module}/values.yaml") : file(var.custom_swoop_api_values_yaml)],
     length(var.swoop_api_additional_configuration_values) == 0 ? [] : var.swoop_api_additional_configuration_values

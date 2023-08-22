@@ -234,22 +234,32 @@ variable custom_minio_input_map {
   type        = map
   description = "Input values for MinIO Helm Chart"
   default = {
-    "container.port"            = 9000
-    "container.servicePort"     = 9001
-    "deployment.name"           = "minio"
-    "image.repository"          = "quay.io/minio/minio"
-    "image.tag"                 = "latest"
-    "replicaCount"              = 1
-    "service.type"              = "ClusterIP"
-    "service.port"              = 9000
-    "service.targetPort"        = 9000
-    "service.servicePort"       = 9001
-    "service.serviceTargetPort" = 9001
-    "service.name"              = "minio"
-    "service.bucketName"        = "swoop"
-    "service.accessKeyId"       = ""
-    "service.secretAccessKey"   = ""
-    "service.createSecret"      = false
+    "container.port"                                      = 9000
+    "container.servicePort"                               = 9001
+    "deployment.name"                                     = "minio"
+    "image.repository"                                    = "quay.io/minio/minio"
+    "image.tag"                                           = "latest"
+    "local-path-provisioner.enabled"                      = true
+    "local-path-provisioner.singleNamespace"              = false
+    "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-minio-path-provisioner"
+    "local-path-provisioner.storageClass.name"            = "local-path-class-minio"
+    "local-path-provisioner.configmap.name"               = "local-path-config-minio"
+    "replicaCount"                                        = 1
+    "service.type"                                        = "ClusterIP"
+    "service.port"                                        = 9000
+    "service.targetPort"                                  = 9000
+    "service.servicePort"                                 = 9001
+    "service.serviceTargetPort"                           = 9001
+    "service.name"                                        = "minio"
+    "service.bucketName"                                  = "swoop"
+    "service.accessKeyId"                                 = ""
+    "service.secretAccessKey"                             = ""
+    "service.createSecret"                                = false
+    "storage.size"                                        = "256M"
+    "storage.volumeBindingMode"                           = "WaitForFirstConsumer"
+    "storage.provisioner"                                 = "filmdrop.io/local-minio-path-provisioner"
+    "storage.retainPersistentVolume"                      = true
+    "storage.storageClassName"                            = "minio-retain"
   }
 }
 
@@ -257,46 +267,51 @@ variable custom_postgres_input_map {
   type        = map
   description = "Input values for Postgres Helm Chart"
   default = {
-    "container.port"                      = 5432
-    "deployment.name"                     = "postgres"
-    "image.repository"                    = "quay.io/element84/swoop-db"
-    "image.tag"                           = "latest"
-    "migration.imagePullPolicy"           = "Always"
-    "migration.jobName"                   = "migration-job"
-    "migration.version"                   = 8
-    "migration.no_wait"                   = false
-    "migration.rollback"                  = false
-    "migration.image.repository"          = "quay.io/element84/swoop-db"
-    "migration.image.tag"                 = "latest"
-    "replicaCount"                        = 1
-    "service.type"                        = "ClusterIP"
-    "service.port"                        = 5432
-    "service.targetPort"                  = 5432
-    "service.name"                        = "postgres"
-    "service.dbName"                      = "swoop"
-    "service.authMethod"                  = "trust"
-    "service.createDBAdminSecret"         = false
-    "service.dbUser"                      = ""
-    "service.dbPassword"                  = ""
-    "service.createOwnerRoleSecret"       = false
-    "service.ownerRoleUsername"           = ""
-    "service.ownerRolePassword"           = ""
-    "service.createApiRoleSecret"         = false
-    "service.apiRoleUsername"             = ""
-    "service.apiRolePassword"             = ""
-    "service.createCabooseRoleSecret"     = false
-    "service.cabooseRoleUsername"         = ""
-    "service.cabooseRolePassword"         = ""
-    "service.createConductorRoleSecret"   = false
-    "service.conductorRoleUsername"       = ""
-    "service.conductorRolePassword"       = ""
-    "service.sslMode"                     = "disable"
-    "service.schemaVersionTable"          = "swoop.schema_version"
-    "storage.size"                        = "1Gi"
-    "storage.volumeBindingMode"           = "WaitForFirstConsumer"
-    "storage.provisioner"                 = "filmdrop.io/local-path-provisioner"
-    "storage.retainPersistentVolume"      = true
-    "storage.storageClassName"            = "postgres-retain"
+    "container.port"                                      = 5432
+    "deployment.name"                                     = "postgres"
+    "image.repository"                                    = "quay.io/element84/swoop-db"
+    "image.tag"                                           = "latest"
+    "local-path-provisioner.enabled"                      = true
+    "local-path-provisioner.singleNamespace"              = false
+    "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-postgres-path-provisioner"
+    "local-path-provisioner.storageClass.name"            = "local-path-class-postgres"
+    "local-path-provisioner.configmap.name"               = "local-path-config-postgres"
+    "migration.imagePullPolicy"                           = "Always"
+    "migration.jobName"                                   = "migration-job"
+    "migration.version"                                   = 8
+    "migration.no_wait"                                   = false
+    "migration.rollback"                                  = false
+    "migration.image.repository"                          = "quay.io/element84/swoop-db"
+    "migration.image.tag"                                 = "latest"
+    "replicaCount"                                        = 1
+    "service.type"                                        = "ClusterIP"
+    "service.port"                                        = 5432
+    "service.targetPort"                                  = 5432
+    "service.name"                                        = "postgres"
+    "service.dbName"                                      = "swoop"
+    "service.authMethod"                                  = "trust"
+    "service.createDBAdminSecret"                         = false
+    "service.dbUser"                                      = ""
+    "service.dbPassword"                                  = ""
+    "service.createOwnerRoleSecret"                       = false
+    "service.ownerRoleUsername"                           = ""
+    "service.ownerRolePassword"                           = ""
+    "service.createApiRoleSecret"                         = false
+    "service.apiRoleUsername"                             = ""
+    "service.apiRolePassword"                             = ""
+    "service.createCabooseRoleSecret"                     = false
+    "service.cabooseRoleUsername"                         = ""
+    "service.cabooseRolePassword"                         = ""
+    "service.createConductorRoleSecret"                   = false
+    "service.conductorRoleUsername"                       = ""
+    "service.conductorRolePassword"                       = ""
+    "service.sslMode"                                     = "disable"
+    "service.schemaVersionTable"                          = "swoop.schema_version"
+    "storage.size"                                        = "256M"
+    "storage.volumeBindingMode"                           = "WaitForFirstConsumer"
+    "storage.provisioner"                                 = "filmdrop.io/local-postgres-path-provisioner"
+    "storage.retainPersistentVolume"                      = true
+    "storage.storageClassName"                            = "postgres-retain"
   }
 }
 
@@ -498,4 +513,91 @@ variable custom_swoop_caboose_service_input_map {
     "service.name"        = "swoop-caboose"
     "replicaCount"        = 1
   }
+}
+
+variable custom_stac_fastapi_input_map {
+  type        = map
+  description = "Input values for STAC-FastAPI Helm Chart"
+  default = {
+    "local-path-provisioner.enabled"                      = true
+    "local-path-provisioner.singleNamespace"              = false
+    "local-path-provisioner.storageClass.provisionerName" = "filmdrop.io/local-pgstac-path-provisioner"
+    "local-path-provisioner.storageClass.name"            = "local-path-class-pgstac"
+    "local-path-provisioner.configmap.name"               = "local-path-config-pgstac"
+    "pgStac.container.port"                               = 5432
+    "pgStac.deployment.name"                              = "pgstac"
+    "pgStac.image.repository"                             = "ghcr.io/stac-utils/pgstac"
+    "pgStac.image.tag"                                    = "v0.7.10"
+    "pgStac.enabled"                                      = true
+    "pgStac.replicaCount"                                 = 1
+    "pgStac.service.type"                                 = "ClusterIP"
+    "pgStac.service.port"                                 = 5439
+    "pgStac.service.targetPort"                           = 5432
+    "pgStac.service.name"                                 = "pgstac"
+    "pgStac.dbName"                                       = "postgis"
+    "pgStac.dbHost"                                       = ""
+    "pgStac.dbUser"                                       = ""
+    "pgStac.dbPassword"                                   = ""
+    "pgStac.createPgStacSecret"                           = false
+    "pgStac.storage.size"                                 = "256M"
+    "pgStac.storage.volumeBindingMode"                    = "WaitForFirstConsumer"
+    "pgStac.storage.provisioner"                          = "filmdrop.io/local-pgstac-path-provisioner"
+    "pgStac.storage.retainPersistentVolume"               = true
+    "pgStac.storage.storageClassName"                     = "pgstac-retain"
+    "stacFastApi.container.port"                          = 8080
+    "stacFastApi.deployment.name"                         = "stac-fastapi-pgstac"
+    "stacFastApi.image.repository"                        = "ghcr.io/stac-utils/stac-fastapi-pgstac"
+    "stacFastApi.image.tag"                               = "main"
+    "stacFastApi.replicaCount"                            = 1
+    "stacFastApi.service.type"                            = "ClusterIP"
+    "stacFastApi.service.port"                            = 8080
+    "stacFastApi.service.targetPort"                      = 8080
+    "stacFastApi.service.name"                            = "stac-fastapi-pgstac"
+    "stacFastApi.service.serviceserviceAccount"           = "stac-fastapi-pgstac"
+  }
+}
+
+variable "stac_fastapi_username" {
+  description = "Username for STAC-FastAPI role"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "stac_fastapi_password" {
+  description = "Password for STAC-FastAPI role"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable "stac_fastapi_secret" {
+  description = "Kubernetes Secret name of STAC-FastAPI credentials"
+  type        = string
+  default     = "stac-fastapi-secret-credentials"
+  sensitive   = true
+}
+
+variable stac_namespace {
+  type        = string
+  description = "Namespace for STAC-FastAPI"
+  default     = "stac"
+}
+
+variable stac_version {
+  type = string
+  description = "Version of STAC-FastAPI Helm Chart"
+  default = "0.1.0"
+}
+
+variable stac_fastapi_additional_configuration_values {
+  type        = list(string)
+  default     = []
+  description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options."
+}
+
+variable custom_stac_fastapi_values_yaml {
+  type        = string
+  default     = ""
+  description = "Path to custom STAC-FastAPI values.yaml"
 }

@@ -37,8 +37,16 @@ module "tiling" {
 module "stac" {
   source = "../../modules/stac"
 
-  deploy_stacfastapi    = var.deploy_stacfastapi
-  namespace_annotations = var.namespace_annotations
+  deploy_stacfastapi                            = var.deploy_stacfastapi
+  namespace_annotations                         = var.namespace_annotations
+  custom_stac_fastapi_input_map                 = var.custom_stac_fastapi_input_map
+  stac_fastapi_username                         = var.stac_fastapi_username
+  stac_fastapi_password                         = var.stac_fastapi_password
+  stac_fastapi_secret                           = var.stac_fastapi_secret
+  namespace                                     = var.stac_namespace
+  stac_version                                  = var.stac_version
+  stac_fastapi_additional_configuration_values  = var.stac_fastapi_additional_configuration_values
+  custom_stac_fastapi_values_yaml               = var.custom_stac_fastapi_values_yaml
 
   depends_on = [
     module.service_mesh
