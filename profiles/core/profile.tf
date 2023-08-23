@@ -171,6 +171,7 @@ module "workflow_config" {
   aws_region             = var.aws_region
   aws_session_token      = var.aws_session_token
   s3_secret              = var.s3_secret
+  s3_secret_namespace    = var.s3_secret_namespace
   create_s3_secret       = var.create_s3_secret
 
   depends_on = [

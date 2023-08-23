@@ -11,3 +11,12 @@ module "workflow_config" {
   create_s3_secret      = var.create_s3_secret
 
 }
+
+module "copy_s3_secret_to_workflow_config_namespace" {
+  source  = "./s3_secrets"
+  count   = var.deploy_workflow_config == true && var.create_s3_secret == false && var.namespace != var.s3_secret_namespace ? 1 : 0
+
+  namespace               = var.namespace
+  s3_secret_namespace     = var.s3_secret_namespace
+  s3_secret               = var.s3_secret
+}

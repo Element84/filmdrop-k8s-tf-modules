@@ -51,6 +51,13 @@ variable s3_secret {
   sensitive   = true
 }
 
+variable s3_secret_namespace {
+  description = "S3 Object Storage Kubernetes Secret namespace for credentials"
+  type        = string
+  default     = "swoop"
+  sensitive   = true
+}
+
 variable create_s3_secret {
   description = "boolean specifying if a secret will be created"
   type        = bool
