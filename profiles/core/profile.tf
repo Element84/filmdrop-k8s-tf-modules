@@ -170,6 +170,8 @@ module "workflow_config" {
   aws_secret_access_key  = var.aws_secret_access_key
   aws_region             = var.aws_region
   aws_session_token      = var.aws_session_token
+  s3_secret              = var.s3_secret
+  create_s3_secret       = var.create_s3_secret
 
   depends_on = [
     module.service_mesh,

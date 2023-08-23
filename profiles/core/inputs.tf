@@ -635,3 +635,16 @@ variable aws_session_token {
   default     = ""
   sensitive   = true
 }
+
+variable s3_secret {
+  description = "S3 Object Storage Kubernetes Secret name for credentials"
+  type        = string
+  default     = "copy-stac-asset-s3-secret"
+  sensitive   = true
+}
+
+variable create_s3_secret {
+  description = "boolean specifying if a secret will be created"
+  type        = bool
+  default     = true
+}

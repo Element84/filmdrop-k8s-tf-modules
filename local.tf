@@ -60,4 +60,6 @@ module "local_environment" {
   stac_fastapi_secret                           = var.stac_fastapi_secret
   stac_fastapi_additional_configuration_values  = var.stac_fastapi_additional_configuration_values
   custom_stac_fastapi_values_yaml               = var.custom_stac_fastapi_values_yaml
+  s3_secret                                     = var.s3_secret
+  create_s3_secret                              = var.create_s3_secret
 }

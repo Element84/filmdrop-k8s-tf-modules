@@ -37,3 +37,16 @@ variable aws_session_token {
   default     = ""
   sensitive   = true
 }
+
+variable s3_secret {
+  description = "secret containing S3 credentials"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable create_s3_secret {
+  description = "boolean specifying if a secret will be created"
+  type        = bool
+  default     = true
+}
