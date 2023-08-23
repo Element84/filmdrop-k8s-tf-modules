@@ -1,233 +1,233 @@
-variable "deploy_linkerd" {
+variable deploy_linkerd {
   type        = bool
   default     = true
   description = "Mesh Applications with Linkerd"
 }
 
-variable "high_availability" {
+variable high_availability {
   type        = bool
   default     = false
   description = "Install Linkerd in high availability (HA) mode"
 }
 
-variable "cert_validity_period_hours" {
+variable cert_validity_period_hours {
   description = "The number of hours after initial issuing that the certificate will become invalid."
   type        = number
   default     = 8760 # 1 year
 }
 
-variable "linkerd_additional_configuration_values" {
+variable linkerd_additional_configuration_values {
   type        = list(string)
   default     = []
   description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options. Example: [\"enablePodAntiAffinity: false\"]"
 }
 
-variable "kubernetes_config_file" {
+variable kubernetes_config_file {
   description = "Kubernetes config file path."
   type        = string
   default     = "~/.kube/config"
 }
 
-variable "kubernetes_config_context" {
+variable kubernetes_config_context {
   description = "Kubernetes config context."
   type        = string
   default     = ""
 }
 
-variable "nginx_extra_values" {
+variable nginx_extra_values {
   type        = map(string)
   description = "MAP of Helm values for the NGINX stack"
 }
 
-variable "deploy_ingress_nginx" {
+variable deploy_ingress_nginx {
   type        = bool
   default     = false
   description = "Deploy Ingress Nginx proxy"
 }
 
-variable "loki_extra_values" {
+variable loki_extra_values {
   type        = map(string)
   description = "MAP of Helm values for the Loki stack"
 }
 
-variable "grafana_prometheus_extra_values" {
+variable grafana_prometheus_extra_values {
   type        = map(string)
   description = "MAP of Helm values for the Grafana/Prometheus stack"
 }
 
-variable "grafana_additional_data_sources" {
+variable grafana_additional_data_sources {
   type        = list(any)
   description = "List of MAP specifying additional data sources for grafana, defaults to Loki data source"
 }
 
-variable "promtail_extra_values" {
+variable promtail_extra_values {
   type        = map(string)
   description = "MAP of Helm values for the Promtail stack"
 
 }
 
-variable "deploy_grafana_prometheus" {
+variable deploy_grafana_prometheus {
   type        = bool
   default     = true
   description = "Deploy Grafana and Prometheus stack"
 }
 
-variable "deploy_loki" {
+variable deploy_loki {
   type        = bool
   default     = true
   description = "Deploy Loki stack"
 }
 
-variable "deploy_promtail" {
+variable deploy_promtail {
   type        = bool
   default     = true
   description = "Deploy Promtail stack"
 }
 
-variable "deploy_argo_workflows" {
+variable deploy_argo_workflows {
   type        = bool
   default     = true
   description = "Deploy Argo Workflows"
 }
 
-variable "namespace_annotations" {
+variable namespace_annotations {
   type        = map(string)
   description = "MAP of custom defined namespace annotations"
 }
 
-variable "deploy_titiler" {
+variable deploy_titiler {
   description = "Whether or not to include the TiTiler tiling module resources"
   type        = bool
   default     = false
 }
 
-variable "deploy_stacfastapi" {
+variable deploy_stacfastapi {
   description = "Whether or not to deploy the STAC-FastAPI module resources"
   type        = bool
   default     = false
 }
 
-variable "deploy_swoop_api" {
+variable deploy_swoop_api {
   description = "Whether or not to include the SWOOP API module resources"
   type        = bool
   default     = true
 }
 
-variable "deploy_swoop_caboose" {
+variable deploy_swoop_caboose {
   description = "Whether or not to include the SWOOP Caboose module resources"
   type        = bool
   default     = true
 }
 
-variable "deploy_db_migration" {
+variable deploy_db_migration {
   description = "Whether or not to include the DB Migration capability for SWOOP resources"
   type        = bool
   default     = true
 }
 
-variable "swoop_bundle_version" {
+variable swoop_bundle_version {
   type        = string
   description = "Version of SWOOP Bundle Helm Chart"
   default     = "0.1.0"
 }
 
-variable "deploy_postgres" {
+variable deploy_postgres {
   description = "Whether or not to include the Postgres module resources"
   type        = bool
   default     = true
 }
 
-variable "deploy_db_init" {
+variable deploy_db_init {
   description = "Whether or not to deploy the Postgres initialization script"
   type        = bool
   default     = true
 }
 
-variable "deploy_minio" {
+variable deploy_minio {
   description = "Whether or not to include the MinIO module resources"
   type        = bool
   default     = true
 }
 
-variable "deploy_workflow_config" {
+variable deploy_workflow_config {
   description = "Whether or not to include the SWOOP workflow configuration module resources"
   type        = bool
   default     = true
 }
 
-variable "postgres_version" {
+variable postgres_version {
   type        = string
   description = "Version of Postgres Helm Chart"
   default     = "0.1.0"
 }
 
-variable "db_init_version" {
+variable db_init_version {
   type        = string
   description = "Version of DB Init Helm Chart"
   default     = "0.1.0"
 }
 
-variable "minio_version" {
+variable minio_version {
   type        = string
   description = "Version of MinIO Helm Chart"
   default     = "0.1.0"
 }
 
-variable "swoop_api_additional_configuration_values" {
+variable swoop_api_additional_configuration_values {
   type        = list(string)
   default     = []
   description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options."
 }
 
-variable "custom_swoop_api_values_yaml" {
+variable custom_swoop_api_values_yaml {
   type        = string
   default     = ""
   description = "Path to custom SWOOP API values.yaml"
 }
 
-variable "postgres_additional_configuration_values" {
+variable postgres_additional_configuration_values {
   type        = list(string)
   default     = []
   description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options."
 }
 
-variable "custom_postgres_values_yaml" {
+variable custom_postgres_values_yaml {
   type        = string
   default     = ""
   description = "Path to custom Postgres values.yaml"
 }
 
-variable "minio_additional_configuration_values" {
+variable minio_additional_configuration_values {
   type        = list(string)
   default     = []
   description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options."
 }
 
-variable "custom_minio_values_yaml" {
+variable custom_minio_values_yaml {
   type        = string
   default     = ""
   description = "Path to custom MinIO values.yaml"
 }
 
-variable "ingress_nginx_additional_configuration_values" {
+variable ingress_nginx_additional_configuration_values {
   type        = list(string)
   default     = []
   description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options."
 }
 
-variable "custom_ingress_nginx_values_yaml" {
+variable custom_ingress_nginx_values_yaml {
   type        = string
   default     = ""
   description = "Path to custom MinIO values.yaml"
 }
 
-variable "ingress_nginx_version" {
+variable ingress_nginx_version {
   type        = string
   description = "Version of Ingress NGINX Helm Chart"
   default     = "4.7.1"
 }
 
-variable "custom_postgres_input_map" {
+variable custom_postgres_input_map {
   type        = map(any)
   description = "Input values for Postgres Helm Chart"
   default = {
@@ -279,111 +279,111 @@ variable "custom_postgres_input_map" {
   }
 }
 
-variable "dbadmin_username" {
+variable dbadmin_username {
   description = "DB Admin username"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "dbadmin_password" {
+variable dbadmin_password {
   description = "Password for DB Admin"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "dbadmin_secret" {
+variable dbadmin_secret {
   description = "Kubernetes Secret name of DB Admin credentials"
   type        = string
   default     = "postgres-secret-admin-role"
   sensitive   = true
 }
 
-variable "owner_username" {
+variable owner_username {
   description = "Username for Owner role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "owner_password" {
+variable owner_password {
   description = "Password for Owner role"
   type        = string
   default     = ""
 }
 
-variable "owner_secret" {
+variable owner_secret {
   description = "Kubernetes Secret name of Owner credentials"
   type        = string
   default     = "postgres-secret-owner-role"
   sensitive   = true
 }
 
-variable "api_username" {
+variable api_username {
   description = "Username for API role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "api_password" {
+variable api_password {
   description = "Password for API role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "api_secret" {
+variable api_secret {
   description = "Kubernetes Secret name of API credentials"
   type        = string
   default     = "postgres-secret-api-role"
   sensitive   = true
 }
 
-variable "caboose_username" {
+variable caboose_username {
   description = "Username for Caboose role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "caboose_password" {
+variable caboose_password {
   description = "Password for Caboose role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "caboose_secret" {
+variable caboose_secret {
   description = "Kubernetes Secret name of Caboose credentials"
   type        = string
   default     = "postgres-secret-caboose-role"
   sensitive   = true
 }
 
-variable "conductor_username" {
+variable conductor_username {
   description = "Username for Conductor role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "conductor_password" {
+variable conductor_password {
   description = "Password for Conductor role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "conductor_secret" {
+variable conductor_secret {
   description = "Kubernetes Secret name of Conductor credentials"
   type        = string
   default     = "postgres-secret-conductor-role"
   sensitive   = true
 }
 
-variable "custom_minio_input_map" {
+variable custom_minio_input_map {
   type        = map(any)
   description = "Input values for MinIO Helm Chart"
   default = {
@@ -416,28 +416,28 @@ variable "custom_minio_input_map" {
   }
 }
 
-variable "minio_access_key" {
+variable minio_access_key {
   description = "Object Storage accessKeyId credential"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "minio_secret_access_key" {
+variable minio_secret_access_key {
   description = "Object Storage secretAccessKey credential"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "minio_secret" {
+variable minio_secret {
   description = "Object Storage Kubernetes Secret name for credentials"
   type        = string
   default     = "minio-secret-credentials"
   sensitive   = true
 }
 
-variable "custom_swoop_input_map" {
+variable custom_swoop_input_map {
   type        = map(any)
   description = "Input values for SWOOP Bundle Helm Chart"
   default = {
@@ -452,7 +452,7 @@ variable "custom_swoop_input_map" {
   }
 }
 
-variable "custom_swoop_api_service_input_map" {
+variable custom_swoop_api_service_input_map {
   type        = map(any)
   description = "Input values for SWOOP API Helm Chart"
   default = {
@@ -468,7 +468,7 @@ variable "custom_swoop_api_service_input_map" {
   }
 }
 
-variable "custom_swoop_caboose_service_input_map" {
+variable custom_swoop_caboose_service_input_map {
   type        = map(any)
   description = "Input values for SWOOP Caboose Helm Chart"
   default = {
@@ -484,7 +484,7 @@ variable "custom_swoop_caboose_service_input_map" {
   }
 }
 
-variable "custom_stac_fastapi_input_map" {
+variable custom_stac_fastapi_input_map {
   type        = map(any)
   description = "Input values for STAC-FastAPI Helm Chart"
   default = {
@@ -526,35 +526,63 @@ variable "custom_stac_fastapi_input_map" {
   }
 }
 
-variable "stac_fastapi_username" {
+variable stac_fastapi_username {
   description = "Username for STAC-FastAPI role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "stac_fastapi_password" {
+variable stac_fastapi_password {
   description = "Password for STAC-FastAPI role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "stac_fastapi_secret" {
+variable stac_fastapi_secret {
   description = "Kubernetes Secret name of STAC-FastAPI credentials"
   type        = string
   default     = "stac-fastapi-secret-credentials"
   sensitive   = true
 }
 
-variable "stac_fastapi_additional_configuration_values" {
+variable stac_fastapi_additional_configuration_values {
   type        = list(string)
   default     = []
   description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options."
 }
 
-variable "custom_stac_fastapi_values_yaml" {
+variable custom_stac_fastapi_values_yaml {
   type        = string
   default     = ""
   description = "Path to custom STAC-FastAPI values.yaml"
+}
+
+variable aws_access_key {
+  description = "AWS Access Key ID"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable aws_secret_access_key {
+  description = "AWS Secret Access Key"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable aws_region {
+  description = "AWS Region"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable aws_session_token {
+  description = "AWS Session Token"
+  type        = string
+  default     = ""
+  sensitive   = true
 }

@@ -166,6 +166,10 @@ module "workflow_config" {
 
   deploy_workflow_config = var.deploy_workflow_config
   namespace_annotations  = var.namespace_annotations
+  aws_access_key         = var.aws_access_key
+  aws_secret_access_key  = var.aws_secret_access_key
+  aws_region             = var.aws_region
+  aws_session_token      = var.aws_session_token
 
   depends_on = [
     module.service_mesh,

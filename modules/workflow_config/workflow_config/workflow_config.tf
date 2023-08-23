@@ -1,6 +1,6 @@
 resource "helm_release" "workflow_config" {
   name       = "workflow-config"
-  namespace  = "swoop"
+  namespace  = var.namespace
   repository = "https://element84.github.io/filmdrop-k8s-helm-charts/"
   chart      = "workflow-config"
   atomic     = true
@@ -20,6 +20,10 @@ resource "helm_release" "workflow_config" {
     value = var.aws_region
   }
 
+  set {
+    name  = "s3.token"
+    value = var.aws_session_token
+  }
 
 
   values = [
