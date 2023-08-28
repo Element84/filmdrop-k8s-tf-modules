@@ -495,8 +495,8 @@ variable custom_stac_fastapi_input_map {
     "local-path-provisioner.configmap.name"               = "local-path-config-pgstac"
     "pgStac.container.port"                               = 5432
     "pgStac.deployment.name"                              = "pgstac"
-    "pgStac.image.repository"                             = "ghcr.io/stac-utils/pgstac"
-    "pgStac.image.tag"                                    = "v0.7.10"
+    "pgStac.image.repository"                             = "quay.io/element84/pgstac"
+    "pgStac.image.tag"                                    = "latest"
     "pgStac.enabled"                                      = true
     "pgStac.replicaCount"                                 = 1
     "pgStac.service.type"                                 = "ClusterIP"
@@ -605,4 +605,26 @@ variable create_s3_secret {
   description = "boolean specifying if a secret will be created"
   type        = bool
   default     = true
+}
+
+variable custom_swoop_workflow_config_map {
+  type        = map(any)
+  description = "Input values for SWOOP Workflow Config Chart"
+  default = {
+    "serviceAccountName"                        = "argo"
+    "mirrorWorkflowServiceAccountName"          = "argo"
+    "copyAssetsTemplateTaskServiceAccountName"  = "argo"
+  }
+}
+
+variable swoop_workflow_config_additional_configuration_values {
+  type        = list(string)
+  default     = []
+  description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options."
+}
+
+variable custom_swoop_workflow_config_values_yaml {
+  type        = string
+  default     = ""
+  description = "Path to custom Workflow Config values.yaml"
 }

@@ -50,9 +50,42 @@ resource "helm_release" "workflow_config" {
     value = var.aws_session_token
   }
 
+  dynamic "set" {
+    for_each = var.custom_minio_input_map
 
-  values = [
-    file("${path.module}/values.yaml")
-  ]
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
 
+  set {
+    name  = "minio.service.endpoint"
+    value = "${var.custom_minio_input_map["service.name"]}.${var.minio_namespace}:${var.custom_minio_input_map["service.port"]}" 
+  }
+
+  set {
+    name  = "minio.service.accessKeyIdSecret.name"
+    value = "${var.namespace}-${var.minio_secret}"
+  }
+
+  set {
+    name  = "minio.service.secretAccessKeySecret.name"
+    value = "${var.namespace}-${var.minio_secret}"
+  }
+
+
+  dynamic "set" {
+    for_each = var.custom_swoop_workflow_config_map
+
+    content {
+      name  = set.key
+      value = set.value
+    }
+  }
+
+  values = concat(
+    [var.custom_swoop_workflow_config_values_yaml == "" ? file("${path.module}/values.yaml") : file(var.custom_swoop_workflow_config_values_yaml)],
+    length(var.swoop_workflow_config_additional_configuration_values) == 0 ? [] : var.swoop_workflow_config_additional_configuration_values
+  )
 }

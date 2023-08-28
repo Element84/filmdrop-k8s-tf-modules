@@ -16,8 +16,8 @@ variable custom_stac_fastapi_input_map {
     "local-path-provisioner.configmap.name"               = "local-path-config-pgstac"
     "pgStac.container.port"                               = 5432
     "pgStac.deployment.name"                              = "pgstac"
-    "pgStac.image.repository"                             = "ghcr.io/stac-utils/pgstac"
-    "pgStac.image.tag"                                    = "v0.7.10"
+    "pgStac.image.repository"                             = "quay.io/element84/pgstac"
+    "pgStac.image.tag"                                    = "latest"
     "pgStac.enabled"                                      = true
     "pgStac.replicaCount"                                 = 1
     "pgStac.service.type"                                 = "ClusterIP"

@@ -164,15 +164,21 @@ module "ingress_proxy" {
 module "workflow_config" {
   source = "../../modules/workflow_config"
 
-  deploy_workflow_config = var.deploy_workflow_config
-  namespace_annotations  = var.namespace_annotations
-  aws_access_key         = var.aws_access_key
-  aws_secret_access_key  = var.aws_secret_access_key
-  aws_region             = var.aws_region
-  aws_session_token      = var.aws_session_token
-  s3_secret              = var.s3_secret
-  s3_secret_namespace    = var.s3_secret_namespace
-  create_s3_secret       = var.create_s3_secret
+  deploy_workflow_config                                = var.deploy_workflow_config
+  namespace_annotations                                 = var.namespace_annotations
+  aws_access_key                                        = var.aws_access_key
+  aws_secret_access_key                                 = var.aws_secret_access_key
+  aws_region                                            = var.aws_region
+  aws_session_token                                     = var.aws_session_token
+  s3_secret                                             = var.s3_secret
+  s3_secret_namespace                                   = var.s3_secret_namespace
+  create_s3_secret                                      = var.create_s3_secret
+  custom_swoop_workflow_config_map                      = var.custom_swoop_workflow_config_map
+  swoop_workflow_config_additional_configuration_values = var.swoop_workflow_config_additional_configuration_values
+  custom_swoop_workflow_config_values_yaml              = var.custom_swoop_workflow_config_values_yaml
+  custom_minio_input_map                                = var.custom_minio_input_map
+  minio_secret                                          = var.minio_secret
+  minio_namespace                                       = module.minio.namespace
 
   depends_on = [
     module.service_mesh,
