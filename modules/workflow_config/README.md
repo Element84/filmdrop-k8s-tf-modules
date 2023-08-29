@@ -23,10 +23,10 @@ deploy_db_init            = true
 deploy_minio              = true
 deploy_workflow_config    = true
 
-aws_access_key = "<REPLACE_WITH_AWS_ACCESS_KEY>"
-aws_secret_access_key = "<REPLACE_WITH_AWS_SECRET_ACCESS_KEY>"
-aws_region = "<REPLACE_WITH_AWS_REGION>"
-aws_session_token = "<REPLACE_WITH_AWS_SESSION_TOKEN>"
+aws_access_key = "<REPLACE_WITH_BASE64_AWS_ACCESS_KEY>"
+aws_secret_access_key = "<REPLACE_WITH_BASE64_AWS_SECRET_ACCESS_KEY>"
+aws_region = "<REPLACE_WITH_BASE64_AWS_REGION>"
+aws_session_token = "<REPLACE_WITH_BASE64_AWS_SESSION_TOKEN>"
 ```
 
 1. First, initialize Terraform:
