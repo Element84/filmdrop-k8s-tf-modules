@@ -1,34 +1,34 @@
-variable deploy_linkerd { 
+variable deploy_linkerd {
   type        = bool
   default     = true
   description = "Mesh Applications with Linkerd"
 }
 
-variable high_availability { 
+variable high_availability {
   type        = bool
   default     = false
   description = "Install Linkerd in high availability (HA) mode"
 }
 
-variable cert_validity_period_hours { 
+variable cert_validity_period_hours {
   description = "The number of hours after initial issuing that the certificate will become invalid."
   type        = number
   default     = 8760 # 1 year
 }
 
-variable linkerd_additional_configuration_values { 
+variable linkerd_additional_configuration_values {
   type        = list(string)
   default     = []
   description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options. Example: [\"enablePodAntiAffinity: false\"]"
 }
 
-variable kubernetes_config_file { 
+variable kubernetes_config_file {
   description = "Kubernetes config file path."
   type        = string
   default     = "~/.kube/config"
 }
 
-variable kubernetes_config_context { 
+variable kubernetes_config_context {
   description = "Kubernetes config context."
   type        = string
   default     = ""
@@ -39,7 +39,7 @@ variable nginx_extra_values {
   description = "MAP of Helm values for the NGINX stack"
 }
 
-variable deploy_ingress_nginx { 
+variable deploy_ingress_nginx {
   type        = bool
   default     = false
   description = "Deploy Ingress Nginx proxy"
@@ -66,25 +66,25 @@ variable promtail_extra_values {
 
 }
 
-variable deploy_grafana_prometheus { 
+variable deploy_grafana_prometheus {
   type        = bool
   default     = true
   description = "Deploy Grafana and Prometheus stack"
 }
 
-variable deploy_loki { 
+variable deploy_loki {
   type        = bool
   default     = true
   description = "Deploy Loki stack"
 }
 
-variable deploy_promtail { 
+variable deploy_promtail {
   type        = bool
   default     = true
   description = "Deploy Promtail stack"
 }
 
-variable deploy_argo_workflows { 
+variable deploy_argo_workflows {
   type        = bool
   default     = true
   description = "Deploy Argo Workflows"
@@ -159,6 +159,12 @@ variable deploy_minio {
   description = "Whether or not to include the MinIO module resources"
   type        = bool
   default     = true
+}
+
+variable "deploy_workflow_config" {
+  type        = bool
+  default     = true
+  description = "Deploy SWOOP workflow configuration resources"
 }
 
 variable postgres_version {
@@ -315,104 +321,104 @@ variable custom_postgres_input_map {
   }
 }
 
-variable "dbadmin_username" {
+variable dbadmin_username {
   description = "DB Admin username"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "dbadmin_password" {
+variable dbadmin_password {
   description = "Password for DB Admin"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "dbadmin_secret" {
+variable dbadmin_secret {
   description = "Kubernetes Secret name of DB Admin credentials"
   type        = string
   default     = "postgres-secret-admin-role"
   sensitive   = true
 }
 
-variable "owner_username" {
+variable owner_username {
   description = "Username for Owner role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "owner_password" {
+variable owner_password {
   description = "Password for Owner role"
   type        = string
   default     = ""
 }
 
-variable "owner_secret" {
+variable owner_secret {
   description = "Kubernetes Secret name of Owner credentials"
   type        = string
   default     = "postgres-secret-owner-role"
   sensitive   = true
 }
 
-variable "api_username" {
+variable api_username {
   description = "Username for API role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "api_password" {
+variable api_password {
   description = "Password for API role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "api_secret" {
+variable api_secret {
   description = "Kubernetes Secret name of API credentials"
   type        = string
   default     = "postgres-secret-api-role"
   sensitive   = true
 }
 
-variable "caboose_username" {
+variable caboose_username {
   description = "Username for Caboose role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "caboose_password" {
+variable caboose_password {
   description = "Password for Caboose role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "caboose_secret" {
+variable caboose_secret {
   description = "Kubernetes Secret name of Caboose credentials"
   type        = string
   default     = "postgres-secret-caboose-role"
   sensitive   = true
 }
 
-variable "conductor_username" {
+variable conductor_username {
   description = "Username for Conductor role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "conductor_password" {
+variable conductor_password {
   description = "Password for Conductor role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "conductor_secret" {
+variable conductor_secret {
   description = "Kubernetes Secret name of Conductor credentials"
   type        = string
   default     = "postgres-secret-conductor-role"
@@ -420,21 +426,21 @@ variable "conductor_secret" {
 }
 
 
-variable "minio_access_key" {
+variable minio_access_key {
   description = "Object Storage accessKeyId credential"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "minio_secret_access_key" {
+variable minio_secret_access_key {
   description = "Object Storage secretAccessKey credential"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "minio_secret" {
+variable minio_secret {
   description = "Object Storage Kubernetes Secret name for credentials"
   type        = string
   default     = "minio-secret-credentials"
@@ -526,8 +532,8 @@ variable custom_stac_fastapi_input_map {
     "local-path-provisioner.configmap.name"               = "local-path-config-pgstac"
     "pgStac.container.port"                               = 5432
     "pgStac.deployment.name"                              = "pgstac"
-    "pgStac.image.repository"                             = "ghcr.io/stac-utils/pgstac"
-    "pgStac.image.tag"                                    = "v0.7.10"
+    "pgStac.image.repository"                             = "quay.io/element84/pgstac"
+    "pgStac.image.tag"                                    = "latest"
     "pgStac.enabled"                                      = true
     "pgStac.replicaCount"                                 = 1
     "pgStac.service.type"                                 = "ClusterIP"
@@ -557,21 +563,21 @@ variable custom_stac_fastapi_input_map {
   }
 }
 
-variable "stac_fastapi_username" {
+variable stac_fastapi_username {
   description = "Username for STAC-FastAPI role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "stac_fastapi_password" {
+variable stac_fastapi_password {
   description = "Password for STAC-FastAPI role"
   type        = string
   default     = ""
   sensitive   = true
 }
 
-variable "stac_fastapi_secret" {
+variable stac_fastapi_secret {
   description = "Kubernetes Secret name of STAC-FastAPI credentials"
   type        = string
   default     = "stac-fastapi-secret-credentials"
@@ -600,4 +606,80 @@ variable custom_stac_fastapi_values_yaml {
   type        = string
   default     = ""
   description = "Path to custom STAC-FastAPI values.yaml"
+}
+
+variable aws_access_key {
+  description = "AWS Access Key ID"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable aws_secret_access_key {
+  description = "AWS Secret Access Key"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable aws_region {
+  description = "AWS Region"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable aws_session_token {
+  description = "AWS Session Token"
+  type        = string
+  default     = ""
+  sensitive   = true
+}
+
+variable s3_secret {
+  description = "S3 Object Storage Kubernetes Secret name for credentials"
+  type        = string
+  default     = "copy-stac-asset-s3-secret"
+  sensitive   = true
+}
+
+variable s3_secret_namespace {
+  description = "S3 Object Storage Kubernetes Secret namespace for credentials"
+  type        = string
+  default     = "swoop"
+  sensitive   = true
+}
+
+variable create_s3_secret {
+  description = "boolean specifying if a secret will be created"
+  type        = bool
+  default     = true
+}
+
+variable custom_swoop_workflow_config_map {
+  type        = map(any)
+  description = "Input values for SWOOP Workflow Config Chart"
+  default = {
+    "serviceAccountName"                        = "argo"
+    "mirrorWorkflowServiceAccountName"          = "argo"
+    "copyAssetsTemplateTaskServiceAccountName"  = "argo"
+  }
+}
+
+variable swoop_workflow_config_additional_configuration_values {
+  type        = list(string)
+  default     = []
+  description = "List of values in raw yaml to pass to helm. Values will be merged, in order, as Helm does with multiple -f options."
+}
+
+variable custom_swoop_workflow_config_values_yaml {
+  type        = string
+  default     = ""
+  description = "Path to custom Workflow Config values.yaml"
+}
+
+variable workflow_config_version {
+  type = string
+  description = "Version of Workflow Config Helm Chart"
+  default = "0.1.0"
 }

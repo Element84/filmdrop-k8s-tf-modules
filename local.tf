@@ -26,6 +26,7 @@ module "local_environment" {
   deploy_minio                                  = var.deploy_minio
   deploy_db_init                                = var.deploy_db_init
   deploy_postgres                               = var.deploy_postgres
+  deploy_workflow_config                        = var.deploy_workflow_config
   swoop_bundle_version                          = var.swoop_bundle_version
   ingress_nginx_additional_configuration_values = var.ingress_nginx_additional_configuration_values
   custom_ingress_nginx_values_yaml              = var.custom_ingress_nginx_values_yaml
@@ -59,4 +60,12 @@ module "local_environment" {
   stac_fastapi_secret                           = var.stac_fastapi_secret
   stac_fastapi_additional_configuration_values  = var.stac_fastapi_additional_configuration_values
   custom_stac_fastapi_values_yaml               = var.custom_stac_fastapi_values_yaml
+  aws_access_key                                = var.aws_access_key
+  aws_secret_access_key                         = var.aws_secret_access_key
+  aws_region                                    = var.aws_region
+  aws_session_token                             = var.aws_session_token
+  s3_secret                                     = var.s3_secret
+  s3_secret_namespace                           = var.s3_secret_namespace
+  create_s3_secret                              = var.create_s3_secret
+  workflow_config_version                       = var.workflow_config_version
 }

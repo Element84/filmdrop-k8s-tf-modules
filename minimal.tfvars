@@ -34,3 +34,4 @@ deploy_db_migration       = true
 deploy_postgres           = true
 deploy_db_init            = true
 deploy_minio              = true
+deploy_workflow_config    = false
