@@ -16,6 +16,7 @@ module "workflow_config" {
   custom_minio_input_map                                = var.custom_minio_input_map
   minio_secret                                          = var.minio_secret
   minio_namespace                                       = var.minio_namespace
+  workflow_config_version                               = var.workflow_config_version
 }
 
 module "copy_s3_secret_to_workflow_config_namespace" {

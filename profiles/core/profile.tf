@@ -179,6 +179,7 @@ module "workflow_config" {
   custom_minio_input_map                                = var.custom_minio_input_map
   minio_secret                                          = var.minio_secret
   minio_namespace                                       = module.minio.namespace
+  workflow_config_version                               = var.workflow_config_version
 
   depends_on = [
     module.service_mesh,

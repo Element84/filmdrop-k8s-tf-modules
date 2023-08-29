@@ -1,9 +1,12 @@
 resource "helm_release" "workflow_config" {
-  name       = "workflow-config"
-  namespace  = var.namespace
-  repository = "https://element84.github.io/filmdrop-k8s-helm-charts/"
-  chart      = "workflow-config"
-  atomic     = true
+  name              = "workflow-config"
+  namespace         = var.namespace
+  repository        = "https://element84.github.io/filmdrop-k8s-helm-charts"
+  chart             = "workflow-config"
+  version           = var.workflow_config_version
+  atomic            = true
+  create_namespace  = false
+  wait              = true
 
   set {
     name  = "s3.createSecret"
@@ -54,7 +57,7 @@ resource "helm_release" "workflow_config" {
     for_each = var.custom_minio_input_map
 
     content {
-      name  = set.key
+      name  = "minio.${set.key}"
       value = set.value
     }
   }

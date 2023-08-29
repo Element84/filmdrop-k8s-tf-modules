@@ -102,3 +102,9 @@ variable minio_namespace {
   description = "Namespace for MinIO"
   default     = "io"
 }
+
+variable workflow_config_version {
+  type = string
+  description = "Version of Workflow Config Helm Chart"
+  default = "0.1.0"
+}
