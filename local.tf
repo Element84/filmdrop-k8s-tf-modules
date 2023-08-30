@@ -22,6 +22,7 @@ module "local_environment" {
   deploy_stacfastapi                            = var.deploy_stacfastapi
   deploy_swoop_api                              = var.deploy_swoop_api
   deploy_swoop_caboose                          = var.deploy_swoop_caboose
+  deploy_swoop_conductor                        = var.deploy_swoop_conductor
   deploy_db_migration                           = var.deploy_db_migration
   deploy_minio                                  = var.deploy_minio
   deploy_db_init                                = var.deploy_db_init
@@ -54,6 +55,7 @@ module "local_environment" {
   custom_swoop_input_map                        = var.custom_swoop_input_map
   custom_swoop_api_service_input_map            = var.custom_swoop_api_service_input_map
   custom_swoop_caboose_service_input_map        = var.custom_swoop_caboose_service_input_map
+  custom_swoop_conductor_service_input_map      = var.custom_swoop_conductor_service_input_map
   custom_stac_fastapi_input_map                 = var.custom_stac_fastapi_input_map
   stac_fastapi_username                         = var.stac_fastapi_username
   stac_fastapi_password                         = var.stac_fastapi_password
@@ -68,4 +70,6 @@ module "local_environment" {
   s3_secret_namespace                           = var.s3_secret_namespace
   create_s3_secret                              = var.create_s3_secret
   workflow_config_version                       = var.workflow_config_version
+  swoop_namespace                               = var.swoop_namespace
+
 }

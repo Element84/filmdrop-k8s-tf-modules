@@ -111,6 +111,7 @@ module "swoop" {
 
   deploy_swoop_api                          = var.deploy_swoop_api
   deploy_swoop_caboose                      = var.deploy_swoop_caboose
+  deploy_swoop_conductor                    = var.deploy_swoop_conductor
   deploy_db_migration                       = var.deploy_db_migration
   deploy_argo_workflows                     = var.deploy_argo_workflows
   deploy_minio                              = var.deploy_minio
@@ -133,6 +134,7 @@ module "swoop" {
   minio_secret                              = var.minio_secret
   custom_swoop_api_service_input_map        = var.custom_swoop_api_service_input_map
   custom_swoop_caboose_service_input_map    = var.custom_swoop_caboose_service_input_map
+  custom_swoop_conductor_service_input_map  = var.custom_swoop_conductor_service_input_map
 
   depends_on = [
     module.service_mesh,
