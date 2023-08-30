@@ -112,7 +112,7 @@ resource "helm_release" "swoop_bundle" {
   }
 
   set {
-    name  = "global.swoop.argo.enabled"
+    name  = "global.swoop.caboose.argo.enabled"
     value = var.deploy_argo_workflows
   }
 
@@ -171,6 +171,46 @@ resource "helm_release" "swoop_bundle" {
 
   set {
     name  = "swoop-caboose.argo-workflows.server.enabled"
+    value = var.deploy_argo_workflows_server
+  }
+
+
+  dynamic "set" {
+    for_each = var.custom_swoop_conductor_service_input_map
+
+    content {
+      name  = "swoop-conductor.${set.key}"
+      value = set.value
+    }
+  }
+
+  set {
+    name  = "swoop-conductor.enabled"
+    value = var.deploy_swoop_conductor
+  }
+
+  set {
+    name  = "swoop-conductor.argoWorkflows.enabled"
+    value = var.custom_swoop_input_map["swoop.conductor.argo.enabled"]
+  }
+
+  set {
+    name  = "swoop-conductor.argo-workflows.controller.workflowNamespaces[0]"
+    value = var.namespace
+  }
+
+  set {
+    name  = "swoop-conductor.argo-workflows.enabled"
+    value = var.custom_swoop_input_map["swoop.conductor.argo.enabled"]
+  }
+
+  set {
+    name  = "swoop-conductor.argo-workflows.singleNamespace"
+    value = var.deploy_argo_workflows_single_namespace
+  }
+
+  set {
+    name  = "swoop-conductor.argo-workflows.server.enabled"
     value = var.deploy_argo_workflows_server
   }
 

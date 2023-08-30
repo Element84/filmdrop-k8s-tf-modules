@@ -17,6 +17,7 @@ deploy_titiler            = false
 deploy_stacfastapi        = false
 deploy_swoop_api          = false
 deploy_swoop_caboose      = true
+deploy_swoop_conductor    = true
 deploy_db_migration       = true
 deploy_postgres           = true
 deploy_db_init            = true
