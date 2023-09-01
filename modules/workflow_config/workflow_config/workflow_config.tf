@@ -34,6 +34,11 @@ resource "helm_release" "workflow_config" {
   }
 
   set {
+    name  = "s3.dataBucketSecret.name"
+    value = var.s3_secret
+  }
+
+  set {
     name  = "s3.accessKeyId"
     value = var.aws_access_key
   }
@@ -51,6 +56,11 @@ resource "helm_release" "workflow_config" {
   set {
     name  = "s3.sessionToken"
     value = var.aws_session_token
+  }
+
+  set {
+    name  = "s3.data_bucket"
+    value = base64encode(var.swoop_workflow_output_s3_bucket)
   }
 
   dynamic "set" {

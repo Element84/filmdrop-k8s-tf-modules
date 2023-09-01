@@ -16,5 +16,6 @@ resource "kubernetes_secret" "s3_secret_destination" {
     secret_access_key = base64encode(data.kubernetes_secret.s3_secret_source.data["secret_access_key"])
     region            = base64encode(data.kubernetes_secret.s3_secret_source.data["region"])
     session_token     = base64encode(data.kubernetes_secret.s3_secret_source.data["session_token"])
+    data_bucket       = base64encode(data.kubernetes_secret.s3_secret_source.data["data_bucket"])
   }
 }

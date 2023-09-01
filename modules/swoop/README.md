@@ -317,7 +317,7 @@ terraform apply -var-file=local.tfvars
 ```
 
 ### Running Argo Workflows Copy Assets Stac Task
-The [copy-assets-stac-task](https://github.com/Element84/copy-assets-stac-task) example will run an argo workflow which copies specified Assets from Source STAC Item(s), uploads them to S3 and updates Item assets hrefs to point to the new location.
+The [publish-stac-task](https://github.com/Element84/publish-stac-task) example will run an argo workflow which copies specified Assets from Source STAC Item(s), uploads them to S3 and updates Item assets hrefs to point to the new location.
 
 
 Now, prior to running the argo workflows example, first make sure to port-forward `minio` onto localhost ports `9000` & `9001`.
@@ -350,11 +350,11 @@ export MINIO_SECRET_KEY=`kubectl get secrets -n io minio-secret-credentials --te
 mc alias set swoopminio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
 ```
 
-####  Run the [copy-assets-stac-task](https://github.com/Element84/copy-assets-stac-task) argo workflow example
+####  Run the [publish-stac-task](https://github.com/Element84/publish-stac-task) argo workflow example
 
-First clone the [copy-assets-stac-task](https://github.com/Element84/copy-assets-stac-task) repository.
+First clone the [publish-stac-task](https://github.com/Element84/publish-stac-task) repository.
 
-After cloning the [copy-assets-stac-task](https://github.com/Element84/copy-assets-stac-task) repository, first proceed to modify the `payload_workflow.json` and replace the `<REPLACE_WITH_ASSETS_S3_BUCKET_NAME>` with the bucket name created on the [Pre-requisites section](#pre-requisites-to-running-argo-workflows-example).
+After cloning the [publish-stac-task](https://github.com/Element84/publish-stac-task) repository, first proceed to modify the `payload_workflow.json` and replace the `<REPLACE_WITH_ASSETS_S3_BUCKET_NAME>` with the bucket name created on the [Pre-requisites section](#pre-requisites-to-running-argo-workflows-example).
 
 Create a public minio local bucket and copy the `payload_workflow.json` file after replacing the `<REPLACE_WITH_ASSETS_S3_BUCKET_NAME>` name. To do this via the minio client:
 
@@ -402,7 +402,7 @@ aws s3 ls s3://<REPLACE_WITH_ASSETS_S3_BUCKET_NAME>/data/naip/tx_m_2609719_se_14
 2023-08-17 10:00:08       9776 thumbnail.jpg
 ```
 
-Similarly, you should be able to run the `workflow_copyassets_with_template.yaml` workflow in the [copy-assets-stac-task](https://github.com/Element84/copy-assets-stac-task) repository by following these steps:
+Similarly, you should be able to run the `workflow_copyassets_with_template.yaml` workflow in the [publish-stac-task](https://github.com/Element84/publish-stac-task) repository by following these steps:
 
 1. Create first the workflow template by the following command:
 ```
@@ -455,6 +455,7 @@ aws_access_key = "<REPLACE_WITH_BASE64_AWS_ACCESS_KEY>"
 aws_secret_access_key = "<REPLACE_WITH_BASE64_AWS_SECRET_ACCESS_KEY>"
 aws_region = "<REPLACE_WITH_BASE64_AWS_REGION>"
 aws_session_token = "<REPLACE_WITH_BASE64_AWS_SESSION_TOKEN>"
+swoop_workflow_output_s3_bucket = "<REPLACE_WITH_SWOOP_WORKFLOW_OUTPUT_S3_BUCKET_NAME>"
 ```
 
 2. Next, initialize terraform:
@@ -495,7 +496,7 @@ First port-forward swoop-api to your local port 8000:
 kubectl port-forward -n swoop svc/swoop-api 8000:8000 &
 ```
 
-Then clone the [copy-assets-stac-task](https://github.com/Element84/copy-assets-stac-task) repository locally, and then run the following from the top level of the your local copy-assets-stac-task clone:
+Then clone the [publish-stac-task](https://github.com/Element84/publish-stac-task) repository locally, and then run the following from the top level of the your local publish-stac-task clone:
 ```
 python3 swoop_api_payload_test.py
 ```
@@ -519,29 +520,29 @@ SWOOP API Host: localhost:8000
 STAC ASSETS BUCKET NAME: REDACTED_BUCKET_NAME
 POST URL: http://localhost:8000/processes/mirror/execution
 POST Input payload:
-{"inputs": {"payload": {"type": "FeatureCollection", "id": "tx_m_2609719_se_14_060_20201217", "features": [{"id": "tx_m_2609719_se_14_060_20201217", "bbox": [-97.690252, 26.622563, -97.622203, 26.689923], "type": "Feature", "links": [{"rel": "collection", "type": "application/json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip"}, {"rel": "parent", "type": "application/json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip"}, {"rel": "root", "type": "application/json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/"}, {"rel": "self", "type": "application/geo+json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip/items/tx_m_2609719_se_14_060_20201217"}, {"rel": "preview", "href": "https://planetarycomputer.microsoft.com/api/data/v1/item/map?collection=naip&item=tx_m_2609719_se_14_060_20201217", "title": "Map of item", "type": "text/html"}], "assets": {"image": {"href": "https://naipeuwest.blob.core.windows.net/naip/v002/tx/2020/tx_060cm_2020/26097/m_2609719_se_14_060_20201217.tif", "type": "image/tiff; application=geotiff; profile=cloud-optimized", "roles": ["data"], "title": "RGBIR COG tile", "eo:bands": [{"name": "Red", "common_name": "red"}, {"name": "Green", "common_name": "green"}, {"name": "Blue", "common_name": "blue"}, {"name": "NIR", "common_name": "nir", "description": "near-infrared"}]}, "thumbnail": {"href": "https://naipeuwest.blob.core.windows.net/naip/v002/tx/2020/tx_060cm_2020/26097/m_2609719_se_14_060_20201217.200.jpg", "type": "image/jpeg", "roles": ["thumbnail"], "title": "Thumbnail"}}, "geometry": {"type": "Polygon", "coordinates": [[[-97.623004, 26.622563], [-97.622203, 26.689286], [-97.68949, 26.689923], [-97.690252, 26.623198], [-97.623004, 26.622563]]]}, "collection": "naip", "properties": {"version": 2, "gsd": 0.6, "datetime": "2020-12-17T00:00:00Z", "naip:year": "2020", "proj:bbox": [630384, 2945370, 637080, 2952762], "proj:epsg": 26914, "naip:state": "tx", "proj:shape": [12320, 11160], "proj:transform": [0.6, 0, 630384, 0, -0.6, 2952762, 0, 0, 1]}, "stac_extensions": ["https://stac-extensions.github.io/eo/v1.0.0/schema.json", "https://stac-extensions.github.io/projection/v1.0.0/schema.json"], "stac_version": "1.0.0"}], "process": [{"description": "string", "workflow": "mirror", "upload_options": {"path_template": "s3://REDACTED_BUCKET_NAME/data/${collection}/${id}/", "collections": {"naip": "*"}, "public_assets": [], "headers": {}, "s3_urls": false}, "tasks": {"copy-assets": {"assets": ["thumbnail"], "drop_assets": ["image"]}}}]}}, "response": "document"}
+{"inputs": {"payload": {"id": "test", "type": "FeatureCollection", "features": [{"id": "tx_m_2609719_se_14_060_20201217", "bbox": [-97.690252, 26.622563, -97.622203, 26.689923], "type": "Feature", "links": [{"rel": "collection", "type": "application/json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip"}, {"rel": "parent", "type": "application/json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip"}, {"rel": "root", "type": "application/json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/"}, {"rel": "self", "type": "application/geo+json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip/items/tx_m_2609719_se_14_060_20201217"}, {"rel": "preview", "href": "https://planetarycomputer.microsoft.com/api/data/v1/item/map?collection=naip&item=tx_m_2609719_se_14_060_20201217", "title": "Map of item", "type": "text/html"}], "assets": {"image": {"href": "https://naipeuwest.blob.core.windows.net/naip/v002/tx/2020/tx_060cm_2020/26097/m_2609719_se_14_060_20201217.tif", "type": "image/tiff; application=geotiff; profile=cloud-optimized", "roles": ["data"], "title": "RGBIR COG tile", "eo:bands": [{"name": "Red", "common_name": "red"}, {"name": "Green", "common_name": "green"}, {"name": "Blue", "common_name": "blue"}, {"name": "NIR", "common_name": "nir", "description": "near-infrared"}]}, "thumbnail": {"href": "https://naipeuwest.blob.core.windows.net/naip/v002/tx/2020/tx_060cm_2020/26097/m_2609719_se_14_060_20201217.200.jpg", "type": "image/jpeg", "roles": ["thumbnail"], "title": "Thumbnail"}}, "geometry": {"type": "Polygon", "coordinates": [[[-97.623004, 26.622563], [-97.622203, 26.689286], [-97.68949, 26.689923], [-97.690252, 26.623198], [-97.623004, 26.622563]]]}, "collection": "naip", "properties": {"gsd": 0.6, "datetime": "2020-12-17T00:00:00Z", "naip:year": "2020", "proj:bbox": [630384, 2945370, 637080, 2952762], "proj:epsg": 26914, "naip:state": "tx", "proj:shape": [12320, 11160], "proj:transform": [0.6, 0, 630384, 0, -0.6, 2952762, 0, 0, 1]}, "stac_extensions": ["https://stac-extensions.github.io/eo/v1.0.0/schema.json", "https://stac-extensions.github.io/projection/v1.0.0/schema.json"], "stac_version": "1.0.0"}], "process": [{"description": "string", "workflow": "mirror", "upload_options": {"path_template": "s3://REDACTED_BUCKET_NAME/data/${collection}/${id}/", "collections": {"naip": "*"}, "public_assets": [], "s3_urls": false}, "tasks": {"copy-assets": {"assets": ["thumbnail"], "drop_assets": ["image"]}, "publish": {"public": false, "stac_validate": true}}}]}}, "response": "document"}
 **************************
 **** RESPONSE SUMMARY ****
 Response from POST to http://localhost:8000/processes/mirror/execution:
- {"processID":"mirror","type":"process","jobID":"018a424a-9201-75c7-9455-e7326c776904","status":"accepted","message":null,"created":"2023-08-29T17:14:57.921969+00:00","started":null,"finished":null,"updated":"2023-08-29T17:14:57.921969+00:00","links":[{"href":"http://localhost:8000/","rel":"root","type":"application/json"},{"href":"http://localhost:8000/jobs/018a424a-9201-75c7-9455-e7326c776904","rel":"self","type":"application/json"},{"href":"http://localhost:8000/jobs/018a424a-9201-75c7-9455-e7326c776904/results","rel":"results","type":"application/json"},{"href":"http://localhost:8000/jobs/018a424a-9201-75c7-9455-e7326c776904/inputs","rel":"inputs","type":"application/json"},{"href":"http://localhost:8000/processes/mirror","rel":"process","type":"application/json"},{"href":"http://localhost:8000/payloadCacheEntries/f7ceceb1-5871-54c9-837d-d24380cb252b","rel":"cache","type":"application/json"}]}
+ {"processID":"mirror","type":"process","jobID":"018a528f-a4f8-7094-821a-1b8eef82e290","status":"accepted","message":null,"created":"2023-09-01T21:04:20.216530+00:00","started":null,"finished":null,"updated":"2023-09-01T21:04:20.216530+00:00","links":[{"href":"http://localhost:8000/","rel":"root","type":"application/json"},{"href":"http://localhost:8000/jobs/018a528f-a4f8-7094-821a-1b8eef82e290","rel":"self","type":"application/json"},{"href":"http://localhost:8000/jobs/018a528f-a4f8-7094-821a-1b8eef82e290/results","rel":"results","type":"application/json"},{"href":"http://localhost:8000/jobs/018a528f-a4f8-7094-821a-1b8eef82e290/inputs","rel":"inputs","type":"application/json"},{"href":"http://localhost:8000/processes/mirror","rel":"process","type":"application/json"},{"href":"http://localhost:8000/payloadCacheEntries/f7ceceb1-5871-54c9-837d-d24380cb252b","rel":"cache","type":"application/json"}]}
 **************************
 ```
 
-You should see now a `018a424a-9201-75c7-9455-e7326c776904-copy-task-someid` pod matching the jobID `018a424a-9201-75c7-9455-e7326c776904` running via:
+You should see now a `018a528f-a4f8-7094-821a-1b8eef82e290-copy-task-someid` pod matching the jobID `018a528f-a4f8-7094-821a-1b8eef82e290` running via:
 ```
 $ kubectl get pods
 
 NAME                                                              READY   STATUS      RESTARTS   AGE
-minio-78fc4699df-k9jsp                                            1/1     Running     0          7m33s
-postgres-7b6b9ff76-hj4qs                                          1/1     Running     0          6m55s
-db-initialization-8-cdqz9                                         0/1     Completed   0          6m22s
-wait-for-db-initialization-8-2mdhf                                0/1     Completed   0          6m22s
-migration-job-8-q442b                                             0/1     Completed   0          5m42s
-swoop-caboose-argo-workflows-workflow-controller-86d7778c8fgfcl   1/1     Running     0          5m24s
-swoop-caboose-78cdd68b7b-8dr7n                                    1/1     Running     0          5m24s
-swoop-api-cdf497fc8-wmjgw                                         1/1     Running     0          4m24s
-swoop-conductor-55fcb7d956-l6q22                                  1/1     Running     0          3m12s
-018a424a-9201-75c7-9455-e7326c776904-copy-task-199703505          2/2     Running     0          51s
+migration-job-8-hpsnq                                             0/1     Completed   0          7m29s
+wait-for-migration-job-8-g7nd7                                    0/1     Completed   0          7m29s
+swoop-bundle-argo-workflows-workflow-controller-6654d9947-nsb7c   1/1     Running     0          7m29s
+swoop-api-7b45d969fc-h6vj4                                        1/1     Running     0          7m29s
+wait-for-swoop-api-8-6hb6b                                        0/1     Completed   0          7m29s
+swoop-caboose-7fb689f8b8-d8ncs                                    1/1     Running     0          7m29s
+swoop-conductor-65b98d6d8-4klz4                                   1/1     Running     0          7m29s
+wait-for-swoop-caboose-8-px4bd                                    0/1     Completed   0          7m29s
+018a528f-a4f8-7094-821a-1b8eef82e290-copy-task-3015836743         0/2     Completed   0          102s
+018a528f-a4f8-7094-821a-1b8eef82e290-publish-2564547885           0/2     Completed   0          38s
 ```
 
 In a couple of minutes, the job will complete, and you will not see the pod running anymore with `kubectl get pods`.
@@ -557,11 +558,11 @@ SWOOP API Host: localhost:8000
 STAC ASSETS BUCKET NAME: REDACTED_BUCKET_NAME
 POST URL: http://localhost:8000/processes/mirror/execution
 POST Input payload:
-{"inputs": {"payload": {"type": "FeatureCollection", "id": "tx_m_2609719_se_14_060_20201217", "features": [{"id": "tx_m_2609719_se_14_060_20201217", "bbox": [-97.690252, 26.622563, -97.622203, 26.689923], "type": "Feature", "links": [{"rel": "collection", "type": "application/json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip"}, {"rel": "parent", "type": "application/json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip"}, {"rel": "root", "type": "application/json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/"}, {"rel": "self", "type": "application/geo+json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip/items/tx_m_2609719_se_14_060_20201217"}, {"rel": "preview", "href": "https://planetarycomputer.microsoft.com/api/data/v1/item/map?collection=naip&item=tx_m_2609719_se_14_060_20201217", "title": "Map of item", "type": "text/html"}], "assets": {"image": {"href": "https://naipeuwest.blob.core.windows.net/naip/v002/tx/2020/tx_060cm_2020/26097/m_2609719_se_14_060_20201217.tif", "type": "image/tiff; application=geotiff; profile=cloud-optimized", "roles": ["data"], "title": "RGBIR COG tile", "eo:bands": [{"name": "Red", "common_name": "red"}, {"name": "Green", "common_name": "green"}, {"name": "Blue", "common_name": "blue"}, {"name": "NIR", "common_name": "nir", "description": "near-infrared"}]}, "thumbnail": {"href": "https://naipeuwest.blob.core.windows.net/naip/v002/tx/2020/tx_060cm_2020/26097/m_2609719_se_14_060_20201217.200.jpg", "type": "image/jpeg", "roles": ["thumbnail"], "title": "Thumbnail"}}, "geometry": {"type": "Polygon", "coordinates": [[[-97.623004, 26.622563], [-97.622203, 26.689286], [-97.68949, 26.689923], [-97.690252, 26.623198], [-97.623004, 26.622563]]]}, "collection": "naip", "properties": {"version": 2, "gsd": 0.6, "datetime": "2020-12-17T00:00:00Z", "naip:year": "2020", "proj:bbox": [630384, 2945370, 637080, 2952762], "proj:epsg": 26914, "naip:state": "tx", "proj:shape": [12320, 11160], "proj:transform": [0.6, 0, 630384, 0, -0.6, 2952762, 0, 0, 1]}, "stac_extensions": ["https://stac-extensions.github.io/eo/v1.0.0/schema.json", "https://stac-extensions.github.io/projection/v1.0.0/schema.json"], "stac_version": "1.0.0"}], "process": [{"description": "string", "workflow": "mirror", "upload_options": {"path_template": "s3://REDACTED_BUCKET_NAME/data/${collection}/${id}/", "collections": {"naip": "*"}, "public_assets": [], "headers": {}, "s3_urls": false}, "tasks": {"copy-assets": {"assets": ["thumbnail"], "drop_assets": ["image"]}}}]}}, "response": "document"}
+{"inputs": {"payload": {"id": "test", "type": "FeatureCollection", "features": [{"id": "tx_m_2609719_se_14_060_20201217", "bbox": [-97.690252, 26.622563, -97.622203, 26.689923], "type": "Feature", "links": [{"rel": "collection", "type": "application/json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip"}, {"rel": "parent", "type": "application/json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip"}, {"rel": "root", "type": "application/json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/"}, {"rel": "self", "type": "application/geo+json", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip/items/tx_m_2609719_se_14_060_20201217"}, {"rel": "preview", "href": "https://planetarycomputer.microsoft.com/api/data/v1/item/map?collection=naip&item=tx_m_2609719_se_14_060_20201217", "title": "Map of item", "type": "text/html"}], "assets": {"image": {"href": "https://naipeuwest.blob.core.windows.net/naip/v002/tx/2020/tx_060cm_2020/26097/m_2609719_se_14_060_20201217.tif", "type": "image/tiff; application=geotiff; profile=cloud-optimized", "roles": ["data"], "title": "RGBIR COG tile", "eo:bands": [{"name": "Red", "common_name": "red"}, {"name": "Green", "common_name": "green"}, {"name": "Blue", "common_name": "blue"}, {"name": "NIR", "common_name": "nir", "description": "near-infrared"}]}, "thumbnail": {"href": "https://naipeuwest.blob.core.windows.net/naip/v002/tx/2020/tx_060cm_2020/26097/m_2609719_se_14_060_20201217.200.jpg", "type": "image/jpeg", "roles": ["thumbnail"], "title": "Thumbnail"}}, "geometry": {"type": "Polygon", "coordinates": [[[-97.623004, 26.622563], [-97.622203, 26.689286], [-97.68949, 26.689923], [-97.690252, 26.623198], [-97.623004, 26.622563]]]}, "collection": "naip", "properties": {"gsd": 0.6, "datetime": "2020-12-17T00:00:00Z", "naip:year": "2020", "proj:bbox": [630384, 2945370, 637080, 2952762], "proj:epsg": 26914, "naip:state": "tx", "proj:shape": [12320, 11160], "proj:transform": [0.6, 0, 630384, 0, -0.6, 2952762, 0, 0, 1]}, "stac_extensions": ["https://stac-extensions.github.io/eo/v1.0.0/schema.json", "https://stac-extensions.github.io/projection/v1.0.0/schema.json"], "stac_version": "1.0.0"}], "process": [{"description": "string", "workflow": "mirror", "upload_options": {"path_template": "s3://REDACTED_BUCKET_NAME/data/${collection}/${id}/", "collections": {"naip": "*"}, "public_assets": [], "s3_urls": false}, "tasks": {"copy-assets": {"assets": ["thumbnail"], "drop_assets": ["image"]}, "publish": {"public": false, "stac_validate": true}}}]}}, "response": "document"}
 **************************
 **** RESPONSE SUMMARY ****
 Response from POST to http://localhost:8000/processes/mirror/execution:
- {"processID":"mirror","type":"process","jobID":"018a424a-9201-75c7-9455-e7326c776904","status":"successful","created":"2023-08-29T17:14:57.921969+00:00","started":"2023-08-29T17:14:58+00:00","finished":"2023-08-29T17:16:00+00:00","updated":"2023-08-29T17:16:00+00:00","links":[{"href":"http://localhost:8000/","rel":"root","type":"application/json"},{"href":"http://localhost:8000/jobs/018a424a-9201-75c7-9455-e7326c776904","rel":"self","type":"application/json"},{"href":"http://localhost:8000/jobs/018a424a-9201-75c7-9455-e7326c776904/results","rel":"results","type":"application/json"},{"href":"http://localhost:8000/jobs/018a424a-9201-75c7-9455-e7326c776904/inputs","rel":"inputs","type":"application/json"},{"href":"http://localhost:8000/processes/mirror","rel":"process","type":"application/json"},{"href":"http://localhost:8000/payloadCacheEntries/f7ceceb1-5871-54c9-837d-d24380cb252b","rel":"cache","type":"application/json"}]}
+ {"processID":"mirror","type":"process","jobID":"018a528f-a4f8-7094-821a-1b8eef82e290","status":"successful","created":"2023-09-01T21:04:20.216530+00:00","started":"2023-09-01T21:04:22+00:00","finished":"2023-09-01T21:06:05+00:00","updated":"2023-09-01T21:06:05+00:00","links":[{"href":"http://localhost:8000/","rel":"root","type":"application/json"},{"href":"http://localhost:8000/jobs/018a528f-a4f8-7094-821a-1b8eef82e290","rel":"self","type":"application/json"},{"href":"http://localhost:8000/jobs/018a528f-a4f8-7094-821a-1b8eef82e290/results","rel":"results","type":"application/json"},{"href":"http://localhost:8000/jobs/018a528f-a4f8-7094-821a-1b8eef82e290/inputs","rel":"inputs","type":"application/json"},{"href":"http://localhost:8000/processes/mirror","rel":"process","type":"application/json"},{"href":"http://localhost:8000/payloadCacheEntries/f7ceceb1-5871-54c9-837d-d24380cb252b","rel":"cache","type":"application/json"}]}
 **************************
 ```
 
@@ -581,7 +582,7 @@ mc alias set swoopminio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KE
 
 Check that you have an output file:
 ```
-$ mc ls swoopminio/swoop/executions/018a424a-9201-75c7-9455-e7326c776904/
+$ mc ls swoopminio/swoop/executions/018a528f-a4f8-7094-821a-1b8eef82e290/
 
 [2023-08-29 13:14:57 EDT] 2.5KiB STANDARD input.json
 [2023-08-29 13:15:50 EDT] 2.1KiB STANDARD output.json
@@ -590,15 +591,15 @@ $ mc ls swoopminio/swoop/executions/018a424a-9201-75c7-9455-e7326c776904/
 
 Copy the output file locally:
 ```
-$ mc cp swoopminio/swoop/executions/018a424a-9201-75c7-9455-e7326c776904/output.json .
-...7326c776904/output.json: 2.05 KiB / 2.05 KiB ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 49.29 KiB/s 0s
+$ mc cp swoopminio/swoop/executions/018a528f-a4f8-7094-821a-1b8eef82e290/output.json .
+...528f-a4f8-7094-821a-1b8eef82e290/output.json: 2.34 KiB / 2.34 KiB ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 73.18 KiB/s 0s
 ```
 
 Check the contents of the output.json:
 ```
 $ cat output.json
 
-{"type": "FeatureCollection", "features": [{"type": "Feature", "stac_version": "1.0.0", "id": "tx_m_2609719_se_14_060_20201217", "properties": {"version": 2, "gsd": 0.6, "datetime": "2020-12-17T00:00:00Z", "naip:year": "2020", "proj:bbox": [630384, 2945370, 637080, 2952762], "proj:epsg": 26914, "naip:state": "tx", "proj:shape": [12320, 11160], "proj:transform": [0.6, 0, 630384, 0, -0.6, 2952762, 0, 0, 1], "processing:software": {"copy-assets": "0.1.0"}}, "geometry": {"type": "Polygon", "coordinates": [[[-97.623004, 26.622563], [-97.622203, 26.689286], [-97.68949, 26.689923], [-97.690252, 26.623198], [-97.623004, 26.622563]]]}, "links": [{"rel": "collection", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip", "type": "application/json"}, {"rel": "parent", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip", "type": "application/json"}, {"rel": "self", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip/items/tx_m_2609719_se_14_060_20201217", "type": "application/geo+json"}, {"rel": "preview", "href": "https://planetarycomputer.microsoft.com/api/data/v1/item/map?collection=naip&item=tx_m_2609719_se_14_060_20201217", "type": "text/html", "title": "Map of item"}], "assets": {"thumbnail": {"href": "https://REDACTED_BUCKET_NAME.s3.us-west-2.amazonaws.com/data/naip/tx_m_2609719_se_14_060_20201217/thumbnail.jpg", "type": "image/jpeg", "title": "Thumbnail", "roles": ["thumbnail"]}}, "bbox": [-97.690252, 26.622563, -97.622203, 26.689923], "stac_extensions": ["https://stac-extensions.github.io/processing/v1.1.0/schema.json", "https://stac-extensions.github.io/eo/v1.0.0/schema.json", "https://stac-extensions.github.io/projection/v1.0.0/schema.json"], "collection": "naip"}], "process": {"description": "string", "tasks": {"copy-assets": {"assets": ["thumbnail"], "drop_assets": ["image"]}}, "upload_options": {"path_template": "s3://REDACTED_BUCKET_NAME/data/${collection}/${id}/", "collections": {"naip": "*"}, "public_assets": [], "headers": {}, "s3_urls": false}, "workflow": "mirror"}}%
+{"type": "FeatureCollection", "features": [{"type": "Feature", "stac_version": "1.0.0", "id": "tx_m_2609719_se_14_060_20201217", "properties": {"gsd": 0.6, "datetime": "2020-12-17T00:00:00Z", "naip:year": "2020", "proj:bbox": [630384, 2945370, 637080, 2952762], "proj:epsg": 26914, "naip:state": "tx", "proj:shape": [12320, 11160], "proj:transform": [0.6, 0, 630384, 0, -0.6, 2952762, 0, 0, 1], "processing:software": {"publish": "0.1.0"}, "created": "2023-09-01T20:48:19.861207+00:00", "updated": "2023-09-01T21:05:42.233712+00:00"}, "geometry": {"type": "Polygon", "coordinates": [[[-97.623004, 26.622563], [-97.622203, 26.689286], [-97.68949, 26.689923], [-97.690252, 26.623198], [-97.623004, 26.622563]]]}, "links": [{"rel": "self", "href": "s3://REDACTED_BUCKET_NAME/data/naip/tx_m_2609719_se_14_060_20201217/tx_m_2609719_se_14_060_20201217.json", "type": "application/json"}, {"rel": "canonical", "href": "s3://REDACTED_BUCKET_NAME/data/naip/tx_m_2609719_se_14_060_20201217/tx_m_2609719_se_14_060_20201217.json", "type": "application/json"}, {"rel": "collection", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip", "type": "application/json"}, {"rel": "parent", "href": "https://planetarycomputer.microsoft.com/api/stac/v1/collections/naip", "type": "application/json"}, {"rel": "preview", "href": "https://planetarycomputer.microsoft.com/api/data/v1/item/map?collection=naip&item=tx_m_2609719_se_14_060_20201217", "type": "text/html", "title": "Map of item"}], "assets": {"thumbnail": {"href": "https://REDACTED_BUCKET_NAME.s3.us-west-2.amazonaws.com/data/naip/tx_m_2609719_se_14_060_20201217/thumbnail.jpg", "type": "image/jpeg", "title": "Thumbnail", "roles": ["thumbnail"]}}, "bbox": [-97.690252, 26.622563, -97.622203, 26.689923], "stac_extensions": ["https://stac-extensions.github.io/processing/v1.1.0/schema.json", "https://stac-extensions.github.io/projection/v1.0.0/schema.json", "https://stac-extensions.github.io/eo/v1.0.0/schema.json"], "collection": "naip"}], "process": {"description": "string", "tasks": {"copy-assets": {"assets": ["thumbnail"], "drop_assets": ["image"]}, "publish": {"public": false, "stac_validate": true}}, "upload_options": {"path_template": "s3://REDACTED_BUCKET_NAME/data/${collection}/${id}/", "collections": {"naip": "*"}, "s3_urls": false, "public_assets": []}, "workflow": "mirror"}}%
 ```
 
 <br></br>
