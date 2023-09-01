@@ -711,3 +711,10 @@ variable workflow_config_version {
   description = "Version of Workflow Config Helm Chart"
   default = "0.1.0"
 }
+
+variable swoop_workflow_output_s3_bucket {
+  type          = string
+  description   = "Output S3 Bucket for SWOOP initiated Workflows"
+  default       = ""
+  sensitive     = true
+}

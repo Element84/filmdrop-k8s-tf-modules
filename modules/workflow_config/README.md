@@ -28,6 +28,7 @@ aws_access_key = "<REPLACE_WITH_BASE64_AWS_ACCESS_KEY>"
 aws_secret_access_key = "<REPLACE_WITH_BASE64_AWS_SECRET_ACCESS_KEY>"
 aws_region = "<REPLACE_WITH_BASE64_AWS_REGION>"
 aws_session_token = "<REPLACE_WITH_BASE64_AWS_SESSION_TOKEN>"
+swoop_workflow_output_s3_bucket = "<REPLACE_WITH_SWOOP_WORKFLOW_OUTPUT_S3_BUCKET_NAME>"
 ```
 
 1. First, initialize Terraform:
@@ -66,7 +67,7 @@ to see that the workflow templates and SWOOP configmap that were deployed.
 
 Create a bucket in S3 that will be used to hold your output assets from the workflow. Create an IAM user that has read/write permissions to this bucket and generate a set of AWS credentials (Access Key ID and Secret Access Key) for this user. These AWS credentials should have permissions to write to an S3 bucket where the output assets from the workflow will be uploaded.
 
-Create an `input.json` file for the input payload or clone the [copy-assets-stac-task](https://github.com/Element84/copy-assets-stac-task) repo and use the payload_workflow.json as reference.
+Create an `input.json` file for the input payload or clone the [publish-stac-task](https://github.com/Element84/publish-stac-task) repo and use the payload_workflow.json as reference.
 
 Modify the `process/upload_options/path_template`property of the input payload to contain the bucket name of the S3 bucket created in the previous step. For example, if the bucket is named `mirrorworkflowoutput`, the `path_template` should be:
 

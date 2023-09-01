@@ -71,5 +71,5 @@ module "local_environment" {
   create_s3_secret                              = var.create_s3_secret
   workflow_config_version                       = var.workflow_config_version
   swoop_namespace                               = var.swoop_namespace
-
+  swoop_workflow_output_s3_bucket               = var.swoop_workflow_output_s3_bucket
 }

@@ -17,6 +17,7 @@ module "workflow_config" {
   minio_secret                                          = var.minio_secret
   minio_namespace                                       = var.minio_namespace
   workflow_config_version                               = var.workflow_config_version
+  swoop_workflow_output_s3_bucket                       = var.swoop_workflow_output_s3_bucket
 }
 
 module "copy_s3_secret_to_workflow_config_namespace" {
