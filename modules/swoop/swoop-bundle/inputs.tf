@@ -191,3 +191,10 @@ variable custom_swoop_conductor_service_input_map {
     "replicaCount"       = 1
   }
 }
+
+variable swoop_sa_iam_role {
+  type          = string
+  description   = "IAM Role for SWOOP Service Account"
+  default       = ""
+  sensitive     = true
+}

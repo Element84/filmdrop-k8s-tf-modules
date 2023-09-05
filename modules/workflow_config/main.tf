@@ -18,11 +18,12 @@ module "workflow_config" {
   minio_namespace                                       = var.minio_namespace
   workflow_config_version                               = var.workflow_config_version
   swoop_workflow_output_s3_bucket                       = var.swoop_workflow_output_s3_bucket
+  swoop_sa_iam_role                                     = var.swoop_sa_iam_role
 }
 
 module "copy_s3_secret_to_workflow_config_namespace" {
   source  = "./s3_secrets"
-  count   = var.deploy_workflow_config == true && var.create_s3_secret == false && var.namespace != var.s3_secret_namespace ? 1 : 0
+  count   = var.deploy_workflow_config == true && var.create_s3_secret == false && var.swoop_sa_iam_role == "" && var.namespace != var.s3_secret_namespace ? 1 : 0
 
   namespace               = var.namespace
   s3_secret_namespace     = var.s3_secret_namespace

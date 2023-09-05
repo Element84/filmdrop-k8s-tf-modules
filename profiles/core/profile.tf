@@ -135,6 +135,7 @@ module "swoop" {
   custom_swoop_api_service_input_map        = var.custom_swoop_api_service_input_map
   custom_swoop_caboose_service_input_map    = var.custom_swoop_caboose_service_input_map
   custom_swoop_conductor_service_input_map  = var.custom_swoop_conductor_service_input_map
+  swoop_sa_iam_role                         = var.swoop_sa_iam_role
 
   depends_on = [
     module.service_mesh,
@@ -183,6 +184,7 @@ module "workflow_config" {
   minio_namespace                                       = module.minio.namespace
   workflow_config_version                               = var.workflow_config_version
   swoop_workflow_output_s3_bucket                       = var.swoop_workflow_output_s3_bucket
+  swoop_sa_iam_role                                     = var.swoop_sa_iam_role
 
   depends_on = [
     module.service_mesh,
