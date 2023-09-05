@@ -59,8 +59,13 @@ resource "helm_release" "workflow_config" {
   }
 
   set {
-    name  = "s3.data_bucket"
-    value = base64encode(var.swoop_workflow_output_s3_bucket)
+    name  = "s3.dataBucket"
+    value = var.swoop_workflow_output_s3_bucket
+  }
+
+  set {
+    name  = "s3.iamAccess"
+    value = var.swoop_sa_iam_role == "" ? false : true
   }
 
   dynamic "set" {

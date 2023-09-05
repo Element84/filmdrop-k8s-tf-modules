@@ -174,6 +174,13 @@ resource "helm_release" "swoop_bundle" {
     value = var.deploy_argo_workflows_server
   }
 
+  dynamic "set" {
+    for_each = var.swoop_sa_iam_role != "" ? [var.swoop_sa_iam_role] : []
+    content {
+      name  = "swoop-caboose.argo-workflows.workflow.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+      value = set.value
+    }
+  }
 
   dynamic "set" {
     for_each = var.custom_swoop_conductor_service_input_map
@@ -212,6 +219,14 @@ resource "helm_release" "swoop_bundle" {
   set {
     name  = "swoop-conductor.argo-workflows.server.enabled"
     value = var.deploy_argo_workflows_server
+  }
+
+  dynamic "set" {
+    for_each = var.swoop_sa_iam_role != "" ? [var.swoop_sa_iam_role] : []
+    content {
+      name  = "swoop-conductor.argo-workflows.workflow.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
+      value = set.value
+    }
   }
 
   values = concat(

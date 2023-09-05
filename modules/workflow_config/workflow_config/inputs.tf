@@ -102,3 +102,10 @@ variable swoop_workflow_output_s3_bucket {
   default       = ""
   sensitive     = true
 }
+
+variable swoop_sa_iam_role {
+  type          = string
+  description   = "IAM Role for SWOOP Service Account"
+  default       = ""
+  sensitive     = true
+}

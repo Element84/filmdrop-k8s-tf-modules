@@ -72,4 +72,5 @@ module "local_environment" {
   workflow_config_version                       = var.workflow_config_version
   swoop_namespace                               = var.swoop_namespace
   swoop_workflow_output_s3_bucket               = var.swoop_workflow_output_s3_bucket
+  swoop_sa_iam_role                             = var.swoop_sa_iam_role
 }

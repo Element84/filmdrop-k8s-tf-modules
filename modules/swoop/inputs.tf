@@ -202,3 +202,10 @@ variable deploy_minio {
   type        = bool
   default     = true
 }
+
+variable swoop_sa_iam_role {
+  type          = string
+  description   = "IAM Role for SWOOP Service Account"
+  default       = ""
+  sensitive     = true
+}
