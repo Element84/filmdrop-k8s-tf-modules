@@ -53,6 +53,17 @@ module "stac" {
   ]
 }
 
+module "stac_collection" {
+  source = "../../modules/stac/stac-collection"
+
+  deploy_staccollection                        = var.deploy_staccollection
+  namespace                                    = var.stac_namespace
+
+  depends_on = [
+    module.ingress_proxy
+  ]
+}
+
 module "minio" {
   source = "../../modules/io"
 
@@ -161,6 +172,7 @@ module "ingress_proxy" {
     module.swoop,
     module.minio,
     module.postgres,
+    module.stac
   ]
 }
 
