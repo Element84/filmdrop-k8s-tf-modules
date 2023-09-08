@@ -21,14 +21,14 @@ nginx_extra_values = {}
 
 #### Component flags: Deploy only Ingress NGINX with SWOOP API, Postgres and MinIO for GitHub Actions and other minimal testing
 deploy_linkerd            = false
-deploy_ingress_nginx      = true
+deploy_ingress_nginx      = false
 deploy_grafana_prometheus = false
 deploy_loki               = false
 deploy_promtail           = false
 deploy_argo_workflows     = true
 deploy_titiler            = false
-deploy_stacfastapi        = true
-deploy_staccollection     = true
+deploy_stacfastapi        = false
+deploy_staccollection     = false
 deploy_swoop_api          = true
 deploy_swoop_caboose      = true
 deploy_swoop_conductor    = true
