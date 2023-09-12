@@ -13,7 +13,8 @@ from typing import Dict
 import urllib.request
 
 
-# Format is http://{service-name}.{namespace-name}:{port}/collections
+# Format is http://{SERVICE_NAME}.{<NAMESPACE NAME}:{port}/collections
+# Change the namespace here to where Stac-FastAPI has been deployed
 FASTAPI_ENDPOINT = "http://stac-fastapi-pgstac.stac:8080/collections"
 
 
