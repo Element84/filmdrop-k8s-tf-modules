@@ -107,6 +107,12 @@ variable deploy_stacfastapi {
   default     = false
 }
 
+variable deploy_staccollection{
+  description = "Whether or not to deploy the STAC-collection module resources"
+  type        = bool
+  default     = false
+}
+
 variable deploy_swoop_api {
   description = "Whether or not to include the SWOOP API module resources"
   type        = bool

@@ -36,3 +36,16 @@ module "stac-fastapi" {
     module.stac_secrets,
   ]
 }
+
+module "stac-collection" {
+  source  = "./stac-collection"
+  count   = var.deploy_staccollection == true ? 1 : 0
+
+  namespace                                     = var.namespace
+
+  depends_on = [
+    module.stac_namespace,
+    module.stac_secrets,
+    module.stac-fastapi
+  ]
+}

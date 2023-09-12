@@ -59,6 +59,7 @@ deploy_promtail           = true
 deploy_argo_workflows     = true
 deploy_titiler            = false
 deploy_stacfastapi        = false
+deploy_staccollection     = false
 deploy_swoop_api          = true
 deploy_swoop_caboose      = true
 deploy_swoop_conductor    = true

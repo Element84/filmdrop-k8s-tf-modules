@@ -16,6 +16,12 @@ variable deploy_stacfastapi {
   default     = false
 }
 
+variable deploy_staccollection{
+  description = "Whether or not to deploy the STAC-collection module resources"
+  type        = bool
+  default     = false
+}
+
 variable custom_stac_fastapi_input_map {
   type        = map
   description = "Input values for STAC-FastAPI Helm Chart"
