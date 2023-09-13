@@ -38,6 +38,7 @@ module "stac" {
   source = "../../modules/stac"
 
   deploy_stacfastapi                           = var.deploy_stacfastapi
+  deploy_staccollection                        = var.deploy_staccollection
   namespace_annotations                        = var.namespace_annotations
   custom_stac_fastapi_input_map                = var.custom_stac_fastapi_input_map
   stac_fastapi_username                        = var.stac_fastapi_username

@@ -20,6 +20,7 @@ module "local_environment" {
   namespace_annotations                         = var.namespace_annotations
   deploy_titiler                                = var.deploy_titiler
   deploy_stacfastapi                            = var.deploy_stacfastapi
+  deploy_staccollection                         = var.deploy_staccollection
   deploy_swoop_api                              = var.deploy_swoop_api
   deploy_swoop_caboose                          = var.deploy_swoop_caboose
   deploy_swoop_conductor                        = var.deploy_swoop_conductor
