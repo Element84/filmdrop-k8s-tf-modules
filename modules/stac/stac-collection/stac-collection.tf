@@ -35,6 +35,12 @@ resource "kubernetes_job_v1" "create_collections" {
     template {
       metadata {}
       spec {
+        service_account_name = var.fastapi_serviceaccountname
+        init_container {
+          name            = "wait-for-stacfastapi"
+          image           = "ghcr.io/groundnuty/k8s-wait-for:v2.0"
+          args            = [ "service", "-lapp=${var.fastapi_servicename}"]
+        }
         container {
           name    = "create-collections"
           image   = "python:3.9-alpine"

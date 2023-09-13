@@ -16,9 +16,15 @@ variable fastapi_servicename {
   type        = string
   default     = "stac-fastapi-pgstac"
 }
+
 variable fastapi_serviceport {
   description = "STAC FastAPI Service Port"
   type        = number
   default     = 8080
 }
 
+variable fastapi_serviceaccountname {
+  description = "STAC FastAPI Service Account Name"
+  type        = string
+  default     = "stac-fastapi-pgstac"
+}
