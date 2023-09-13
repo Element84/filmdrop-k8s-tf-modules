@@ -190,7 +190,7 @@ Pools:
 First clone the [https://github.com/Element84/swoop](https://github.com/Element84/swoop) repository locally, and then run the following from the top level of the your local swoop clone:
 
 ```
-$ mc cp --recursive tests/fixtures/io/base_01/ swoopminio/swoop/execution/2595f2da-81a6-423c-84db-935e6791046e/
+$ mc cp --recursive tests/fixtures/io/base_01/ swoopminio/swoop/executions/2595f2da-81a6-423c-84db-935e6791046e/
 
 ...fixtures/io/base_01/output.json: 181 B / 181 B ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.67 KiB/s 0s
 ```
