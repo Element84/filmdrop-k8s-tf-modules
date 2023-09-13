@@ -5,6 +5,7 @@ locals {
 resource "kubernetes_config_map" "collections" {
   metadata {
     name = "collections"
+    namespace = var.namespace
   }
 
   data = {
@@ -16,6 +17,7 @@ resource "kubernetes_config_map" "collections" {
 resource "kubernetes_config_map" "ingest_script" {
   metadata {
     name = "ingest-script"
+    namespace = var.namespace
   }
 
   data = {
@@ -27,6 +29,7 @@ resource "kubernetes_config_map" "ingest_script" {
 resource "kubernetes_job_v1" "create_collections" {
   metadata {
     name = "create-collections"
+    namespace = var.namespace
   }
   spec {
     template {
@@ -36,6 +39,10 @@ resource "kubernetes_job_v1" "create_collections" {
           name    = "create-collections"
           image   = "python:3.9-alpine"
           command = ["python3", "task/ingest/task.py"]
+          env {
+            name = "FASTAPI_HOST"
+            value = "${var.fastapi_servicename}.${var.namespace}:${var.fastapi_serviceport}"
+          }
           volume_mount {
             name = "collection-volume"
             mount_path = "task/collections"
@@ -62,7 +69,7 @@ resource "kubernetes_job_v1" "create_collections" {
     }
     backoff_limit = 4
   }
-  wait_for_completion = true
+  wait_for_completion = false
 
   depends_on = [kubernetes_config_map.collections,
   kubernetes_config_map.ingest_script]

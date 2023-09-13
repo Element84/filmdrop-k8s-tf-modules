@@ -41,7 +41,9 @@ module "stac-collection" {
   source  = "./stac-collection"
   count   = var.deploy_staccollection == true ? 1 : 0
 
-  namespace                                     = var.namespace
+  namespace                               = var.namespace
+  fastapi_servicename                     = var.custom_stac_fastapi_input_map["stacFastApi.service.name"]
+  fastapi_serviceport                     = var.custom_stac_fastapi_input_map["stacFastApi.service.port"]
 
   depends_on = [
     module.stac_namespace,

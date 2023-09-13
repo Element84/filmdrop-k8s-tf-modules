@@ -15,7 +15,8 @@ import urllib.request
 
 # Format is http://{SERVICE_NAME}.{<NAMESPACE NAME}:{port}/collections
 # Change the namespace here to where Stac-FastAPI has been deployed
-FASTAPI_ENDPOINT = "http://stac-fastapi-pgstac.stac:8080/collections"
+FASTAPI_HOST = os.getenv("FASTAPI_HOST")
+FASTAPI_ENDPOINT = "http://" + FASTAPI_HOST + "/collections"
 
 
 def post_collection(values: Dict) -> None:
