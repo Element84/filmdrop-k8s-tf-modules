@@ -79,7 +79,7 @@ jobs:
           export MINIO_ACCESS_KEY=`kubectl get secrets -n io minio-secret-credentials --template={{.data.access_key_id}} | base64 --decode`
           export MINIO_SECRET_KEY=`kubectl get secrets -n io minio-secret-credentials --template={{.data.secret_access_key}} | base64 --decode`
           mc alias set swoopminio http://127.0.0.1:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY
-          mc cp --recursive swoop/tests/fixtures/io/base_01/ swoopminio/swoop/execution/2595f2da-81a6-423c-84db-935e6791046e/
+          mc cp --recursive swoop/tests/fixtures/io/base_01/ swoopminio/swoop/executions/2595f2da-81a6-423c-84db-935e6791046e/
 
       - name: Apply migrations and load swoop-db fixtures
         run: |
