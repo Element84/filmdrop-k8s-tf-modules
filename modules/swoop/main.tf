@@ -62,6 +62,8 @@ module "swoop_bundle" {
   custom_swoop_caboose_service_input_map    = var.custom_swoop_caboose_service_input_map
   custom_swoop_conductor_service_input_map  = var.custom_swoop_conductor_service_input_map
   swoop_sa_iam_role                         = var.swoop_sa_iam_role
+  custom_stac_fastapi_input_map             = var.custom_stac_fastapi_input_map
+  stac_namespace                            = var.stac_namespace
 
   depends_on = [
     module.swoop_namespace,

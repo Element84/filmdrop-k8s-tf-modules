@@ -91,6 +91,10 @@ resource "helm_release" "swoop_bundle" {
     value = "${var.namespace}-${var.minio_secret}" 
   }
 
+  set {
+    name  = "global.stac.endpoint"
+    value = "http://${var.custom_stac_fastapi_input_map["stacFastApi.service.name"]}.${var.stac_namespace}:${var.custom_stac_fastapi_input_map["stacFastApi.service.port"]}"
+  }
 
   dynamic "set" {
     for_each = var.custom_swoop_input_map
@@ -192,6 +196,11 @@ resource "helm_release" "swoop_bundle" {
   }
 
   set {
+    name  = "swoop-caboose.service.stacApiEndpoint"
+    value = "http://${var.custom_stac_fastapi_input_map["stacFastApi.service.name"]}.${var.stac_namespace}:${var.custom_stac_fastapi_input_map["stacFastApi.service.port"]}"
+  }
+
+  set {
     name  = "swoop-conductor.enabled"
     value = var.deploy_swoop_conductor
   }
@@ -227,6 +236,11 @@ resource "helm_release" "swoop_bundle" {
       name  = "swoop-conductor.argo-workflows.workflow.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
       value = set.value
     }
+  }
+
+  set {
+    name  = "swoop-conductor.service.stacApiEndpoint"
+    value = "http://${var.custom_stac_fastapi_input_map["stacFastApi.service.name"]}.${var.stac_namespace}:${var.custom_stac_fastapi_input_map["stacFastApi.service.port"]}"
   }
 
   values = concat(

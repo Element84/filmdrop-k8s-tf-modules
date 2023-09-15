@@ -465,7 +465,7 @@ variable custom_swoop_input_map {
     "swoop.conductor.argo.enabled"      = false
     "swoop.conductor.argo.crdsInstall"  = false
     "swoop.conductor.argo.objectCounts" = 5
-    "swoop.conductor.instanceName"      = "instance-a"
+    "swoop.conductor.instanceName"      = "main"
     "swoop.bundle.serviceAccount"       = "swoop-bundle"
   }
 }
