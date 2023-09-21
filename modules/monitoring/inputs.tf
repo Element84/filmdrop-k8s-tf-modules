@@ -1,3 +1,9 @@
+variable create_namespace {
+  description = "Whether or not to include to create the namespace"
+  type        = bool
+  default     = true
+}
+
 variable loki_extra_values {
   type        = map(string)
   description = "MAP of Helm values for the Loki stack"
@@ -34,4 +40,16 @@ variable deploy_promtail {
   type        = bool
   default     = true
   description = "Deploy Promtail stack"
+}
+
+variable namespace {
+  description = "Name of monitoring Namespace"
+  type        = string
+  default     = "monitoring"
+}
+
+variable namespace_annotations {
+  type = map(string)
+  description = "MAP of annotations applied to the created namespace"
+  default = {}
 }

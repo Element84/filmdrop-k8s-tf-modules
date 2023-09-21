@@ -1,6 +1,6 @@
 resource "helm_release" "promtail" {
   name = "promtail"
-  namespace = "monitoring"
+  namespace = var.namespace
   create_namespace = true
   repository = "https://grafana.github.io/helm-charts"
   chart = "promtail"
