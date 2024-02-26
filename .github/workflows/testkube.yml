@@ -86,12 +86,9 @@ jobs:
           kubectl exec -it --namespace=db svc/postgres  -- /bin/sh -c "swoop-db up"
           kubectl exec -it --namespace=db svc/postgres  -- /bin/sh -c "swoop-db load-fixture base_01"
 
+      - uses: kubeshop/setup-testkube@v1
       - name: Installing Testkube
         run: |
-          wget -qO - https://repo.testkube.io/key.pub | sudo apt-key add -
-          echo "deb https://repo.testkube.io/linux linux main" | sudo tee -a /etc/apt/sources.list
-          sudo apt-get update
-          sudo apt-get install -y testkube
           kubectl testkube install --no-confirm
           kubectl wait --for=condition=ready --timeout=30m pod -n testkube -l app.kubernetes.io/instance=testkube
           kubectl port-forward -n testkube svc/testkube-api-server 8088:8088 &
