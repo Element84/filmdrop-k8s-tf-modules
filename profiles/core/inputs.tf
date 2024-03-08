@@ -471,6 +471,13 @@ variable minio_namespace {
   default     = "io"
 }
 
+variable monitoring_namespace {
+  type        = string
+  description = "Namespace for monitoring"
+  default     = "monitoring"
+}
+
+
 variable postgres_namespace {
   type        = string
   description = "Namespace for Postgres"

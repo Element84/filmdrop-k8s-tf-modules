@@ -17,6 +17,7 @@ module "monitoring" {
   grafana_prometheus_extra_values = var.grafana_prometheus_extra_values
   grafana_additional_data_sources = var.grafana_additional_data_sources
   promtail_extra_values           = var.promtail_extra_values
+  namespace                       = var.monitoring_namespace
 
   depends_on = [
     module.service_mesh
